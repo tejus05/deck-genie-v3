@@ -1,0 +1,40 @@
+{
+  "name": "presenton",
+  "main": "app_dist/main.js",
+  "version": "0.2.0-beta",
+  "description": "Presenton Open Source",
+  "homepage": "https://presenton.ai",
+  "author": {
+    "name": "Presenton",
+    "email": "contact@presenton.ai"
+  },
+  "scripts": {
+    "dev": "rm -rf app_dist && tsc && electron .",
+    "setup:env": "npm install && cd servers/fastapi && poetry env remove --all && poetry install && .venv/bin/pip uninstall -y hf_xet && cd ../../servers/nextjs && npm install",
+    "install:pyinstaller": "cd servers/fastapi && .venv/bin/pip install pyinstaller",
+    "build:ts": "rm -rf app_dist && tsc",
+    "build:css": "tailwindcss -i ./resources/ui/assets/css/tailwind.import.css -o ./resources/ui/assets/css/tailwind.css --watch",
+    "build:nextjs": "rm -rf resources/nextjs && cd servers/nextjs && npm run build && cp -r out ../../resources/nextjs",
+    "build:fastapi": "rm -rf resources/fastapi && cd servers/fastapi && .venv/bin/pyinstaller --distpath ../../resources server.spec",
+    "build:electron": "rm -rf app_dist && tsc && node build.js",
+    "build:all": "npm run clean:build && npm run setup:env && npm run build:ts && npm run install:pyinstaller && npm run build:nextjs && npm run build:fastapi && npm run build:electron",
+    "clean:build": "rm -rf resources/nextjs && rm -rf resources/fastapi && rm -rf app_dist"
+  },
+  "devDependencies": {
+    "electron": "^36.1.0",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.5",
+    "dotenv": "^16.5.0",
+    "electron-squirrel-startup": "^1.0.1",
+    "puppeteer": "^24.8.2",
+    "serve-handler": "^6.1.6",
+    "tailwindcss": "^4.1.5",
+    "tree-kill": "^1.2.2"
+  }
+}
