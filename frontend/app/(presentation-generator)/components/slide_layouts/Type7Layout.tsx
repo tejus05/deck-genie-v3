@@ -1,33 +1,31 @@
 import React from "react";
 import EditableText from "../EditableText";
-import IconsEditor from "../IconsEditor";
 import { Plus } from "lucide-react";
 import ElementMenu from "../ElementMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useSlideOperations } from "../../hooks/use-slide-operations";
+import { numberTranslations } from "../../utils/others";
 import SlideFooter from "./SlideFooter";
 
-interface Type2LayoutProps {
+interface Type7LayoutProps {
   title: string;
   body: Array<{
     heading: string;
     description: string;
   }>;
-  icons: string[];
   slideIndex: number;
   slideId: string | null;
-  icon_queries?: Array<{ queries: string[] }> | null;
+  language: string;
 }
 
 const Type7Layout = ({
   title,
   body,
-  icons,
   slideIndex,
   slideId,
-  icon_queries,
-}: Type2LayoutProps) => {
+  language,
+}: Type7LayoutProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const { handleAddItem, handleDeleteItem } = useSlideOperations(slideIndex);
 
@@ -83,15 +81,22 @@ const Type7Layout = ({
               <ElementMenu index={index} handleDeleteItem={DeleteItem} />
               <div className="flex items-start gap-2 mg:gap-4">
                 <div className="flex-shrink-0 lg:w-16">
-                  <IconsEditor
-                    hasBg={true}
-                    backgroundColor={currentColors.iconBg}
-                    icon={icons[index]}
-                    index={index}
-                    slideIndex={slideIndex}
-                    elementId={`slide-${slideIndex}-icon-${index}`}
-                    icon_prompt={icon_queries?.[index]?.queries || []}
-                  />
+                  <div
+                    data-slide-element
+                    data-slide-index={slideIndex}
+                    data-element-type="text"
+                    data-element-id={`slide-${slideIndex}-item-${index}-number`}
+                    className="text-[32px] leading-[40px] font-bold"
+                    style={{
+                      color: currentColors.iconBg,
+                    }}
+                  >
+                    {
+                      numberTranslations[
+                        language as keyof typeof numberTranslations
+                      ][index]
+                    }
+                  </div>
                 </div>
                 <div>
                   <EditableText
@@ -144,15 +149,22 @@ const Type7Layout = ({
             className={`w-full slide-box  rounded-lg p-3 lg:p-6 relative group`}
           >
             <ElementMenu index={index} handleDeleteItem={DeleteItem} />
-            <IconsEditor
-              hasBg={true}
-              backgroundColor={currentColors.iconBg}
-              icon={icons[index]}
-              index={index}
-              slideIndex={slideIndex}
-              elementId={`slide-${slideIndex}-icon-${index}`}
-              icon_prompt={icon_queries?.[index]?.queries || []}
-            />
+            <div
+              data-slide-element
+              data-slide-index={slideIndex}
+              data-element-type="text"
+              data-element-id={`slide-${slideIndex}-item-${index}-number`}
+              className="text-[32px] leading-[40px] font-bold mb-4"
+              style={{
+                color: currentColors.iconBg,
+              }}
+            >
+              {
+                numberTranslations[
+                  language as keyof typeof numberTranslations
+                ][index]
+              }
+            </div>
             <div className="lg:space-y-4 mt-2 lg:mt-4">
               <EditableText
                 slideIndex={slideIndex}

@@ -1,35 +1,33 @@
 import React from "react";
 import EditableText from "../EditableText";
-import IconsEditor from "../IconsEditor";
 import { Plus } from "lucide-react";
 import ElementMenu from "../ElementMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useSlideOperations } from "../../hooks/use-slide-operations";
+import { numberTranslations } from "../../utils/others";
 import SlideFooter from "./SlideFooter";
 
-interface Type6LayoutProps {
+interface Type8LayoutProps {
   title: string;
   description: string;
   body: Array<{
     heading: string;
     description: string;
   }>;
-  icons: string[];
   slideId: string | null;
   slideIndex: number;
-  icon_queries?: Array<{ queries: string[] }> | null;
+  language: string;
 }
 
 const Type8Layout = ({
   title,
   description,
   body,
-  icons,
   slideIndex,
   slideId,
-  icon_queries,
-}: Type6LayoutProps) => {
+  language,
+}: Type8LayoutProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const { handleAddItem, handleDeleteItem } = useSlideOperations(slideIndex);
 
@@ -101,15 +99,22 @@ const Type8Layout = ({
                   className="slide-box  rounded-lg p-3 lg:p-6 relative group"
                 >
                   <ElementMenu index={index} handleDeleteItem={DeleteItem} />
-                  <IconsEditor
-                    icon={icons[index]}
-                    index={index}
-                    backgroundColor={currentColors.iconBg}
-                    hasBg={true}
-                    slideIndex={slideIndex}
-                    elementId={`slide-${slideIndex}-icon-${index}`}
-                    icon_prompt={icon_queries?.[index]?.queries || []}
-                  />
+                  <div
+                    data-slide-element
+                    data-slide-index={slideIndex}
+                    data-element-type="text"
+                    data-element-id={`slide-${slideIndex}-item-${index}-number`}
+                    className="text-[32px] leading-[40px] font-bold mb-4"
+                    style={{
+                      color: currentColors.iconBg,
+                    }}
+                  >
+                    {
+                      numberTranslations[
+                        language as keyof typeof numberTranslations
+                      ][index]
+                    }
+                  </div>
 
                   <div className="space-y-1 lg:space-y-3  lg:mt-3">
                     <EditableText
@@ -143,17 +148,23 @@ const Type8Layout = ({
                 >
                   <ElementMenu index={index} handleDeleteItem={DeleteItem} />
                   <div className="flex items-start gap-4">
-                    <div className="w-[32px] md:w-[64px]  h-[32px] md:h-[64px]">
-                      <IconsEditor
-                        className="rounded-lg"
-                        icon={icons[index]}
-                        index={index}
-                        backgroundColor={currentColors.iconBg}
-                        hasBg={true}
-                        slideIndex={slideIndex}
-                        elementId={`slide-${slideIndex}-icon-${index}`}
-                        icon_prompt={icon_queries?.[index]?.queries || []}
-                      />
+                    <div className="w-[32px] md:w-[64px] h-[32px] md:h-[64px] flex items-center justify-center">
+                      <div
+                        data-slide-element
+                        data-slide-index={slideIndex}
+                        data-element-type="text"
+                        data-element-id={`slide-${slideIndex}-item-${index}-number`}
+                        className="text-[24px] md:text-[32px] leading-[32px] md:leading-[40px] font-bold"
+                        style={{
+                          color: currentColors.iconBg,
+                        }}
+                      >
+                        {
+                          numberTranslations[
+                            language as keyof typeof numberTranslations
+                          ][index]
+                        }
+                      </div>
                     </div>
                     <div className="lg:space-y-3 ">
                       <EditableText

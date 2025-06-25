@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
 import { RootState } from "@/store/store";
+import { numberTranslations } from "../../utils/others";
 import MiniTypeWriter from "./MiniTypeWriter";
 
 interface Type7MiniProps {
@@ -9,18 +10,12 @@ interface Type7MiniProps {
     heading: string;
     description: string;
   }>;
-  icons: string[];
+  language: string;
 }
 
-const Type7Mini = ({ title, body, icons }: Type7MiniProps) => {
+const Type7Mini = ({ title, body, language }: Type7MiniProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const isGridLayout = body.length === 4;
-  const updatedIcons = icons.map((icon) => {
-    if (icon.startsWith("user")) {
-      return `file://${icon}`;
-    }
-    return icon;
-  });
 
   return (
     <div className="slide-container w-full aspect-video bg-white p-2 flex flex-col justify-center items-center rounded-lg text-[6px] border shadow-xl">
@@ -33,16 +28,14 @@ const Type7Mini = ({ title, body, icons }: Type7MiniProps) => {
         {body.map((item, index) => (
           <div key={index} className="bg-gray-50 rounded-sm p-1 slide-box">
             <div
-              className="w-2 h-2 mb-1 rounded-sm flex items-center justify-center"
-              style={{ backgroundColor: currentColors.iconBg }}
+              className="w-2 h-2 mb-1 rounded-sm flex items-center justify-center text-[4px] font-bold"
+              style={{ backgroundColor: currentColors.iconBg, color: 'white' }}
             >
-              {updatedIcons && updatedIcons[index] && (
-                <img
-                  src={updatedIcons[index]}
-                  alt={item.heading}
-                  className="w-1 h-1 object-contain"
-                />
-              )}
+              {
+                numberTranslations[
+                  language as keyof typeof numberTranslations
+                ][index]
+              }
             </div>
             <div className="truncate font-medium slide-heading">
               <MiniTypeWriter text={item.heading} />

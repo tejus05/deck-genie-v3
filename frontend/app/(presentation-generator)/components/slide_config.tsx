@@ -117,8 +117,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           slideId={slide.id}
           slideIndex={slide.index}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          icons={slide.icons || []}
-          icon_queries={slide.content.icon_queries || []}
+          language={language || "English"}
         />
       );
 
@@ -130,8 +129,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
           slideIndex={slide.index}
           description={slide.content.description || ""}
-          icons={slide.icons || []}
-          icon_queries={slide.content.icon_queries || []}
+          language={language || "English"}
         />
       );
 
@@ -154,7 +152,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
   }
 };
 
-export const renderMiniSlideContent = (slide: Slide) => {
+export const renderMiniSlideContent = (slide: Slide, language: string = "English") => {
   const { type, content } = slide;
 
   switch (type) {
@@ -212,7 +210,7 @@ export const renderMiniSlideContent = (slide: Slide) => {
         <Type7Mini
           title={slide.content.title}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          icons={slide.icons || []}
+          language={language || "English"}
         />
       );
     case 8:
@@ -221,7 +219,7 @@ export const renderMiniSlideContent = (slide: Slide) => {
           title={slide.content.title}
           description={slide.content.description || ""}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          icons={slide.icons || []}
+          language={language || "English"}
         />
       );
     case 9:

@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
+import { numberTranslations } from "../../utils/others";
 import MiniTypeWriter from "./MiniTypeWriter";
 
 interface Type8MiniProps {
@@ -10,17 +11,11 @@ interface Type8MiniProps {
     heading: string;
     description: string;
   }>;
-  icons: string[];
+  language: string;
 }
 
-const Type8Mini = ({ title, description, body, icons }: Type8MiniProps) => {
+const Type8Mini = ({ title, description, body, language }: Type8MiniProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
-  const updatedIcons = icons.map((icon) => {
-    if (icon.startsWith("user")) {
-      return `file://${icon}`;
-    }
-    return icon;
-  });
 
   return (
     <div className="slide-container w-full aspect-video bg-white p-2 flex flex-col justify-center items-center rounded-lg text-[6px] border shadow-xl">
@@ -40,16 +35,14 @@ const Type8Mini = ({ title, description, body, icons }: Type8MiniProps) => {
               className="flex gap-1 bg-gray-50 rounded-sm p-1 slide-box"
             >
               <div
-                className="w-2 h-2 rounded-sm flex items-center justify-center"
-                style={{ backgroundColor: currentColors.iconBg }}
+                className="w-2 h-2 rounded-sm flex items-center justify-center text-[4px] font-bold"
+                style={{ backgroundColor: currentColors.iconBg, color: 'white' }}
               >
-                {updatedIcons && updatedIcons[index] && (
-                  <img
-                    src={updatedIcons[index]}
-                    alt={item.heading}
-                    className="w-1 h-1 object-contain"
-                  />
-                )}
+                {
+                  numberTranslations[
+                    language as keyof typeof numberTranslations
+                  ][index]
+                }
               </div>
               <div>
                 <div className="truncate font-medium slide-heading">
