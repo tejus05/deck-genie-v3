@@ -358,10 +358,7 @@ export class PresentationGenerationApi {
       if (response.ok) {
         const data = await response.json();
         logOperation('Successfully exported presentation as PPTX');
-        return {
-          ...data,
-          url: `${BASE_URL}${data.url}`,
-        };
+        return data; // Don't add BASE_URL since backend already provides the correct URL
       } else {
         logOperation(`Failed to export as pptx: ${response.statusText}`);
         throw new Error(`Failed to export as pptx: ${response.statusText}`);

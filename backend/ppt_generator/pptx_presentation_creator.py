@@ -1,6 +1,7 @@
 import os
 from typing import List, Optional
 import uuid
+import re
 from lxml import etree
 
 from pptx import Presentation
@@ -54,6 +55,46 @@ from ppt_generator.utils import (
 )
 
 BLANK_SLIDE_LAYOUT = 6
+
+
+def sanitize_hex_color(color: str) -> str:
+    """
+    Sanitize a hex color string to ensure it's valid for RGBColor.from_string().
+    
+    Args:
+        color: Hex color string (e.g., "#123", "#1", "#123456")
+        
+    Returns:
+        Valid 6-digit hex color string (e.g., "123456")
+    """
+    if not color:
+        return "000000"  # Default to black
+    
+    # Remove # prefix if present
+    color = color.lstrip('#')
+    
+    # Ensure only valid hex characters
+    if not re.match(r'^[0-9A-Fa-f]*$', color):
+        return "000000"  # Default to black if invalid characters
+    
+    # Handle different lengths
+    if len(color) == 3:
+        # Convert 3-digit to 6-digit (e.g., "123" -> "112233")
+        return ''.join([c*2 for c in color])
+    elif len(color) == 6:
+        return color
+    elif len(color) == 1:
+        # Pad single digit (e.g., "1" -> "111111")
+        return color * 6
+    elif len(color) == 2:
+        # Pad two digits (e.g., "12" -> "121212")
+        return color * 3
+    elif len(color) < 6:
+        # Pad to 6 digits
+        return color.ljust(6, '0')
+    else:
+        # Truncate to 6 digits
+        return color[:6]
 
 
 class PptxPresentationCreator:
@@ -137,7 +178,7 @@ class PptxPresentationCreator:
             connector_model.type, *connector_model.position.to_pt_xyxy()
         )
         connector_shape.line.width = Pt(connector_model.thickness)
-        connector_shape.line.color.rgb = RGBColor.from_string(connector_model.color)
+        connector_shape.line.color.rgb = RGBColor.from_string(sanitize_hex_color(connector_model.color))
 
     def add_graph(self, slide: Slide, graph_box_model: PptxGraphBoxModel):
         chart_data = None
@@ -462,7 +503,8 @@ class PptxPresentationCreator:
             shape.fill.background()
         else:
             shape.fill.solid()
-            shape.fill.fore_color.rgb = RGBColor.from_string(fill.color)
+            sanitized_color = sanitize_hex_color(fill.color)
+            shape.fill.fore_color.rgb = RGBColor.from_string(sanitized_color)
 
     def apply_stroke_to_shape(
         self, shape: Shape, stroke: Optional[PptxStrokeModel] = None
@@ -471,7 +513,7 @@ class PptxPresentationCreator:
             shape.line.fill.background()
         else:
             shape.line.fill.solid()
-            shape.line.fill.fore_color.rgb = RGBColor.from_string(stroke.color)
+            shape.line.fill.fore_color.rgb = RGBColor.from_string(sanitize_hex_color(stroke.color))
             shape.line.width = Pt(stroke.thickness)
 
     def apply_shadow_to_shape(
@@ -557,7 +599,7 @@ class PptxPresentationCreator:
 
     def apply_font(self, font: Font, font_model: PptxFontModel):
         font.name = font_model.name
-        font.color.rgb = RGBColor.from_string(font_model.color)
+        font.color.rgb = RGBColor.from_string(sanitize_hex_color(font_model.color))
         font.bold = font_model.bold
         font.italic = font_model.italic
         font.size = Pt(font_model.size)

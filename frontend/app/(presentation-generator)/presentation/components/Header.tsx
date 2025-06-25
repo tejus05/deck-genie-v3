@@ -132,15 +132,78 @@ const Header = ({
   const getSlideMetadata = async () => {
     try {
       logOperation('Fetching slide metadata');
-      const baseUrl = window.location.href;
       
       // For web mode, create metadata for each slide based on current presentation data
       const slides = presentationData?.slides || [];
-      const metadata = slides.map((slide, index) => ({
-        elements: [], // Empty elements array for now
-        backgroundColor: currentColors?.slideBg || '#ffffff',
-        slideIndex: index
-      }));
+      const metadata = slides.map((slide: any, index: number) => {
+        // Extract text content from the slide
+        const elements = [];
+        
+        if (slide.content) {
+          // Try to extract title
+          const title = slide.content.title || slide.content.heading || slide.title;
+          if (title) {
+            elements.push({
+              type: 'text',
+              content: title,
+              position: { left: 50, top: 50, width: 600, height: 100 },
+              fontSize: 36,
+              fontWeight: 'bold'
+            });
+          }
+          
+          // Try to extract subtitle  
+          const subtitle = slide.content.subtitle || slide.content.subheading;
+          if (subtitle) {
+            elements.push({
+              type: 'text', 
+              content: subtitle,
+              position: { left: 50, top: 150, width: 600, height: 50 },
+              fontSize: 24
+            });
+          }
+          
+          // Try to extract bullet points or content
+          const bulletPoints = slide.content.bullet_points || slide.content.bullets || slide.content.points;
+          if (bulletPoints && Array.isArray(bulletPoints) && bulletPoints.length > 0) {
+            const bulletText = bulletPoints.map((point: any) => `• ${point}`).join('\n');
+            elements.push({
+              type: 'text',
+              content: bulletText,
+              position: { left: 50, top: 220, width: 600, height: 300 },
+              fontSize: 18
+            });
+          }
+          
+          // Try to extract general content
+          const content = slide.content.content || slide.content.text || slide.content.description;
+          if (content && typeof content === 'string' && !bulletPoints) {
+            elements.push({
+              type: 'text',
+              content: content,
+              position: { left: 50, top: 220, width: 600, height: 300 },
+              fontSize: 18
+            });
+          }
+        }
+        
+        // If no content found, add a placeholder
+        if (elements.length === 0) {
+          elements.push({
+            type: 'text',
+            content: `Slide ${index + 1}`,
+            position: { left: 50, top: 50, width: 600, height: 100 },
+            fontSize: 36,
+            fontWeight: 'bold'
+          });
+        }
+        
+        return {
+          elements: elements,
+          backgroundColor: currentColors?.slideBg || '#ffffff',
+          slideIndex: index
+        };
+      });
       
       logOperation('Slide metadata fetched successfully');
       return metadata;
@@ -167,20 +230,12 @@ const Header = ({
         console.error(error);
       });
 
-    const metadata = await getSlideMetadata();
-
-    const slides = metadata.map((slide: any, index: any) => {
-      return {
-        shapes: slide.elements,
-      };
-    });
-
+    // Use the slide data directly as presenton does - no conversion needed
     const apiBody = {
       presentation_id: presentation_id,
       pptx_model: {
-        background_color: metadata[0].backgroundColor,
-
-        slides: slides,
+        background_color: currentColors?.slideBg || '#ffffff',
+        slides: presentationData?.slides || []
       },
     };
 
@@ -201,17 +256,20 @@ const Header = ({
         logOperation('PPTX export completed, initiating download');
         setShowLoader(false);
         
-        // For web mode, create a download link
+        // Extract filename from path
+        const filename = response.path.split('/').pop() || `presentation-${presentation_id}.pptx`;
+        
+        // For web mode, create a download link using the download endpoint
         const link = document.createElement('a');
-        link.href = `http://localhost:8000/static/${response.path}`;
-        link.download = `presentation-${presentation_id}.pptx`;
+        link.href = `http://localhost:8000/download/${presentation_id}/${filename}`;
+        link.download = filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
         logOperation('PPTX download completed successfully');
       } else {
-        throw new Error("No URL returned from export");
+        throw new Error("No path returned from export");
       }
     } catch (error) {
       logOperation(`Error in PPTX export: ${error}`);
@@ -234,20 +292,41 @@ const Header = ({
     setOpen(false);
     try {
       logOperation('Starting PDF export');
+      setShowLoader(true);
+      
       toast({
         title: "Exporting presentation...",
         description: "Please wait while we export your presentation.",
         variant: "default",
       });
 
-      // For web mode, show a message that PDF export is not yet implemented
-      toast({
-        title: "PDF Export",
-        description: "PDF export is not yet available in web mode. Please use PPTX export instead.",
-        variant: "default",
+      const response = await fetch('/api/export-as-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: `http://localhost:3000/pdf-maker?id=${presentation_id}`,
+          title: presentationData?.presentation?.title || `presentation-${presentation_id}`,
+        })
       });
-      
-      logOperation('PDF export requested - not implemented in web mode');
+
+      if (response.ok) {
+        const { url: pdfUrl } = await response.json();
+        logOperation('PDF export completed, initiating download');
+        
+        // Create a download link
+        const link = document.createElement('a');
+        link.href = pdfUrl.startsWith('http') ? pdfUrl : `http://localhost:8000${pdfUrl}`;
+        link.download = `${presentationData?.presentation?.title || `presentation-${presentation_id}`}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        logOperation('PDF download completed successfully');
+      } else {
+        throw new Error("Failed to export PDF");
+      }
 
     } catch (err) {
       logOperation(`Error in PDF export: ${err}`);
@@ -258,6 +337,8 @@ const Header = ({
           "We are having trouble exporting your presentation. Please try again.",
         variant: "default",
       });
+    } finally {
+      setShowLoader(false);
     }
   };
 
