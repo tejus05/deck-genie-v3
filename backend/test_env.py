@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 # Set Google Gemini as default LLM
 os.environ.setdefault("LLM", "google")
-os.environ.setdefault("GOOGLE_API_KEY", "AIzaSyBjqKxUF4WTY4rI1KVPvrNcUoLqfxNM8yc")
+# Google API key will be loaded from .env file
 
 print("LLM:", os.getenv("LLM"))
 print("GOOGLE_API_KEY:", os.getenv("GOOGLE_API_KEY"))

@@ -8,3 +8,4 @@ langchain-community==0.3.23
 pdfplumber==0.11.6
 fastembed==0.6.1
 uvicorn==0.32.1
+python-dotenv==1.0.0

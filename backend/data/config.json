@@ -1,4 +1,3 @@
 {
-  "LLM": "google",
-  "GOOGLE_API_KEY": "AIzaSyBjqKxUF4WTY4rI1KVPvrNcUoLqfxNM8yc"
+  "LLM": "google"
 }
