@@ -26,7 +26,7 @@ import {
   updateSlideImage,
   updateSlideProperties,
 } from "@/store/slices/presentationGeneration";
-import { ThemeImagePrompt } from "../utils/others";
+import { ThemeImagePrompt, getStaticFileUrl } from "../utils/others";
 
 import {
   Popover,
@@ -292,7 +292,7 @@ const ImageEditor = ({
   // Helper function to determine image URL
   const getImageUrl = (src: string | null) => {
     if (!src) return "";
-    return src.startsWith("user") ? `file://${src}` : `file://${src}`;
+    return getStaticFileUrl(src);
   };
   const urls = getEnv();
   const BASE_URL = urls.BASE_URL;
@@ -564,7 +564,7 @@ const ImageEditor = ({
                           <img
                             src={
                               image
-                                ? `file://${image}`
+                                ? getStaticFileUrl(image)
                                 : ""
                             }
                             alt={`Preview ${index + 1}`}
@@ -645,7 +645,7 @@ const ImageEditor = ({
                               className="cursor-pointer group w-full h-full"
                             >
                               <img
-                                src={`file://${uploadedImageUrl}`}
+                                src={getStaticFileUrl(uploadedImageUrl)}
                                 alt="Uploaded preview"
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                               />

@@ -214,3 +214,39 @@ export const ThemeImagePrompt = {
     " Inspirational and creative with a youthful and playful tone, featuring light, pastel colors including blue, pink, and purple, all blending in a vibrant gradient.",
   custom: "",
 };
+
+export function sanitizeFilename(filename: string): string {
+  // Remove emojis and invalid filename characters
+  return filename
+    .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '') // Remove surrogate pairs (emojis)
+    .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII characters (including remaining emojis)
+    .replace(/[\\/:*?"<>|]/g, '_'); // Replace invalid filename characters
+}
+
+export function getStaticFileUrl(filepath: string): string {
+  if (!filepath) return "";
+  
+  // If it's already a full HTTP URL, return as is
+  if (filepath.startsWith('http://') || filepath.startsWith('https://')) {
+    return filepath;
+  }
+  
+  // If it's a data URL, return as is
+  if (filepath.startsWith('data:')) {
+    return filepath;
+  }
+  
+  // Convert file path to static URL
+  // Handle paths like "/Users/tejuss/Desktop/deck-genie-v3/backend/data/..."
+  const pathParts = filepath.split('/');
+  let relevantPath = filepath;
+  
+  // Find the data directory in the path and extract the relative part
+  const dataIndex = pathParts.findIndex(part => part === 'data');
+  if (dataIndex !== -1 && dataIndex < pathParts.length - 1) {
+    relevantPath = pathParts.slice(dataIndex + 1).join('/');
+  }
+  
+  // Return the static URL
+  return `http://localhost:8000/static/${relevantPath}`;
+}
