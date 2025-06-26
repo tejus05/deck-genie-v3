@@ -20,8 +20,12 @@ export async function POST(req: NextRequest) {
     
     const page = await browser.newPage();
     
-    // Set viewport to match slide dimensions (16:9 aspect ratio)
-    await page.setViewport({ width: 1280, height: 720 });
+    // Set high-resolution viewport for crisp output (16:9 aspect ratio)
+    await page.setViewport({ 
+      width: 2560, 
+      height: 1440, 
+      deviceScaleFactor: 2 
+    });
     
     await page.goto(url, { waitUntil: 'networkidle0' });
 
