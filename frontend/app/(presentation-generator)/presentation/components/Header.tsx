@@ -246,39 +246,73 @@ const Header = ({
 
     setOpen(false);
     try {
-      logOperation('Starting PPTX export');
+      logOperation('Starting advanced PPTX export with presenton integration');
       setShowLoader(true);
       
       toast({
         title: "Exporting presentation...",
-        description: "Please wait while we export your presentation.",
+        description: "Please wait while we export your presentation with full fidelity.",
         variant: "default",
       });
 
-      const response = await fetch('/api/export-as-pptx', {
+      // First, extract slide metadata using the new presenton-based API
+      const metadataResponse = await fetch('/api/slide-metadata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           url: `http://localhost:3000/pdf-maker?id=${presentation_id}`,
-          title: presentationData?.presentation?.title || `presentation-${presentation_id}`,
+          theme: currentTheme || 'light',
+          customColors: currentColors
         })
       });
 
-      if (response.ok) {
-        const { url: pptxUrl } = await response.json();
+      if (!metadataResponse.ok) {
+        throw new Error("Failed to extract slide metadata");
+      }
+
+      const { pptx_model } = await metadataResponse.json();
+      logOperation('Successfully extracted slide metadata for PPTX generation');
+      
+      // Debug: Log the actual PPTX model structure
+      console.log('PPTX Model Debug:', JSON.stringify(pptx_model, null, 2));
+      console.log('Number of slides:', pptx_model.slides.length);
+      console.log('Background color:', pptx_model.background_color);
+
+      // Now send the PPTX model to backend for generation
+      const backendResponse = await fetch('http://127.0.0.1:8000/ppt/presentation/export_as_pptx', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          presentation_id: presentation_id,
+          pptx_model: pptx_model
+        })
+      });
+
+      if (backendResponse.ok) {
+        const { path: pptxPath } = await backendResponse.json();
         logOperation('PPTX export completed, initiating download');
         
         // Create a download link
         const link = document.createElement('a');
-        link.href = pptxUrl.startsWith('http') ? pptxUrl : `http://localhost:8000${pptxUrl}`;
+        const fileName = pptxPath.split('/').pop() || `presentation-${presentation_id}.pptx`;
+        // Construct correct static URL including presentation folder
+        link.href = `http://127.0.0.1:8000/static/${presentation_id}/${fileName}`;
         link.download = `${presentationData?.presentation?.title || `presentation-${presentation_id}`}.pptx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
         logOperation('PPTX download completed successfully');
+        
+        toast({
+          title: "Export successful!",
+          description: "Your presentation has been exported with full fidelity.",
+          variant: "default",
+        });
       } else {
         throw new Error("Failed to export PPTX");
       }
@@ -290,7 +324,7 @@ const Header = ({
         title: "Having trouble exporting!",
         description:
           "We are having trouble exporting your presentation. Please try again.",
-        variant: "default",
+        variant: "destructive",
       });
     } finally {
       setShowLoader(false);

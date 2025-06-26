@@ -80,7 +80,9 @@ const AllChart = ({
         data-slide-element
         data-element-type="graph"
         data-graph-type={localChartData && localChartData.type}
-        data-element-id={`slide-group-${slideIndex}-graph`}
+        data-graph-data={JSON.stringify(localChartData)}
+        data-element-id={`slide-${slideIndex}-graph`}
+        data-slide-index={slideIndex}
         className="w-full h-full min-h-[200px] lg:min-h-[300px] max-md:pointer-events-none cursor-pointer hover:opacity-90 transition-opacity relative"
       >
         {renderChart(localChartData, false, currentColors ?? [], chartSettings)}

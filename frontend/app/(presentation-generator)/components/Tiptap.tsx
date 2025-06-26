@@ -74,6 +74,34 @@ const TipTapEditor = ({
     }
   };
 
+  const getTextStyleSize = () => {
+    switch (type) {
+      case "title":
+        return "40";
+      case "heading":
+      case "info-heading":
+        return "24";
+      case "description":
+      case "info-description":
+      case "description-body":
+      case "heading-description":
+        return "20";
+      default:
+        return "20";
+    }
+  };
+
+  const getTextWeight = () => {
+    switch (type) {
+      case "title":
+      case "heading":
+      case "info-heading":
+        return "bold";
+      default:
+        return "normal";
+    }
+  };
+
   const updateSlide = (type: string, value: string) => {
     switch (type) {
       case "title": {
@@ -197,11 +225,13 @@ const TipTapEditor = ({
           updateSlide(type, markdown || "");
         }}
         data-slide-element
-        data-text-content={editor?.storage.markdown.getMarkdown()}
+        data-text-content={editor?.storage.markdown.getMarkdown() || editor?.getText() || content}
         data-is-align={isAlingCenter}
         data-slide-index={slideIndex}
         data-element-type="text"
         data-element-id={elementId}
+        data-font-size={getTextStyleSize()}
+        data-font-weight={getTextWeight()}
         editor={editor}
       />
     </div>
