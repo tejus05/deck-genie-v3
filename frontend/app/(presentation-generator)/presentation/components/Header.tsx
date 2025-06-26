@@ -244,37 +244,48 @@ const Header = ({
   const handleExportPptx = async () => {
     if (isStreaming) return;
 
+    setOpen(false);
     try {
       logOperation('Starting PPTX export');
-      setOpen(false);
       setShowLoader(true);
+      
+      toast({
+        title: "Exporting presentation...",
+        description: "Please wait while we export your presentation.",
+        variant: "default",
+      });
 
-      const apiBody = await metaData();
-      const response = await PresentationGenerationApi.exportAsPPTX(apiBody);
+      const response = await fetch('/api/export-as-pptx', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: `http://localhost:3000/pdf-maker?id=${presentation_id}`,
+          title: presentationData?.presentation?.title || `presentation-${presentation_id}`,
+        })
+      });
 
-      if (response.path) {
+      if (response.ok) {
+        const { url: pptxUrl } = await response.json();
         logOperation('PPTX export completed, initiating download');
-        setShowLoader(false);
         
-        // Extract filename from path
-        const filename = response.path.split('/').pop() || `presentation-${presentation_id}.pptx`;
-        
-        // For web mode, create a download link using the download endpoint
+        // Create a download link
         const link = document.createElement('a');
-        link.href = `http://localhost:8000/download/${presentation_id}/${filename}`;
-        link.download = filename;
+        link.href = pptxUrl.startsWith('http') ? pptxUrl : `http://localhost:8000${pptxUrl}`;
+        link.download = `${presentationData?.presentation?.title || `presentation-${presentation_id}`}.pptx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
         logOperation('PPTX download completed successfully');
       } else {
-        throw new Error("No path returned from export");
+        throw new Error("Failed to export PPTX");
       }
-    } catch (error) {
-      logOperation(`Error in PPTX export: ${error}`);
-      console.error("Export failed:", error);
-      setShowLoader(false);
+
+    } catch (err) {
+      logOperation(`Error in PPTX export: ${err}`);
+      console.error(err);
       toast({
         title: "Having trouble exporting!",
         description:

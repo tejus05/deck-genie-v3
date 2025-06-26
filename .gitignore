@@ -191,5 +191,3 @@ servers/fastapi/build
 servers/nextjs/out
 
 dependencies
-
-presenton/

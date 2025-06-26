@@ -48,6 +48,7 @@
     "lucide-react": "^0.447.0",
     "marked": "^15.0.11",
     "next": "^14.2.14",
+    "pptxgenjs": "^4.0.1",
     "puppeteer": "^24.10.2",
     "react": "^18",
     "react-dom": "^18",
