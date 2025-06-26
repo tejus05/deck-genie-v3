@@ -39,7 +39,7 @@ const Type1Layout = ({
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-8 md:gap-12 lg:gap-16 w-full">
         <div 
-          className=" flex flex-col w-full items-start justify-center space-y-1 md:space-y-2 lg:space-y-6"
+          className=" flex flex-col w-full items-start justify-evenly space-y-1 md:space-y-2 lg:space-y-6"
           data-slide-element
           data-element-type="text-box"
           data-element-id={`slide-${slideIndex}-text-box`}
