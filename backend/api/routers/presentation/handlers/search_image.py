@@ -2,6 +2,7 @@ import uuid
 from api.models import LogMetadata
 from api.routers.presentation.models import PresentationAndUrls, SearchImageRequest
 from api.services.logging import LoggingService
+from image_processor.images_finder import search_images_for_selection
 
 
 class SearchImageHandler:
@@ -18,8 +19,18 @@ class SearchImageHandler:
             extra=log_metadata.model_dump(),
         )
 
+        # Search for images using Unsplash
+        image_urls = []
+        if self.data.query:
+            image_urls = await search_images_for_selection(
+                prompt=self.data.query,
+                page=self.data.page,
+                limit=self.data.limit
+            )
+
         response = PresentationAndUrls(
-            presentation_id=self.data.presentation_id, urls=[]
+            presentation_id=self.data.presentation_id, 
+            urls=image_urls
         )
 
         logging_service.logger.info(

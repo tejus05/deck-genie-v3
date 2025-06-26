@@ -15,6 +15,7 @@ import {
   Edit,
   Move,
   Maximize,
+  Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,6 +76,13 @@ const ImageEditor = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [isFocusPointMode, setIsFocusPointMode] = useState(false);
+  
+  // Search-related state
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  
   const [focusPoint, setFocusPoint] = useState(
     (properties &&
       properties[imageIdx] &&
@@ -297,6 +305,34 @@ const ImageEditor = ({
   const urls = getEnv();
   const BASE_URL = urls.BASE_URL;
 
+  // Search handler function for Unsplash image search
+  const handleSearchImages = async () => {
+    if (!searchQuery.trim()) return;
+    
+    try {
+      logOperation(`Searching images for slide ${slideIndex}, element ${elementId} with query: ${searchQuery}`);
+      setIsSearching(true);
+      setSearchError(null);
+
+      const presentation_id = searchParams.get("id");
+      const response = await PresentationGenerationApi.imageSearch({
+        presentation_id: presentation_id!,
+        query: searchQuery,
+        page: 1,
+        limit: 12,
+      });
+
+      logOperation(`Image search successful for slide ${slideIndex}, element ${elementId}`);
+      setSearchResults(response.urls || []);
+    } catch (err) {
+      const errorMessage = "Failed to search images. Please try again.";
+      logOperation(`Image search failed for slide ${slideIndex}, element ${elementId}: ${err}`);
+      setSearchError(errorMessage);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -507,9 +543,13 @@ const ImageEditor = ({
 
           <div className="mt-6">
             <Tabs defaultValue="generate" className="w-full">
-              <TabsList className="grid bg-blue-100 border border-blue-300 w-full grid-cols-2 mx-auto ">
+              <TabsList className="grid bg-blue-100 border border-blue-300 w-full grid-cols-3 mx-auto ">
                 <TabsTrigger className="font-medium" value="generate">
                   AI Generate
+                </TabsTrigger>
+
+                <TabsTrigger className="font-medium" value="search">
+                  Search Images
                 </TabsTrigger>
 
                 <TabsTrigger className="font-medium" value="upload">
@@ -575,6 +615,76 @@ const ImageEditor = ({
                   </div>
                 </div>
               </TabsContent>
+              
+              <TabsContent value="search" className="mt-4 space-y-4">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-base font-medium mb-2">
+                      Search Images
+                    </h3>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Search for images (e.g., 'office meeting', 'nature landscape')"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            handleSearchImages();
+                          }
+                        }}
+                      />
+                      <Button
+                        onClick={handleSearchImages}
+                        disabled={!searchQuery || isSearching}
+                        className="px-4"
+                      >
+                        {isSearching ? "Searching..." : "Search"}
+                      </Button>
+                    </div>
+                  </div>
+
+                  {searchError && <p className="text-red-500 text-sm">{searchError}</p>}
+
+                  <div className="grid grid-cols-2 gap-4 max-h-96 overflow-y-auto">
+                    {isSearching 
+                      ? Array.from({ length: 8 }).map((_, index) => (
+                        <Skeleton
+                          key={index}
+                          className="aspect-[4/3] w-full rounded-lg"
+                        />
+                      ))
+                      : searchResults.map((imageUrl, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleImageChange(imageUrl)}
+                          className="aspect-[4/3] w-full overflow-hidden rounded-lg border cursor-pointer group relative"
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={`Search result ${index + 1}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-200" />
+                          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="bg-white/90 px-3 py-1 rounded-full text-sm font-medium">
+                              Click to use this image
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+
+                  {searchResults.length === 0 && !isSearching && searchQuery && (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>No images found for "{searchQuery}"</p>
+                      <p className="text-sm">Try different keywords or phrases</p>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+              
               <TabsContent value="upload" className="mt-4 space-y-4">
                 <div className="space-y-4">
                   <div
