@@ -17,7 +17,7 @@ interface Type6LayoutProps {
   }>;
   slideId: string | null;
   slideIndex: number;
-  language: string;
+  tone: string;
 }
 
 const Type6Layout = ({
@@ -26,7 +26,7 @@ const Type6Layout = ({
   body,
   slideId,
   slideIndex,
-  language,
+  tone,
 }: Type6LayoutProps) => {
   const dispatch = useDispatch();
   const { currentColors } = useSelector((state: RootState) => state.theme);
@@ -107,7 +107,7 @@ const Type6Layout = ({
                       color: currentColors.iconBg,
                     }}
                   >
-                    {numberTranslations[language][index || 0]}
+                    {numberTranslations["English"][index || 0]}
                   </div>
                   <div className="space-y-1">
                     <EditableText

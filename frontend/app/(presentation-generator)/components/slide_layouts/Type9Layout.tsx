@@ -17,7 +17,7 @@ interface Type9LayoutProps {
   }>;
   graphData?: any;
   slideId: string | null;
-  language: string;
+  tone: string;
   slideIndex: number;
 }
 
@@ -27,7 +27,7 @@ const Type9Layout = ({
   graphData,
   slideId,
   slideIndex,
-  language,
+  tone,
 }: Type9LayoutProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const { handleAddItem, handleDeleteItem } = useSlideOperations(slideIndex);
@@ -106,7 +106,7 @@ const Type9Layout = ({
                         color: currentColors.iconBg,
                       }}
                     >
-                      {numberTranslations[language][index || 0]}
+                      {numberTranslations["English"][index || 0]}
                     </div>
 
                     <div className="lg:space-y-2 ">

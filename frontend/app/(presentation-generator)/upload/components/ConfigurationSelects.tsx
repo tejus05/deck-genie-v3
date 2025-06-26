@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LanguageType, PresentationConfig } from "../type";
+import { ToneType, PresentationConfig } from "../type";
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -65,9 +65,9 @@ const SlideCountSelect: React.FC<{
 );
 
 /**
- * Renders a language selection component with search functionality
+ * Renders a tone selection component
  */
-const LanguageSelect: React.FC<{
+const ToneSelect: React.FC<{
   value: string | null;
   onValueChange: (value: string) => void;
   open: boolean;
@@ -78,13 +78,13 @@ const LanguageSelect: React.FC<{
       <Button
         variant="outline"
         role="combobox"
-        name="language"
-        data-testid="language-select"
+        name="tone"
+        data-testid="tone-select"
         aria-expanded={open}
         className="w-[200px] justify-between font-instrument_sans font-semibold overflow-hidden bg-blue-100 hover:bg-blue-100 border-blue-200 focus-visible:ring-blue-300 border-none"
       >
         <p className="text-sm font-medium truncate">
-          {value || "Select language"}
+          {value || "Select tone"}
         </p>
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
@@ -92,16 +92,16 @@ const LanguageSelect: React.FC<{
     <PopoverContent className="w-[300px] p-0" align="end">
       <Command>
         <CommandInput
-          placeholder="Search language..."
+          placeholder="Search tone..."
           className="font-instrument_sans"
         />
         <CommandList>
-          <CommandEmpty>No language found.</CommandEmpty>
+          <CommandEmpty>No tone found.</CommandEmpty>
           <CommandGroup>
-            {Object.values(LanguageType).map((language) => (
+            {Object.values(ToneType).map((tone) => (
               <CommandItem
-                key={language}
-                value={language}
+                key={tone}
+                value={tone}
                 role="option"
                 onSelect={(currentValue) => {
                   onValueChange(currentValue);
@@ -112,10 +112,10 @@ const LanguageSelect: React.FC<{
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === language ? "opacity-100" : "opacity-0"
+                    value === tone ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {language}
+                {tone}
               </CommandItem>
             ))}
           </CommandGroup>
@@ -129,7 +129,7 @@ export function ConfigurationSelects({
   config,
   onConfigChange,
 }: ConfigurationSelectsProps) {
-  const [openLanguage, setOpenLanguage] = useState(false);
+  const [openTone, setOpenTone] = useState(false);
 
   return (
     <div className="flex flex-wrap order-1 gap-4">
@@ -137,11 +137,11 @@ export function ConfigurationSelects({
         value={config.slides}
         onValueChange={(value) => onConfigChange("slides", value)}
       />
-      <LanguageSelect
-        value={config.language}
-        onValueChange={(value) => onConfigChange("language", value)}
-        open={openLanguage}
-        onOpenChange={setOpenLanguage}
+      <ToneSelect
+        value={config.tone}
+        onValueChange={(value) => onConfigChange("tone", value)}
+        open={openTone}
+        onOpenChange={setOpenTone}
       />
     </div>
   );

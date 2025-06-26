@@ -80,7 +80,7 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
             root.style.setProperty(`--${theme}-${cssKey}`, value);
         });
     };
-    const language = presentationData?.presentation?.language || "English";
+    const tone = presentationData?.presentation?.tone || "Professional";
     // Regular view
     return (
         <div className="flex overflow-hidden flex-col">
@@ -139,7 +139,7 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
                                     presentationData.slides.map((slide, index) => (
                                         <div key={index}>
 
-                                            {renderSlideContent(slide, language)}
+                                            {renderSlideContent(slide, tone)}
                                         </div>
                                     ))}
                             </>

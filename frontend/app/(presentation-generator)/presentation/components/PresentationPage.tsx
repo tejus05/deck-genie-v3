@@ -354,7 +354,7 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
         onFullscreenToggle={toggleFullscreen}
         onExit={handlePresentExit}
         onSlideChange={handleSlideChange}
-        language={presentationData?.presentation?.language || "English"}
+        tone={presentationData?.presentation?.tone || "Professional"}
       />
     );
   }

@@ -19,7 +19,7 @@ class GenerateResearchReportHandler:
             extra=log_metadata.model_dump(),
         )
 
-        report = await get_report(self.data.query, self.data.language)
+        report = await get_report(self.data.query, self.data.tone)
 
         file_name = f"{report[:30]}.txt"
         file_path = temp_file_service.create_temp_file_path(file_name, self.temp_dir)

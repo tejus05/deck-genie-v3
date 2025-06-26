@@ -70,7 +70,7 @@ class PresentationEditHandler:
             new_slide_type,
             slide_to_edit,
             presentation.theme,
-            presentation.language,
+            presentation.tone,
         )
 
         new_slide_model = SlideModel(

@@ -62,7 +62,7 @@ const SlideContent = ({
     }
   }, [presentationData?.slides, isStreaming]);
 
-  const language = presentationData?.presentation?.language || "English";
+  const tone = presentationData?.presentation?.tone || "Professional";
   return (
     <>
       <div
@@ -73,7 +73,7 @@ const SlideContent = ({
           <Loader2 className="w-8 h-8 absolute right-2 top-2 z-30 text-blue-800 animate-spin" />
         )}
         <div className={` w-full group `}>
-          {renderSlideContent(slide, language)}
+          {renderSlideContent(slide, tone)}
 
           {!showNewSlideSelection && (
             <div className="group-hover:opacity-100 hidden md:block opacity-0 transition-opacity my-4 duration-300">

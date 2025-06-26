@@ -45,7 +45,7 @@ export interface PresentationData {
     titles: string[];
     vector_store: string | null;
     thumbnail: string | null;
-    language: string;
+    tone: string;
   } | null;
   slides: Slide[];
 }

@@ -148,7 +148,7 @@ const DocumentsPreviewPage: React.FC = () => {
         n_slides: config?.slides ? parseInt(config.slides) : null,
         documents: documentPaths,
         images: imageKeys,
-        language: config?.language ?? "",
+        tone: config?.tone ?? "",
       });
 
       try {

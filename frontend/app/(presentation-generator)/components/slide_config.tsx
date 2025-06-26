@@ -40,7 +40,7 @@ import {
   transformedData,
 } from "../utils/chart";
 
-export const renderSlideContent = (slide: Slide, language: string) => {
+export const renderSlideContent = (slide: Slide, tone: string) => {
   switch (slide.type) {
     case 1:
       return (
@@ -65,7 +65,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           slideId={slide.id}
           slideIndex={slide.index}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          language={language || "English"}
+          tone={tone || "Professional"}
           design_index={slide.design_index || 2}
         />
       );
@@ -106,7 +106,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           slideIndex={slide.index}
           description={slide.content.description || ""}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          language={language || "English"}
+          tone={tone || "Professional"}
         />
       );
 
@@ -117,7 +117,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           slideId={slide.id}
           slideIndex={slide.index}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          language={language || "English"}
+          tone={tone || "Professional"}
         />
       );
 
@@ -129,7 +129,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
           slideIndex={slide.index}
           description={slide.content.description || ""}
-          language={language || "English"}
+          tone={tone || "Professional"}
         />
       );
 
@@ -141,7 +141,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
           title={slide.content.title}
           // @ts-ignore
           body={slide.content.body}
-          language={language || "English"}
+          tone={tone || "Professional"}
           graphData={slide.content.graph}
         />
       );
@@ -152,7 +152,7 @@ export const renderSlideContent = (slide: Slide, language: string) => {
   }
 };
 
-export const renderMiniSlideContent = (slide: Slide, language: string = "English") => {
+export const renderMiniSlideContent = (slide: Slide, tone: string = "Professional") => {
   const { type, content } = slide;
 
   switch (type) {
@@ -210,7 +210,7 @@ export const renderMiniSlideContent = (slide: Slide, language: string = "English
         <Type7Mini
           title={slide.content.title}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          language={language || "English"}
+          tone={tone || "Professional"}
         />
       );
     case 8:
@@ -219,7 +219,7 @@ export const renderMiniSlideContent = (slide: Slide, language: string = "English
           title={slide.content.title}
           description={slide.content.description || ""}
           body={Array.isArray(slide.content.body) ? slide.content.body : []}
-          language={language || "English"}
+          tone={tone || "Professional"}
         />
       );
     case 9:

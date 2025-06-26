@@ -36,7 +36,7 @@ class PresentationTitlesGenerateHandler:
                 presentation.prompt,
                 presentation.n_slides,
                 presentation.summary,
-                presentation.language,
+                presentation.tone,
             )
 
             presentation.title = presentation_titles.presentation_title

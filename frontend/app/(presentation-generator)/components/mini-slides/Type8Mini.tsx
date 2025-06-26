@@ -11,10 +11,10 @@ interface Type8MiniProps {
     heading: string;
     description: string;
   }>;
-  language: string;
+  tone: string;
 }
 
-const Type8Mini = ({ title, description, body, language }: Type8MiniProps) => {
+const Type8Mini = ({ title, description, body, tone }: Type8MiniProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
 
   return (
@@ -40,7 +40,7 @@ const Type8Mini = ({ title, description, body, language }: Type8MiniProps) => {
               >
                 {
                   numberTranslations[
-                    language as keyof typeof numberTranslations
+                    "English"
                   ][index]
                 }
               </div>

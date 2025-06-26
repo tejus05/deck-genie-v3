@@ -10,10 +10,10 @@ interface Type7MiniProps {
     heading: string;
     description: string;
   }>;
-  language: string;
+  tone: string;
 }
 
-const Type7Mini = ({ title, body, language }: Type7MiniProps) => {
+const Type7Mini = ({ title, body, tone }: Type7MiniProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const isGridLayout = body.length === 4;
 
@@ -33,7 +33,7 @@ const Type7Mini = ({ title, body, language }: Type7MiniProps) => {
             >
               {
                 numberTranslations[
-                  language as keyof typeof numberTranslations
+                  "English"
                 ][index]
               }
             </div>

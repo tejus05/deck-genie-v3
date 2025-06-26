@@ -21,7 +21,7 @@ class PresentationSqlModel(SQLModel, table=True):
     titles: Optional[List[str]] = Field(
         sa_column=Column(JSON, nullable=True), default=None
     )
-    language: Optional[str] = None
+    tone: Optional[str] = None
     summary: Optional[str] = None
     thumbnail: Optional[str] = None
     data: Optional[dict] = Field(sa_column=Column(JSON, nullable=True), default=None)

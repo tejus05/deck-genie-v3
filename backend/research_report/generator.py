@@ -13,24 +13,25 @@ prompt_template = ChatPromptTemplate.from_messages(
         (
             "system",
             """
-            Use provided prompt and search results to create an elaborate and up-to-date research report in mentioned language.
+            Use provided prompt and search results to create an elaborate and up-to-date research report in the specified tone.
 
             # Steps
             1. Analyze the prompt and search results.
             2. Extract topic of the report.
-            3. Generate a report in markdown format.
+            3. Generate a report in markdown format matching the specified tone.
 
             # Notes
-            - If language is not mentioned, use language from prompt.
+            - If tone is not mentioned, use Professional tone.
             - Format of report should be like *Research Report*.
             - Ignore formatting if mentioned in prompt.
+            - Adapt language and style to match the specified tone (e.g., Technical, Executive, Conversational).
             """,
         ),
         (
             "human",
             """
             - Prompt: {prompt}
-            - Language: {language}
+            - Tone: {tone}
             - Search Results: {search_results}
             """,
         ),
@@ -38,7 +39,7 @@ prompt_template = ChatPromptTemplate.from_messages(
 )
 
 
-async def get_report(query: str, language: Optional[str]):
+async def get_report(query: str, tone: Optional[str]):
     model = (
         ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
         if os.getenv("LLM") == "openai"
@@ -50,7 +51,7 @@ async def get_report(query: str, language: Optional[str]):
     # response = await chain.ainvoke(
     #     {
     #         "prompt": query,
-    #         "language": language,
+    #         "tone": tone,
     #         "search_results": search_results,
     #     }
     # )

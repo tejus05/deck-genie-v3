@@ -16,7 +16,7 @@ interface Type7LayoutProps {
   }>;
   slideIndex: number;
   slideId: string | null;
-  language: string;
+  tone: string;
 }
 
 const Type7Layout = ({
@@ -24,7 +24,7 @@ const Type7Layout = ({
   body,
   slideIndex,
   slideId,
-  language,
+  tone,
 }: Type7LayoutProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const { handleAddItem, handleDeleteItem } = useSlideOperations(slideIndex);
@@ -93,7 +93,7 @@ const Type7Layout = ({
                   >
                     {
                       numberTranslations[
-                        language as keyof typeof numberTranslations
+                        "English"
                       ][index]
                     }
                   </div>
@@ -161,7 +161,7 @@ const Type7Layout = ({
             >
               {
                 numberTranslations[
-                  language as keyof typeof numberTranslations
+                  "English"
                 ][index]
               }
             </div>

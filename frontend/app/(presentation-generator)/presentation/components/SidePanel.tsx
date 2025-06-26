@@ -324,7 +324,7 @@ const SidePanel = ({
                   presentationData &&
                   presentationData?.slides.map((slide, index) => (
                     <div key={`${index}-${slide.type}-${slide.id}`}>
-                      {renderMiniSlideContent(slide, presentationData?.presentation?.language || "English")}
+                      {renderMiniSlideContent(slide, presentationData?.presentation?.tone || "Professional")}
                     </div>
                   ))
                 ) : (
@@ -342,7 +342,7 @@ const SidePanel = ({
                           index={index}
                           selectedSlide={selectedSlide}
                           onSlideClick={onSlideClick}
-                          language={presentationData?.presentation?.language || "English"}
+                          tone={presentationData?.presentation?.tone || "Professional"}
                         />
                       ))}
                   </SortableContext>

@@ -12,7 +12,7 @@ user_prompt_text = {
     "text": """
                 **Input:**
                 - Prompt: {prompt}
-                - Output Language: {language}
+                - Presentation Tone: {tone}
                 - Number of Slides: {n_slides}
                 - Content: {content}
             """,
@@ -37,8 +37,17 @@ def get_prompt_template():
                     7. In case if slides for chapter is provided then analyze all chapter content and then structurally generate titles considering all slide content. \
                         Keep the flow as per given chapter content. Ensure that titles are generated to cover all the content in the chapter.
 
+                    # Tone Guidelines
+                    Apply the specified tone when creating titles:
+                    - **Investor Pitch**: Use compelling, growth-oriented titles that highlight opportunities and returns
+                    - **Executive**: Create strategic, high-level titles focused on business outcomes
+                    - **Technical**: Use precise, specific titles that emphasize methodology and implementation
+                    - **Startup Pitch**: Generate energetic, innovative titles that showcase disruption and potential
+                    - **Conversational**: Create friendly, accessible titles that are easy to understand
+                    - **Professional**: Maintain balanced, business-appropriate titles suitable for general audiences
+
                     # Notes
-                    - Generate output in language mentioned in **Input**.
+                    - Apply the specified tone from **Input** to all titles.
                     - Ensure the prompt and additional information remains the main focus of the presentation.
                     - **Additional Information** serves as supporting information, providing depth and details.
                     - Slide titles should maintain a logical and coherent flow throughout the presentation.
@@ -63,7 +72,7 @@ async def generate_ppt_titles(
     prompt: Optional[str],
     n_slides: int,
     content: Optional[str],
-    language: Optional[str] = None,
+    tone: Optional[str] = None,
 ) -> PresentationTitlesModel:
     model = (
         ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
@@ -78,7 +87,7 @@ async def generate_ppt_titles(
         {
             "prompt": prompt,
             "n_slides": n_slides,
-            "language": language or "English",
+            "tone": tone or "Professional",
             "content": content,
         },
         PresentationTitlesModel,

@@ -21,7 +21,7 @@ prompt_template_from_slide = ChatPromptTemplate.from_messages(
                 Edit Slide data based on provided prompt, follow mentioned steps and notes and provide structured output.
 
                 # Notes
-                - Provide output in language mentioned in **Input**.
+                - Provide output in the specified tone and style.
                 - The goal is to change Slide data based on the provided prompt.
                 - Do not change **Image prompts** and **Icon queries** if not asked for in prompt.
                 - Generate **Image prompts** and **Icon queries** if asked to generate or change image or icons in prompt.
@@ -36,7 +36,7 @@ prompt_template_from_slide = ChatPromptTemplate.from_messages(
             "user",
             """
             - Prompt: {prompt}
-            - Output Language: {language}
+            - Output Tone: {tone}
             - Image Prompts and Icon Queries Language: English
             - Theme: {theme}
             - Slide data: {slide_data}
@@ -89,7 +89,7 @@ async def get_edited_slide_content_model(
     slide_type: SlideType,
     slide: SlideModel,
     theme: Optional[dict] = None,
-    language: Optional[str] = None,
+    tone: Optional[str] = None,
 ):
     model = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
 
@@ -102,7 +102,7 @@ async def get_edited_slide_content_model(
         chain,
         {
             "prompt": prompt,
-            "language": language or "English",
+            "tone": tone or "Professional",
             "theme": theme,
             "slide_data": slide_data,
             "notes": "",

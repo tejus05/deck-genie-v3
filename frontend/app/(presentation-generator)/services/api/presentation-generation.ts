@@ -452,14 +452,14 @@ export class PresentationGenerationApi {
     n_slides,
     documents,
     images,
-    language,
+    tone,
   
   }: {
     prompt: string;
     n_slides: number | null;
     documents?: string[];
     images?: string[];
-    language: string | null;
+    tone: string | null;
     
   }) {
     try {
@@ -471,7 +471,7 @@ export class PresentationGenerationApi {
           body: JSON.stringify({
             prompt,
             n_slides,
-            language,
+            tone,
             documents,
             images,
            

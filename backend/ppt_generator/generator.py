@@ -30,8 +30,17 @@ CREATE_PRESENTATION_PROMPT = """
                 5. Output should be in json format as per given schema.
                 6. **Adherence to schema should be beyond all the rules mentioned in notes.**
 
+                # Tone Guidelines
+                Apply the specified tone throughout the presentation:
+                - **Investor Pitch**: Persuasive, confident, growth-focused. Emphasize ROI, market opportunity, competitive advantages, and scalability.
+                - **Executive**: Formal, authoritative, data-driven. Focus on strategic insights, KPIs, and decision-making information.
+                - **Technical**: Detailed, precise, solution-oriented. Include technical specifications, methodologies, and implementation details.
+                - **Startup Pitch**: Energetic, ambitious, problem-solving. Highlight innovation, disruption, and rapid growth potential.
+                - **Conversational**: Friendly, approachable, easy to understand. Use simple language and relatable examples.
+                - **Professional**: Balanced, versatile, business-appropriate. Maintain professionalism while being accessible.
+
                 # Notes
-                - Generate output in language mentioned in *Input*.
+                - Generate output using the specified tone from *Input*.
                 - Distribute contexts mentioned in prompt to slides using **info** field.
                 - User prompt should be respected beyond all rules or constraints.
                 - If the presentation is academic, then make only take the chapter text as context and create presentation according to that text and structure. Don't assume or put text or context which is not in the text.
@@ -41,7 +50,7 @@ CREATE_PRESENTATION_PROMPT = """
                 - Introduction and Conclusion should have *Type 1* if graph is not assigned.
                 - Try to select **different types for every slides**.
                 - Don't select Type **3** for any slide.
-                - Make sure to give presentation in said language. You must translate and understand given context and text is in any other language.
+                - Make sure to adapt language and terminology to match the specified tone.
                 - Do not include same graph twice in presentation without any changes to the other.
                 - Every series in a graph should have data in same unit. Example: all series should be in percentage or all series should be in number of items.
                 - Type **9** and **5** should be only picked if graph is available.
@@ -75,7 +84,7 @@ def generate_presentation_stream(
     titles: List[str],
     prompt: str,
     n_slides: int,
-    language: str,
+    tone: str,
     summary: str,
 ) -> AsyncIterator[AIMessageChunk]:
 
@@ -84,7 +93,7 @@ def generate_presentation_stream(
     system_prompt = f"{CREATE_PRESENTATION_PROMPT} -|0|--|0|- Follow this schema while giving out response: {schema}. Make description short and obey the character limits. Output should be in JSON format. Give out only JSON, nothing else."
     system_prompt = SystemMessage(system_prompt.replace("-|0|-", "\n"))
 
-    user_message = f"Prompt: {prompt}-|0|--|0|- Number of Slides: {n_slides}-|0|--|0|- Presentation Language: {language} -|0|--|0|- Slide Titles: {titles} -|0|--|0|- Reference Document: {summary}"
+    user_message = f"Prompt: {prompt}-|0|--|0|- Number of Slides: {n_slides}-|0|--|0|- Presentation Tone: {tone} -|0|--|0|- Slide Titles: {titles} -|0|--|0|- Reference Document: {summary}"
     user_message = HumanMessage(user_message.replace("-|0|-", "\n"))
 
     model = (

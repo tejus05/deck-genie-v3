@@ -20,7 +20,7 @@ interface PresentationModeProps {
   onFullscreenToggle: () => void;
   onExit: () => void;
   onSlideChange: (slideNumber: number) => void;
-  language: string;
+  tone: string;
 }
 
 const PresentationMode: React.FC<PresentationModeProps> = ({
@@ -32,7 +32,7 @@ const PresentationMode: React.FC<PresentationModeProps> = ({
   onFullscreenToggle,
   onExit,
   onSlideChange,
-  language,
+  tone,
 }) => {
   // Modify the handleKeyPress to prevent default behavior
   const handleKeyPress = useCallback(
@@ -193,7 +193,7 @@ const PresentationMode: React.FC<PresentationModeProps> = ({
           data-theme={currentTheme}
         >
           {slides[currentSlide] &&
-            renderSlideContent(slides[currentSlide], language)}
+            renderSlideContent(slides[currentSlide], tone)}
         </div>
       </div>
     </div>

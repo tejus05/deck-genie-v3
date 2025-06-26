@@ -93,7 +93,7 @@ class PresentationGenerateStreamHandler:
             self.titles,
             presentation.prompt or "create presentation",
             presentation.n_slides,
-            presentation.language,
+            presentation.tone,
             presentation.summary,
         ):
             presentation_text += chunk.content

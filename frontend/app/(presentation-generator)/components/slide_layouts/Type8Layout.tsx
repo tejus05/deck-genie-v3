@@ -17,7 +17,7 @@ interface Type8LayoutProps {
   }>;
   slideId: string | null;
   slideIndex: number;
-  language: string;
+  tone: string;
 }
 
 const Type8Layout = ({
@@ -26,7 +26,7 @@ const Type8Layout = ({
   body,
   slideIndex,
   slideId,
-  language,
+  tone,
 }: Type8LayoutProps) => {
   const { currentColors } = useSelector((state: RootState) => state.theme);
   const { handleAddItem, handleDeleteItem } = useSlideOperations(slideIndex);
@@ -111,7 +111,7 @@ const Type8Layout = ({
                   >
                     {
                       numberTranslations[
-                        language as keyof typeof numberTranslations
+                        "English"
                       ][index]
                     }
                   </div>
@@ -161,7 +161,7 @@ const Type8Layout = ({
                       >
                         {
                           numberTranslations[
-                            language as keyof typeof numberTranslations
+                            "English"
                           ][index]
                         }
                       </div>

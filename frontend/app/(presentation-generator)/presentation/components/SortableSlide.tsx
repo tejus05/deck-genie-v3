@@ -9,10 +9,10 @@ interface SortableSlideProps {
     index: number;
     selectedSlide: number;
     onSlideClick: (index: number) => void;
-    language: string;
+    tone: string;
 }
 
-export function SortableSlide({ slide, index, selectedSlide, onSlideClick, language }: SortableSlideProps) {
+export function SortableSlide({ slide, index, selectedSlide, onSlideClick, tone }: SortableSlideProps) {
     const [mouseDownTime, setMouseDownTime] = useState(0);
 
     const {
@@ -57,7 +57,7 @@ export function SortableSlide({ slide, index, selectedSlide, onSlideClick, langu
                 : 'hover:ring-2 hover:ring-gray-200'
                 } rounded-lg`}
         >
-            {renderMiniSlideContent(slide, language)}
+            {renderMiniSlideContent(slide, tone)}
         </div>
     );
 } 

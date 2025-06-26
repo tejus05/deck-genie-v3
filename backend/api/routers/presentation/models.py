@@ -16,7 +16,7 @@ class DocumentsAndImagesPath(BaseModel):
 
 
 class GenerateResearchReportRequest(BaseModel):
-    language: Optional[str] = None
+    tone: Optional[str] = None
     query: str
 
 
@@ -27,7 +27,7 @@ class DecomposeDocumentsRequest(DocumentsAndImagesPath):
 class GeneratePresentationRequirementsRequest(BaseModel):
     prompt: Optional[str] = None
     n_slides: int
-    language: str
+    tone: str
     documents: Optional[List[str]] = None
     research_reports: Optional[List[str]] = None
     images: Optional[List[str]] = None

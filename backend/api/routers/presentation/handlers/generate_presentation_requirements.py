@@ -20,7 +20,7 @@ class GeneratePresentationRequirementsHandler:
         self.prompt = data.prompt
         self.n_slides = data.n_slides
         self.documents = data.documents or []
-        self.language = data.language
+        self.tone = data.tone
         self.research_reports = data.research_reports or []
         self.images = data.images or []
 
@@ -44,7 +44,7 @@ class GeneratePresentationRequirementsHandler:
             id=self.presentation_id,
             prompt=self.prompt,
             n_slides=self.n_slides,
-            language=self.language,
+            tone=self.tone,
             summary=summary,
         )
 

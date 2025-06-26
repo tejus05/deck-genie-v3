@@ -23,7 +23,7 @@ interface Type2LayoutProps {
   slideId: string | null;
 
   slideIndex: number;
-  language: string;
+  tone: string;
   design_index: number;
 }
 
@@ -33,7 +33,7 @@ const Type2Layout = ({
   slideId,
   slideIndex,
   design_index,
-  language,
+  tone,
 }: Type2LayoutProps) => {
   const { currentColors } = useSelector(
     (state: RootState) => state.theme
@@ -137,7 +137,7 @@ const Type2Layout = ({
                   data-element-type="text"
                   data-element-id={`slide-${slideIndex}-timeline-number-text-${index}`}
                 >
-                  {numberTranslations[language][index || 0]}
+                  {numberTranslations["English"][index || 0]}
                 </span>
               </div>
             ))}
@@ -215,7 +215,7 @@ const Type2Layout = ({
                   >
                     {
                       numberTranslations[
-                      language as keyof typeof numberTranslations
+                      "English"
                       ][index]
                     }
                   </div>
@@ -297,7 +297,7 @@ const Type2Layout = ({
               >
                 {
                   numberTranslations[
-                  language as keyof typeof numberTranslations
+                  "English"
                   ][index]
                 }
               </div>

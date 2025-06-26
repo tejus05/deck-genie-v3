@@ -1,8 +1,12 @@
 /**
  * UploadPage Component
  * 
- * This component handles the presentation generation upload process, allowing users to:
- * - Configure presentation settings (slides, language)
+ * This compone  const [config, setConfig] = useState<PresentationConfig>({
+    slides: null,
+    tone: ToneType.Professional,
+    prompt: "",
+  });ndles the presentation generation upload process, allowing users to:
+ * - Configure presentation settings (slides, tone)
  * - Input prompts
  * 
  * @component
@@ -19,7 +23,7 @@ import {
 } from "@/store/slices/presentationGeneration";
 import { ConfigurationSelects } from "./ConfigurationSelects";
 import { PromptInput } from "./PromptInput";
-import { LanguageType, PresentationConfig } from "../type";
+import { PresentationConfig, ToneType } from "../type";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -47,7 +51,7 @@ const UploadPage = () => {
   // State management
   const [config, setConfig] = useState<PresentationConfig>({
     slides: "8",
-    language: LanguageType.English,
+    tone: ToneType.Professional,
     prompt: "",
   });
 
@@ -73,9 +77,9 @@ const UploadPage = () => {
    * @returns boolean indicating if the configuration is valid
    */
   const validateConfiguration = (): boolean => {
-    if (!config.language || !config.slides) {
+    if (!config.tone || !config.slides) {
       toast({
-        title: "Please select number of Slides & Language",
+        title: "Please select number of Slides & Tone",
         variant: "destructive",
       });
       return false;
@@ -130,7 +134,7 @@ const UploadPage = () => {
       n_slides: config?.slides ? parseInt(config.slides) : null,
       documents: [],
       images: [],
-      language: config?.language ?? "",
+      tone: config?.tone ?? "",
     });
 
     try {
