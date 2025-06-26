@@ -12,20 +12,15 @@ from fastapi.responses import StreamingResponse
 
 from api.models import LogMetadata, UserConfig
 from api.services.logging import LoggingService
+from api.services.presentation_storage import presentation_storage
 
 
 def get_presentation_dir(presentation_id: str) -> str:
-    presentation_dir = os.path.join(os.getenv("APP_DATA_DIRECTORY"), presentation_id)
-    os.makedirs(presentation_dir, exist_ok=True)
-    return presentation_dir
+    return presentation_storage.get_presentation_dir(presentation_id)
 
 
 def get_presentation_images_dir(presentation_id: str) -> str:
-    presentation_images_dir = os.path.join(
-        get_presentation_dir(presentation_id), "images"
-    )
-    os.makedirs(presentation_images_dir, exist_ok=True)
-    return presentation_images_dir
+    return presentation_storage.get_presentation_images_dir(presentation_id)
 
 
 def get_user_config():

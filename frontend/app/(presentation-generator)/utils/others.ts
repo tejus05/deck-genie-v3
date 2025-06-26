@@ -237,11 +237,20 @@ export function getStaticFileUrl(filepath: string): string {
   }
   
   // Convert file path to static URL
-  // Handle paths like "/Users/tejuss/Desktop/deck-genie-v3/backend/data/..."
+  // Handle paths like "/Users/tejuss/Desktop/deck-genie-v3/backend/data/..." or temp presentation paths
   const pathParts = filepath.split('/');
   let relevantPath = filepath;
   
-  // Find the data directory in the path and extract the relative part
+  // Check if this is a temp presentation path
+  if (filepath.includes('deck_genie_presentations')) {
+    const presentationIndex = pathParts.findIndex(part => part === 'deck_genie_presentations');
+    if (presentationIndex !== -1 && presentationIndex < pathParts.length - 1) {
+      relevantPath = pathParts.slice(presentationIndex + 1).join('/');
+      return `http://localhost:8000/presentations/${relevantPath}`;
+    }
+  }
+  
+  // Find the data directory in the path and extract the relative part (legacy)
   const dataIndex = pathParts.findIndex(part => part === 'data');
   if (dataIndex !== -1 && dataIndex < pathParts.length - 1) {
     relevantPath = pathParts.slice(dataIndex + 1).join('/');

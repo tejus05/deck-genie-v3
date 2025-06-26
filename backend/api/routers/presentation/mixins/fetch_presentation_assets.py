@@ -21,9 +21,13 @@ class FetchPresentationAssetsMixin:
                             # Convert to local file path
                             relative_path = image_path.replace("http://localhost:8000/static", "")
                             # Get data directory
-                            import os
                             data_directory = os.getenv("APP_DATA_DIRECTORY", os.path.join(os.getcwd(), "data"))
                             image_path = os.path.join(data_directory, relative_path.lstrip('/'))
+                        elif image_path.startswith("http://localhost:8000/presentations"):
+                            # Handle new presentation storage paths
+                            relative_path = image_path.replace("http://localhost:8000/presentations", "")
+                            from api.services.presentation_storage import presentation_storage
+                            image_path = os.path.join(presentation_storage.presentation_base_dir, relative_path.lstrip('/'))
                         else:
                             # External URL - download it
                             image_urls.append(image_path)

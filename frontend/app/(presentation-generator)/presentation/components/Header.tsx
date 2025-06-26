@@ -299,8 +299,8 @@ const Header = ({
         // Create a download link
         const link = document.createElement('a');
         const fileName = pptxPath.split('/').pop() || `presentation-${presentation_id}.pptx`;
-        // Construct correct static URL including presentation folder
-        link.href = `http://127.0.0.1:8000/static/${presentation_id}/${fileName}`;
+        // Construct correct presentations URL
+        link.href = `http://127.0.0.1:8000/presentations/${presentation_id}/${fileName}`;
         link.download = `${presentationData?.presentation?.title || `presentation-${presentation_id}`}.pptx`;
         document.body.appendChild(link);
         link.click();

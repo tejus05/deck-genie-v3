@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import puppeteer from 'puppeteer';
 import { NextResponse, NextRequest } from 'next/server';
 
@@ -29,20 +30,24 @@ export async function POST(req: NextRequest) {
     await browser.close();
     
     const sanitizedTitle = sanitizeFilename(title);
-    const backendDataDirectory = '/Users/tejuss/Desktop/deck-genie-v3/backend/data';
-    const destinationPath = path.join(backendDataDirectory, `${sanitizedTitle}.pdf`);
+    // Use temp directory for PDF storage since presentations are now in temp
+    const tempDir = os.tmpdir();
+    const pdfStorageDir = path.join(tempDir, 'deck_genie_presentations', 'pdfs');
     
     // Ensure the directory exists
-    await fs.promises.mkdir(path.dirname(destinationPath), { recursive: true });
+    await fs.promises.mkdir(pdfStorageDir, { recursive: true });
+    
+    const destinationPath = path.join(pdfStorageDir, `${sanitizedTitle}.pdf`);
     await fs.promises.writeFile(destinationPath, pdfBuffer);
 
-    // Return relative path for URL
-    const relativePath = path.relative(backendDataDirectory, destinationPath);
+    // Return the filename for download via the backend
+    const filename = `${sanitizedTitle}.pdf`;
     
     return NextResponse.json({
       success: true,
       path: destinationPath,
-      url: `/static/${relativePath.replace(/\\/g, '/')}`
+      filename: filename,
+      url: `/presentations/pdfs/${filename}`
     });
   } catch (error) {
     console.error('PDF generation failed:', error);

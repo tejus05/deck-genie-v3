@@ -1,3 +1,4 @@
 {
-  "LLM": "google"
+  "LLM": "google",
+  "presentation_cleanup_hours": 24
 }
