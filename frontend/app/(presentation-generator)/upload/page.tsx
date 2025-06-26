@@ -5,10 +5,10 @@ import Header from '@/app/dashboard/components/Header'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: "Presenton | AI-Powered Presentation Generator & Design tool",
+    title: "DeckGenie | AI-Powered Presentation Generator & Design tool",
     description: "Transform your data into compelling presentations. Upload your documents and let our AI generate professional, data-driven presentations tailored to your needs.",
     alternates: {
-        canonical: "https://presenton.ai/create"
+        canonical: "https://deckgenie.ai/create"
     },
     keywords: [
         "presentation generator",

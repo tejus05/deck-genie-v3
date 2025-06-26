@@ -174,7 +174,7 @@ export default function Home() {
                 {/* Branding Header */}
                 <div className="text-center mb-12">
                     <div className="flex items-center justify-center gap-3 mb-4">
-                        <img src="/Logo.png" alt="Presenton Logo" className="" />
+                        <img src="/Logo.png" alt="DeckGenie Logo" className="" />
                     </div>
                     <p className="text-gray-600 text-lg">
                         Open-source AI presentation generator

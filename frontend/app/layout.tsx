@@ -46,10 +46,10 @@ const instrument_sans = Instrument_Sans({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://presenton.ai"),
-  title: "Presenton.ai - AI Presentation Maker for Data Storytelling",
+  metadataBase: new URL("https://deckgenie.ai"),
+  title: "DeckGenie.ai - AI Presentation Maker for Data Storytelling",
   description:
-    "Turn complex data into stunning, interactive presentations with Presenton.ai. Create professional slides from reports and analytics in minutes. Try now!",
+    "Turn complex data into stunning, interactive presentations with DeckGenie.ai. Create professional slides from reports and analytics in minutes. Try now!",
   keywords: [
     "AI presentation maker",
     "data storytelling",
@@ -61,31 +61,31 @@ export const metadata: Metadata = {
     "professional slides",
   ],
   openGraph: {
-    title: "Presenton.ai - AI-Powered Data Presentations",
+    title: "DeckGenie.ai - AI-Powered Data Presentations",
     description:
-      "Transform data into engaging presentations effortlessly with Presenton.ai, your go-to AI tool for stunning slides and data storytelling.",
-    url: "https://presenton.ai",
-    siteName: "Presenton.ai",
+      "Transform data into engaging presentations effortlessly with DeckGenie.ai, your go-to AI tool for stunning slides and data storytelling.",
+    url: "https://deckgenie.ai",
+    siteName: "DeckGenie.ai",
     images: [
       {
-        url: "https://presenton.ai/presenton-feature-graphics.png",
+        url: "https://deckgenie.ai/deckgenie-feature-graphics.png",
         width: 1200,
         height: 630,
-        alt: "Presenton.ai Logo",
+        alt: "DeckGenie.ai Logo",
       },
     ],
     type: "website",
     locale: "en_US",
   },
   alternates: {
-    canonical: "https://presenton.ai",
+    canonical: "https://deckgenie.ai",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Presenton.ai - AI Presentation Maker for Data Storytelling",
+    title: "DeckGenie.ai - AI Presentation Maker for Data Storytelling",
     description:
-      "Create stunning presentations from data with Presenton.ai. Simplify reports and analytics into interactive slides fast!",
-    images: ["https://presenton.ai/presenton-feature-graphics.png"],
+      "Create stunning presentations from data with DeckGenie.ai. Simplify reports and analytics into interactive slides fast!",
+    images: ["https://deckgenie.ai/deckgenie-feature-graphics.png"],
   },
 };
 

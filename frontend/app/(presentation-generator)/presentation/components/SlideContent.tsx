@@ -1,16 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Slide } from "../../types/slide";
 import { renderSlideContent } from "../../components/slide_config";
-import { Loader2, PlusIcon, Trash2, WandSparkles } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
-import { SendHorizontal } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
-import { PresentationGenerationApi } from "../../services/api/presentation-generation";
+import { Loader2, PlusIcon, Trash2 } from "lucide-react";
 import ToolTip from "@/components/ToolTip";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,56 +27,10 @@ const SlideContent = ({
   onDeleteSlide,
 }: SlideContentProps) => {
   const dispatch = useDispatch();
-  const [isUpdating, setIsUpdating] = useState(false);
   const [showNewSlideSelection, setShowNewSlideSelection] = useState(false);
   const { presentationData, isStreaming } = useSelector(
     (state: RootState) => state.presentationGeneration
   );
-
-  const handleSubmit = async () => {
-    const element = document.getElementById(
-      `slide-${slide.index}-prompt`
-    ) as HTMLInputElement;
-    const value = element?.value;
-    if (!value?.trim()) {
-      logOperation(`Error: Empty prompt for slide ${slide.index}`);
-      toast({
-        title: "Error",
-        description: "Please enter a prompt before submitting",
-        variant: "destructive",
-      });
-      return;
-    }
-    setIsUpdating(true);
-    logOperation(`Updating slide ${slide.index} with prompt: ${value}`);
-
-    try {
-      const response = await PresentationGenerationApi.editSlide(
-        presentationId,
-        slide.index,
-        value
-      );
-
-      if (response) {
-        logOperation(`Slide ${slide.index} updated successfully`);
-        dispatch(updateSlide({ index: slide.index, slide: response }));
-        toast({
-          title: "Success",
-          description: "Slide updated successfully",
-        });
-      }
-    } catch (error) {
-      logOperation(`Error updating slide ${slide.index}: ${error}`);
-      console.error("Error updating slide:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update slide. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsUpdating(false);
-    }
-  };
 
   const handleNewSlide = (type: number, index: number) => {
     logOperation(`Adding new slide of type ${type} after slide ${index}`);
@@ -159,61 +104,6 @@ const SlideContent = ({
                 <Trash2 className="text-gray-500 text-xl cursor-pointer" />
               </div>
             </ToolTip>
-          )}
-          {!isStreaming && (
-            <div className="absolute top-2 z-20 sm:top-4 hidden md:block left-2 sm:left-4 transition-transform">
-              <Popover>
-                <PopoverTrigger>
-                  <ToolTip content="Update slide using prompt">
-                    <div
-                      className={`p-2 group-hover:scale-105 rounded-lg bg-[#5141e5] hover:shadow-md transition-all duration-300 cursor-pointer shadow-md `}
-                    >
-                      <WandSparkles className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                    </div>
-                  </ToolTip>
-                </PopoverTrigger>
-                <PopoverContent
-                  side="right"
-                  align="start"
-                  sideOffset={10}
-                  className="w-[280px] sm:w-[400px] z-20"
-                >
-                  <div className="space-y-4">
-                    <form
-                      className="flex flex-col gap-3"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleSubmit();
-                      }}
-                    >
-                      <Textarea
-                        id={`slide-${slide.index}-prompt`}
-                        placeholder="Enter your prompt here..."
-                        className="w-full min-h-[100px] max-h-[100px] p-2 text-sm border rounded-lg focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                        disabled={isUpdating}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSubmit();
-                          }
-                        }}
-                        rows={4}
-                        wrap="soft"
-                      />
-                      <button
-                        disabled={isUpdating}
-                        type="submit"
-                        className={`bg-gradient-to-r from-[#9034EA] to-[#5146E5] rounded-[32px] px-4 py-2 text-white flex items-center justify-end gap-2 ml-auto ${isUpdating ? "opacity-70 cursor-not-allowed" : ""
-                          }`}
-                      >
-                        {isUpdating ? "Updating..." : "Update"}
-                        <SendHorizontal className="w-4 sm:w-5 h-4 sm:h-5" />
-                      </button>
-                    </form>
-                  </div>
-                </PopoverContent>
-              </Popover>
-            </div>
           )}
         </div>
       </div>

@@ -4,8 +4,6 @@
  * This component handles the presentation generation upload process, allowing users to:
  * - Configure presentation settings (slides, language)
  * - Input prompts
- * - Upload supporting documents and images
- 
  * 
  * @component
  */
@@ -22,14 +20,12 @@ import {
 import { ConfigurationSelects } from "./ConfigurationSelects";
 import { PromptInput } from "./PromptInput";
 import { LanguageType, PresentationConfig } from "../type";
-import SupportingDoc from "./SupportingDoc";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
 import { OverlayLoader } from "@/components/ui/overlay-loader";
 import Wrapper from "@/components/Wrapper";
-import { setPptGenUploadState } from "@/store/slices/presentationGenUpload";
 import { clearLogs, logOperation } from "../../utils/log";
 
 // Types for loading state
@@ -41,24 +37,6 @@ interface LoadingState {
   extra_info?: string;
 }
 
-
-
-interface DecomposedResponse {
-  documents: Record<string, any>;
-  images: Record<string, any>;
-  charts: Record<string, any>;
-  tables: Record<string, any>;
-}
-
-interface ProcessedData {
-  config: PresentationConfig;
-  documents: Record<string, any>;
-  images: Record<string, any>;
-  charts: Record<string, any>;
-  tables: Record<string, any>;
-
-}
-
 const UploadPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -67,8 +45,6 @@ const UploadPage = () => {
 
 
   // State management
-  const [documents, setDocuments] = useState<File[]>([]);
-  const [images, setImages] = useState<File[]>([]);
   const [config, setConfig] = useState<PresentationConfig>({
     slides: "8",
     language: LanguageType.English,
@@ -93,25 +69,7 @@ const UploadPage = () => {
   };
 
   /**
-   * Handles file uploads and separates them into documents and images
-   * @param newFiles - Array of files to process
-   */
-  const handleFilesChange = (newFiles: File[]) => {
-    const { docs, imgs } = newFiles.reduce(
-      (acc, file) => {
-        const isImage = file.type?.startsWith("image/");
-        isImage ? acc.imgs.push(file) : acc.docs.push(file);
-        return acc;
-      },
-      { docs: [] as File[], imgs: [] as File[] }
-    );
-
-    setDocuments(docs);
-    setImages(imgs);
-  };
-
-  /**
-   * Validates the current configuration and files
+   * Validates the current configuration
    * @returns boolean indicating if the configuration is valid
    */
   const validateConfiguration = (): boolean => {
@@ -123,9 +81,10 @@ const UploadPage = () => {
       return false;
     }
 
-    if (!config.prompt.trim() && documents.length === 0 && images.length === 0) {
+    if (!config.prompt.trim()) {
       toast({
-        title: "No Prompt or Document Provided",
+        title: "Please provide a prompt",
+        description: "A prompt is required to generate your presentation",
         variant: "destructive",
       });
       return false;
@@ -145,86 +104,13 @@ const UploadPage = () => {
       clearLogs();
       logOperation(`----New Presentation Generation----`);
 
-      const hasUploadedAssets = documents.length > 0 || images.length > 0;
       // Log the configuration
       logOperation(`Config: ${JSON.stringify(config)}`);
-      // Log the files updated
-      logOperation(`Files updated: ${documents.length} documents, ${images.length} images`);
 
-      if (hasUploadedAssets) {
-        await handleDocumentProcessing();
-      } else {
-        await handleDirectPresentationGeneration();
-      }
+      await handleDirectPresentationGeneration();
     } catch (error) {
       handleGenerationError(error);
     }
-  };
-
-  /**
-   * Handles  document processing
-   */
-  const handleDocumentProcessing = async () => {
-    logOperation('Starting document processing');
-    setLoadingState({
-      isLoading: true,
-      message: "Processing documents...",
-      showProgress: true,
-      duration: 90,
-      extra_info: documents.length > 0 ? "It might take a few minutes for large documents." : "",
-    });
-
-    let documentKeys = [];
-    let imageKeys = [];
-
-    if (documents.length > 0 || images.length > 0) {
-      logOperation(`Uploading ${documents.length} documents and ${images.length} images`);
-      const uploadResponse = await PresentationGenerationApi.uploadDoc(documents, images);
-      documentKeys = uploadResponse["documents"];
-      imageKeys = uploadResponse["images"];
-    }
-
-    const promises: Promise<any>[] = [];
-
-    if (documents.length > 0 || images.length > 0) {
-      logOperation('Decomposing documents');
-      promises.push(
-        PresentationGenerationApi.decomposeDocuments(documentKeys, imageKeys)
-      );
-    }
-
-    const responses = await Promise.all(promises);
-    const processedData = processApiResponses(responses);
-
-    logOperation('Document processing completed');
-    dispatch(setPptGenUploadState(processedData));
-    router.push("/documents-preview");
-  };
-
-  /**
-   * Processes API responses and formats data for state update
-   */
-  const processApiResponses = (responses: (any | DecomposedResponse)[],): ProcessedData => {
-    const result: ProcessedData = {
-      config,
-      documents: {},
-      images: {},
-      charts: {},
-      tables: {},
-    };
-
-    if (responses.length > 0) {
-      const decomposedResponse = responses.shift() as DecomposedResponse;
-      Object.assign(result, {
-        documents: decomposedResponse.documents || {},
-        images: decomposedResponse.images || {},
-        charts: decomposedResponse.charts || {},
-        tables: decomposedResponse.tables || {},
-      });
-    }
-
-
-    return result;
   };
 
   /**
@@ -311,11 +197,6 @@ const UploadPage = () => {
           data-testid="prompt-input"
         />
       </div>
-      <SupportingDoc
-        files={[...documents, ...images]}
-        onFilesChange={handleFilesChange}
-        data-testid="file-upload-input"
-      />
       <Button
         onClick={handleGeneratePresentation}
         className="w-full rounded-[32px] flex items-center justify-center py-6 bg-[#5141e5] text-white font-instrument_sans font-semibold text-xl hover:bg-[#5141e5]/80 transition-colors duration-300"

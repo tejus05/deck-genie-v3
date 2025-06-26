@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-const baseUrl = 'https://presenton.ai'
+const baseUrl = 'https://deckgenie.ai'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
