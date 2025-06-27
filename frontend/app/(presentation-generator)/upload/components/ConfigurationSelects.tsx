@@ -111,13 +111,6 @@ export function ConfigurationSelects({
         />
       </div>
       
-      {/* Smart Hint for Dynamic Slide Generation */}
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-        <p className="text-sm text-blue-700">
-          💡 <strong>Smart Generation:</strong> Our AI will analyze your content and create the optimal number of slides automatically. 
-          You can specify "I need X slides" in your prompt if you have a specific requirement.
-        </p>
-      </div>
     </div>
   );
 }
