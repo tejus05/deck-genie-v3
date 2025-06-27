@@ -13,7 +13,6 @@ user_prompt_text = {
                 **Input:**
                 - Prompt: {prompt}
                 - Presentation Tone: {tone}
-                - Number of Slides: {n_slides}
                 - Content: {content}
             """,
 }
@@ -32,12 +31,13 @@ def get_prompt_template():
                     # Steps
                     1. Analyze the prompt and additional information carefully.
                     2. Create a specific, descriptive presentation title that captures the main topic/theme.
-                    3. Visualize presentation with **Number of Slides**.
-                    4. Use provided input or any information you have on this topic.
-                    5. Check if slide titles are provided in **Input**.
-                    6. Generate title for each slide if not provided in **Input**.
-                    7. If slide titles are provided in **Input** then use them as it is.
-                    8. In case if slides for chapter is provided then analyze all chapter content and then structurally generate titles considering all slide content. \
+                    3. Determine the optimal number of slides (5-20) based on content complexity and depth.
+                    4. If the user specifies "I need X slides" or "Create X slides" in the prompt, respect that requirement.
+                    5. Use provided input or any information you have on this topic.
+                    6. Check if slide titles are provided in **Input**.
+                    7. Generate title for each slide based on logical content flow.
+                    8. If slide titles are provided in **Input** then use them as it is.
+                    9. In case if slides for chapter is provided then analyze all chapter content and then structurally generate titles considering all slide content. \
                         Keep the flow as per given chapter content. Ensure that titles are generated to cover all the content in the chapter.
 
                     # Title Generation Rules
@@ -55,8 +55,16 @@ def get_prompt_template():
                     - **Conversational**: Create friendly, accessible titles that are easy to understand
                     - **Professional**: Maintain balanced, business-appropriate titles suitable for general audiences
 
+                    # Content Analysis Guidelines
+                    - **Simple Topics** (basic concepts, introductions): 5-8 slides
+                    - **Medium Complexity** (business processes, product features): 8-12 slides  
+                    - **Complex Topics** (technical deep-dives, comprehensive analysis): 12-16 slides
+                    - **Very Complex** (detailed research, multi-faceted subjects): 16-20 slides
+
                     # Notes
                     - Apply the specified tone from **Input** to all titles.
+                    - Analyze content depth and complexity to determine optimal slide count.
+                    - Respect explicit user requirements for slide count when mentioned in prompt.
                     - Ensure the prompt and additional information remains the main focus of the presentation.
                     - **Additional Information** serves as supporting information, providing depth and details.
                     - Slide titles should maintain a logical and coherent flow throughout the presentation.
@@ -79,7 +87,6 @@ def get_prompt_template():
 
 async def generate_ppt_titles(
     prompt: Optional[str],
-    n_slides: int,
     content: Optional[str],
     tone: Optional[str] = None,
 ) -> PresentationTitlesModel:
@@ -95,7 +102,6 @@ async def generate_ppt_titles(
         chain,
         {
             "prompt": prompt,
-            "n_slides": n_slides,
             "tone": tone or "Professional",
             "content": content,
         },

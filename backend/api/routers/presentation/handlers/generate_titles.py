@@ -34,13 +34,13 @@ class PresentationTitlesGenerateHandler:
 
             presentation_titles: PresentationTitlesModel = await generate_ppt_titles(
                 presentation.prompt,
-                presentation.n_slides,
                 presentation.summary,
                 presentation.tone,
             )
 
             presentation.title = presentation_titles.presentation_title
             presentation.titles = presentation_titles.titles
+            presentation.n_slides = len(presentation_titles.titles)  # Update with dynamic count
 
             sql_session.commit()
             sql_session.refresh(presentation)

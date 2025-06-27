@@ -16,7 +16,6 @@ class GeneratePresentationRequirementsHandler:
         self.data = data
         self.presentation_id = presentation_id
         self.prompt = data.prompt
-        self.n_slides = data.n_slides
         self.tone = data.tone
         self.research_reports = data.research_reports or []
         self.images = data.images or []
@@ -34,7 +33,7 @@ class GeneratePresentationRequirementsHandler:
         presentation = PresentationSqlModel(
             id=self.presentation_id,
             prompt=self.prompt,
-            n_slides=self.n_slides,
+            n_slides=0,  # Will be determined dynamically by AI
             tone=self.tone,
             summary="",  # No summary since we don't process documents
         )

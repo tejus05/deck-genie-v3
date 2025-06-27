@@ -90,7 +90,6 @@ class PresentationGenerateStreamHandler:
         async for chunk in generate_presentation_stream(
             self.titles,
             presentation.prompt or "create presentation",
-            presentation.n_slides,
             presentation.tone,
             presentation.summary,
         ):

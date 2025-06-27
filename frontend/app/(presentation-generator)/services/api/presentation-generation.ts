@@ -273,16 +273,12 @@ export class PresentationGenerationApi {
 
   static async getQuestions({
     prompt,
-    n_slides,
     images,
     tone,
-  
   }: {
     prompt: string;
-    n_slides: number | null;
     images?: string[];
     tone: string | null;
-    
   }) {
     try {
       const response = await fetch(
@@ -292,10 +288,8 @@ export class PresentationGenerationApi {
           headers: getHeader(),
           body: JSON.stringify({
             prompt,
-            n_slides,
             tone,
             images,
-           
           }),
           cache: "no-cache",
         }

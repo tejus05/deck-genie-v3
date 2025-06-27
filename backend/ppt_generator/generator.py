@@ -24,7 +24,7 @@ CREATE_PRESENTATION_PROMPT = """
 
                 # Steps
                 1. Analyze Prompt, and other provided data.
-                2. Use Slide titles provided in **Titles**.
+                2. Use Slide titles provided in **Titles** to determine the number of slides.
                 3. Generate Slide Content for each slide. Make sure it has all the context and information required to create this individual slide from.
                 4. Select slide type.
                 5. Output should be in json format as per given schema.
@@ -83,7 +83,6 @@ CREATE_PRESENTATION_PROMPT = """
 def generate_presentation_stream(
     titles: List[str],
     prompt: str,
-    n_slides: int,
     tone: str,
     summary: str,
 ) -> AsyncIterator[AIMessageChunk]:
@@ -93,7 +92,7 @@ def generate_presentation_stream(
     system_prompt = f"{CREATE_PRESENTATION_PROMPT} -|0|--|0|- Follow this schema while giving out response: {schema}. Make description short and obey the character limits. Output should be in JSON format. Give out only JSON, nothing else."
     system_prompt = SystemMessage(system_prompt.replace("-|0|-", "\n"))
 
-    user_message = f"Prompt: {prompt}-|0|--|0|- Number of Slides: {n_slides}-|0|--|0|- Presentation Tone: {tone} -|0|--|0|- Slide Titles: {titles} -|0|--|0|- Reference Document: {summary}"
+    user_message = f"Prompt: {prompt}-|0|--|0|- Presentation Tone: {tone} -|0|--|0|- Slide Titles: {titles} -|0|--|0|- Reference Document: {summary}"
     user_message = HumanMessage(user_message.replace("-|0|-", "\n"))
 
     model = (

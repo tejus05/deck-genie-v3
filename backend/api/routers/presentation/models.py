@@ -11,7 +11,6 @@ from api.sql_models import PresentationSqlModel, SlideSqlModel
 
 class GeneratePresentationRequirementsRequest(BaseModel):
     prompt: Optional[str] = None
-    n_slides: int
     tone: str
     research_reports: Optional[List[str]] = None
     images: Optional[List[str]] = None

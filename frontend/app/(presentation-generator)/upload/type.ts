@@ -23,7 +23,6 @@ export enum ToneType {
 }
 
 export interface PresentationConfig {
-  slides: "5" | "8" | "10" | "12" | "15" | null;
   tone: ToneType | null;
   prompt: string;
 }

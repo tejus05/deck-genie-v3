@@ -1,7 +1,7 @@
 export interface GenerateRequestBody {
     prompt?: string;
     document?: string;
-    n_slides: number;
+    tone: string;
 }
 
 export interface SlideData {

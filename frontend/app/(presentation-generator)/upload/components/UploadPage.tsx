@@ -50,7 +50,6 @@ const UploadPage = () => {
 
   // State management
   const [config, setConfig] = useState<PresentationConfig>({
-    slides: "8",
     tone: ToneType.Professional,
     prompt: "",
   });
@@ -77,9 +76,10 @@ const UploadPage = () => {
    * @returns boolean indicating if the configuration is valid
    */
   const validateConfiguration = (): boolean => {
-    if (!config.tone || !config.slides) {
+    if (!config.tone) {
       toast({
-        title: "Please select number of Slides & Tone",
+        title: "Please select a tone",
+        description: "Choose a presentation tone to continue",
         variant: "destructive",
       });
       return false;
@@ -131,7 +131,6 @@ const UploadPage = () => {
 
     const createResponse = await PresentationGenerationApi.getQuestions({
       prompt: config?.prompt ?? "",
-      n_slides: config?.slides ? parseInt(config.slides) : null,
       images: [],
       tone: config?.tone ?? "",
     });

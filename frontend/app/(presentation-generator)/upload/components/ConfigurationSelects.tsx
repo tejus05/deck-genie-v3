@@ -30,39 +30,8 @@ interface ConfigurationSelectsProps {
   onConfigChange: (key: keyof PresentationConfig, value: string) => void;
 }
 
-type SlideOption = "5" | "8" | "10" | "12" | "15" | "18" | "20";
-
 // Constants
-const SLIDE_OPTIONS: SlideOption[] = ["5", "8", "10", "12", "15", "18", "20"];
-
-/**
- * Renders a select component for slide count
- */
-const SlideCountSelect: React.FC<{
-  value: string | null;
-  onValueChange: (value: string) => void;
-}> = ({ value, onValueChange }) => (
-  <Select value={value || ""} onValueChange={onValueChange} name="slides">
-    <SelectTrigger
-      className="w-[180px] font-instrument_sans font-medium bg-blue-100 border-blue-200 focus-visible:ring-blue-300"
-      data-testid="slides-select"
-    >
-      <SelectValue placeholder="Select Slides" />
-    </SelectTrigger>
-    <SelectContent className="font-instrument_sans">
-      {SLIDE_OPTIONS.map((option) => (
-        <SelectItem
-          key={option}
-          value={option}
-          className="font-instrument_sans text-sm font-medium"
-          role="option"
-        >
-          {option} slides
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-);
+const TONE_OPTIONS = Object.values(ToneType);
 
 /**
  * Renders a tone selection component
@@ -132,17 +101,23 @@ export function ConfigurationSelects({
   const [openTone, setOpenTone] = useState(false);
 
   return (
-    <div className="flex flex-wrap order-1 gap-4">
-      <SlideCountSelect
-        value={config.slides}
-        onValueChange={(value) => onConfigChange("slides", value)}
-      />
-      <ToneSelect
-        value={config.tone}
-        onValueChange={(value) => onConfigChange("tone", value)}
-        open={openTone}
-        onOpenChange={setOpenTone}
-      />
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-4">
+        <ToneSelect
+          value={config.tone}
+          onValueChange={(value) => onConfigChange("tone", value)}
+          open={openTone}
+          onOpenChange={setOpenTone}
+        />
+      </div>
+      
+      {/* Smart Hint for Dynamic Slide Generation */}
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <p className="text-sm text-blue-700">
+          💡 <strong>Smart Generation:</strong> Our AI will analyze your content and create the optimal number of slides automatically. 
+          You can specify "I need X slides" in your prompt if you have a specific requirement.
+        </p>
+      </div>
     </div>
   );
 }
