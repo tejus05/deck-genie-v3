@@ -34,7 +34,7 @@ const UserAccount = () => {
           <Link
             href="/dashboard"
             prefetch={false}
-            className="flex items-center gap-2 px-4 py-4 hover:bg-gray-50 transition-colors outline-none focus:bg-gray-50"
+            className="flex items-center gap-2 px-4 py-4 hover:bg-gray-50 transition-colors outline-none focus:bg-gray-50 rounded-2xl"
             role="menuitem"
           >
             <LayoutDashboard className="w-5 h-5 text-gray-500" />

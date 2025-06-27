@@ -440,10 +440,10 @@ const Header = ({
       {/* Present Button */}
       <Button
         onClick={() => router.push(`?id=${presentation_id}&mode=present&slide=${currentSlide || 0}`)}
-        variant="ghost"
+        variant="glass"
         className="border border-white font-bold text-white rounded-[32px] transition-all duration-300 group"
       >
-        <Play className="w-4 h-4 mr-1 stroke-white group-hover:stroke-black" />
+        <Play className="w-4 h-4 mr-1 stroke-white" />
         Present
       </Button>
 
@@ -452,7 +452,10 @@ const Header = ({
       <div className="hidden lg:block">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button className="border py-5 text-white font-bold rounded-[32px] transition-all duration-500 hover:border w-full">
+            <Button
+              variant={"glass"}
+              className="border py-5 text-white font-bold rounded-[32px] transition-all duration-500 hover:border w-full"
+             >
               <SquareArrowOutUpRight className="w-4 h-4 mr-1" />
               Export
             </Button>
