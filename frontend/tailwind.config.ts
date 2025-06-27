@@ -43,6 +43,14 @@ const config: Config = {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
+  			success: {
+  				DEFAULT: 'hsl(var(--success))',
+  				foreground: 'hsl(var(--success-foreground))'
+  			},
+  			warning: {
+  				DEFAULT: 'hsl(var(--warning))',
+  				foreground: 'hsl(var(--warning-foreground))'
+  			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
@@ -57,7 +65,20 @@ const config: Config = {
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			sm: 'calc(var(--radius) - 4px)',
+  			xl: 'var(--radius-xl)',
+  			'2xl': 'calc(var(--radius-xl) + 0.25rem)',
+  			'3xl': 'calc(var(--radius-xl) + 0.5rem)'
+  		},
+  		boxShadow: {
+  			'modern': 'var(--shadow-md)',
+  			'modern-lg': 'var(--shadow-lg)',
+  			'modern-xl': 'var(--shadow-xl)',
+  			'glow': '0 0 20px rgba(59, 130, 246, 0.3)',
+  			'glow-lg': '0 0 40px rgba(59, 130, 246, 0.4)'
+  		},
+  		backdropBlur: {
+  			xs: '2px',
   		},
   		keyframes: {
   			'accordion-down': {
@@ -75,19 +96,41 @@ const config: Config = {
   				to: {
   					height: '0'
   				}
+  			},
+  			fadeIn: {
+  				'0%': { opacity: '0', transform: 'translateY(10px)' },
+  				'100%': { opacity: '1', transform: 'translateY(0)' }
+  			},
+  			slideUp: {
+  				'0%': { transform: 'translateY(100%)' },
+  				'100%': { transform: 'translateY(0)' }
+  			},
+  			bounceGentle: {
+  				'0%, 100%': { transform: 'translateY(0)' },
+  				'50%': { transform: 'translateY(-5px)' }
+  			},
+  			pulseGentle: {
+  				'0%, 100%': { opacity: '1' },
+  				'50%': { opacity: '0.8' }
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			'fade-in': 'fadeIn 0.5s ease-in-out',
+  			'slide-up': 'slideUp 0.3s ease-out',
+  			'bounce-gentle': 'bounceGentle 2s infinite',
+  			'pulse-gentle': 'pulseGentle 3s ease-in-out infinite'
   		},
   		fontFamily: {
-			'instrument_sans':['var(--font-instrument-sans)'],	
-			'inter':['var(--font-inter)'],
-			'roboto':['var(--font-roboto)'],
-			'fraunces':['var(--font-fraunces)'],
-			'montserrat':['var(--font-montserrat)'],
-			'inria_serif':['var(--font-inria-serif)']
+			'instrument_sans': ['var(--font-instrument-sans)', 'Inter', 'system-ui', 'sans-serif'],	
+			'inter': ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
+			'roboto': ['var(--font-roboto)', 'Roboto', 'system-ui', 'sans-serif'],
+			'fraunces': ['var(--font-fraunces)', 'Fraunces', 'serif'],
+			'montserrat': ['var(--font-montserrat)', 'Montserrat', 'system-ui', 'sans-serif'],
+			'inria_serif': ['var(--font-inria-serif)', 'Inria Serif', 'serif'],
+			'display': ['var(--font-fraunces)', 'Fraunces', 'serif'],
+			'body': ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif']
   		},
   	}
   },

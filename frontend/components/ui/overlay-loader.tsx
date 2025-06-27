@@ -52,47 +52,59 @@ export const OverlayLoader = ({
     return (
         <div
             ref={overlayRef}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center opacity-0"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center opacity-0"
         >
             <div
                 ref={contentRef}
                 className={cn(
-                    "flex flex-col items-center justify-center px-6  pt-0 pb-8 rounded-xl bg-[#030303] shadow-2xl",
-                    "min-w-[280px] sm:min-w-[330px] border border-white/10 opacity-0",
+                    "flex flex-col items-center justify-center px-8 pt-4 pb-8 rounded-3xl glass border-2 border-white/20 shadow-modern-xl",
+                    "min-w-[320px] sm:min-w-[380px] opacity-0",
                     className
                 )}
-
             >
-                <img loading="eager" src={'/loading.gif'} alt="loading" width={250} height={250} />
+                {/* Modern loading animation */}
+                <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary rounded-full blur-lg opacity-30 animate-pulse-gentle"></div>
+                    <img 
+                        loading="eager" 
+                        src={'/loading.gif'} 
+                        alt="loading" 
+                        width={220} 
+                        height={220}
+                        className="relative z-10 drop-shadow-lg"
+                    />
+                </div>
+
                 {showProgress ? (
-                    <div className="w-full space-y-6 pt-4">
+                    <div className="w-full space-y-6">
                         <ProgressBar
                             duration={duration}
                             onComplete={onProgressComplete}
                         />
                         {text && (
-                            <div className="space-y-1">
-                                <p className="text-white text-base text-center font-semibold font-inter">
+                            <div className="space-y-2">
+                                <p className="text-white text-lg text-center font-semibold font-body">
                                     {text}
                                 </p>
-                                {extra_info && <p className="text-white/80 text-xs text-center font-semibold font-inter">{extra_info}</p>}
+                                {extra_info && (
+                                    <p className="text-white/80 text-sm text-center font-body">
+                                        {extra_info}
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>
                 ) : (
-                    <>
-                        <p className="text-white text-base text-center font-semibold font-inter">
+                    <div className="space-y-2 text-center">
+                        <p className="text-white text-lg font-semibold font-body">
                             {text}
                         </p>
-                        {extra_info && <p className="text-white/80 text-xs text-center font-semibold font-inter">{extra_info}</p>}
-                    </>
-                    // <div className="flex flex-col items-center gap-4">
-                    //     <div className="relative">
-                    //         <div className="absolute inset-0 bg-gradient-to-r from-[#9034EA] to-[#5146E5] blur-xl opacity-20" />
-                    //         <Loader text={text} />
-                    //     </div>
-
-                    // </div>
+                        {extra_info && (
+                            <p className="text-white/80 text-sm font-body">
+                                {extra_info}
+                            </p>
+                        )}
+                    </div>
                 )}
             </div>
         </div>

@@ -10,18 +10,19 @@ import { usePathname } from "next/navigation";
 const Header = () => {
   const pathname = usePathname();
   return (
-    <div className="bg-[#5146E5] w-full shadow-lg sticky top-0 z-50">
+    <div className="glass border-b-2 border-white/20 w-full shadow-modern-xl sticky top-0 z-50 backdrop-blur-md">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary opacity-90"></div>
       <Wrapper>
-        <div className="flex items-center justify-between py-2">
-          <div className="flex items-center gap-3">
+        <div className="relative flex items-center justify-between py-4">
+          <div className="flex items-center gap-4">
             {pathname !== '/upload' && <BackBtn />}
-            <Link href="/dashboard">
+            <Link href="/dashboard" className="transition-transform hover:scale-105">
               <img
                 src="/logo-white.png"
                 alt="Presentation logo"
                 width={162}
                 height={32}
-
+                className="drop-shadow-lg"
               />
             </Link>
           </div>

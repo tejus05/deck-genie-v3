@@ -363,30 +363,37 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
     <div className="h-screen flex overflow-hidden flex-col">
       {/* Auto save loading state */}
       {autoSaveLoading && (
-        <div className="fixed right-6 top-[5.2rem] z-50 bg-white bg-opacity-50 flex items-center justify-center">
-          <Loader2 className="animate-spin text-primary" />
+        <div className="fixed right-6 top-24 z-50 glass border border-white/20 rounded-xl px-4 py-2 shadow-modern flex items-center gap-2 backdrop-blur-md">
+          <Loader2 className="w-4 h-4 animate-spin text-accent" />
+          <span className="text-sm font-medium text-foreground">Saving...</span>
         </div>
       )}
       <Header presentation_id={presentation_id} currentSlide={currentSlide} />
       {error ? (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+        <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-background via-muted/30 to-destructive/10">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-destructive/5 via-transparent to-destructive/5"></div>
           <div
-            className="bg-white border border-red-300 text-red-700 px-6 py-8 rounded-lg shadow-lg flex flex-col items-center"
+            className="relative glass border-2 border-destructive/20 text-foreground px-8 py-12 rounded-3xl shadow-modern-xl flex flex-col items-center max-w-lg mx-6"
             role="alert"
           >
-            <AlertCircle className="w-16 h-16 mb-4 text-red-500" />
-            <strong className="font-bold text-4xl mb-2">Oops!</strong>
-            <p className="block text-2xl py-2">
+            <div className="relative mb-6">
+              <div className="absolute inset-0 bg-destructive/20 rounded-full blur-lg"></div>
+              <AlertCircle className="relative w-20 h-20 text-destructive" />
+            </div>
+            <strong className="font-bold text-3xl mb-3 font-display text-gradient">Something went wrong!</strong>
+            <p className="text-lg mb-2 text-center font-body text-muted-foreground">
               We encountered an issue loading your presentation.
             </p>
-            <p className="text-lg py-2">
+            <p className="text-base mb-6 text-center font-body text-muted-foreground">
               Please check your internet connection or try again later.
             </p>
             <Button
-              className="mt-4 bg-red-500 text-white hover:bg-red-600 focus:ring-4 focus:ring-red-300"
+              size="lg"
+              variant="destructive"
+              className="shadow-modern-xl hover:shadow-modern-xl hover:scale-[1.02] transition-all duration-300"
               onClick={() => window.location.reload()}
             >
-              Retry
+              Try Again
             </Button>
           </div>
         </div>

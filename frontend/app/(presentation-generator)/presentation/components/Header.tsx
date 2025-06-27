@@ -454,7 +454,7 @@ const Header = ({
       <div className="hidden lg:block">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
-            <Button className="bg-white border py-5 text-[#5146E5] font-bold rounded-[32px] transition-all duration-500 hover:border hover:bg-[#5146E5] hover:text-white w-full">
+            <Button className="border py-5 text-white font-bold rounded-[32px] transition-all duration-500 hover:border w-full">
               <SquareArrowOutUpRight className="w-4 h-4 mr-1" />
               Export
             </Button>
@@ -473,7 +473,8 @@ const Header = ({
   );
 
   return (
-    <div className="bg-[#5146E5] w-full shadow-lg sticky top-0 z-50">
+    <div className="glass border-b-2 border-white/20 w-full shadow-modern-xl sticky top-0 z-50 backdrop-blur-md">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary opacity-90"></div>
       <OverlayLoader
         show={showLoader}
         text="Exporting presentation..."
@@ -481,29 +482,33 @@ const Header = ({
         duration={40}
       />
       <Announcement />
-      <Wrapper className="flex items-center justify-between py-2">
-        <Link href="/dashboard" className="min-w-[162px]">
+      <Wrapper className="relative flex items-center justify-between py-4">
+        <Link href="/dashboard" className="min-w-[162px] transition-transform hover:scale-105">
           <img
             src="/logo-white.png"
             alt="Presentation logo"
             width={162}
             height={32}
+            className="drop-shadow-lg"
           />
         </Link>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-4 2xl:gap-6">
           {isStreaming && (
-            <Loader2 className="animate-spin text-white font-bold w-6 h-6" />
+            <div className="flex items-center gap-2 glass border border-white/30 rounded-xl px-3 py-2">
+              <Loader2 className="animate-spin text-white w-4 h-4" />
+              <span className="text-white text-sm font-medium">Processing...</span>
+            </div>
           )}
           <Select value={currentTheme} onValueChange={handleThemeSelect}>
-            <SelectTrigger className="w-[160px] bg-[#6358fd] text-white border-none hover:bg-[#5146E5] transition-colors">
+            <SelectTrigger className="w-[180px] glass border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 rounded-xl">
               <div className="flex items-center gap-2">
                 <Palette className="w-4 h-4" />
-                <span>Change Theme</span>
+                <span className="font-medium">Change Theme</span>
               </div>
             </SelectTrigger>
-            <SelectContent className="w-[300px] p-0">
+            <SelectContent className="w-[320px] p-0 border-2 border-border/50 rounded-xl shadow-modern-xl">
               <ThemeSelector
                 onSelect={handleThemeSelect}
                 selectedTheme={currentTheme}
@@ -530,16 +535,19 @@ const Header = ({
           <UserAccount />
           <Sheet>
             <SheetTrigger asChild>
-              <button className="text-white">
-                <Menu className="h-6 w-6" />
+              <button className="glass border-2 border-white/30 rounded-xl p-3 hover:bg-white/20 hover:border-white/50 transition-all duration-200 group">
+                <Menu className="h-5 w-5 text-white group-hover:text-white/90 transition-colors" />
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-[#5146E5] border-none p-4">
-              <div className="flex flex-col gap-6 mt-10">
+            <SheetContent side="right" className="glass border-l-2 border-white/20 p-6 backdrop-blur-md">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-accent/90 to-primary/90"></div>
+              <div className="relative flex flex-col gap-6 mt-10">
                 <Select onValueChange={handleThemeSelect}>
-                  <SelectTrigger className="w-full bg-[#6358fd] flex justify-center gap-2 text-white border-none">
-                    <Palette className="w-4 h-4 mr-2" />
-                    <SelectValue placeholder="Theme" />
+                  <SelectTrigger className="w-full glass border-2 border-white/30 text-white hover:bg-white/20 hover:border-white/50 transition-all duration-200 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <Palette className="w-4 h-4" />
+                      <SelectValue placeholder="Choose Theme" className="font-medium" />
+                    </div>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="light">Light Theme</SelectItem>

@@ -7,5 +7,5 @@ interface WrapperProps {
 }
 
 export default function Wrapper({ children, className }: WrapperProps) {
-    return <div className={cn(`max-w-[1440px] w-[95%]  mx-auto `, className)}>{children}</div>;
+    return <div className={cn(`max-w-7xl w-[95%] mx-auto px-4 sm:px-6 lg:px-8`, className)}>{children}</div>;
 }

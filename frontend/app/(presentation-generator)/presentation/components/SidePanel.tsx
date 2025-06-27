@@ -183,10 +183,11 @@ const SidePanel = ({
         <div className="hidden xl:block fixed left-6 bottom-6 z-50">
           <Button
             onClick={() => setIsOpen(true)}
-            className="bg-[#5146E5] hover:bg-[#4638c7] text-white px-4 py-3 rounded-lg shadow-xl border-2 border-white/20 backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:shadow-2xl flex items-center gap-2"
+            className="glass border-2 border-white/30 text-white px-4 py-3 rounded-xl shadow-modern-xl hover:bg-white/20 hover:border-white/50 transition-all duration-200 hover:scale-105 flex items-center gap-2 backdrop-blur-md"
           >
-            <PanelRightOpen className="text-white" size={20} />
-            <span className="text-sm font-medium">Show Panel</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-accent/80 rounded-xl"></div>
+            <PanelRightOpen className="relative text-white" size={20} />
+            <span className="relative text-sm font-medium">Show Panel</span>
           </Button>
         </div>
       )}
@@ -196,10 +197,11 @@ const SidePanel = ({
         <div className="xl:hidden fixed left-6 bottom-6 z-50">
           <Button
             onClick={() => setIsMobilePanelOpen(true)}
-            className="bg-[#5146E5] hover:bg-[#4638c7] text-white px-4 py-3 rounded-lg shadow-xl border-2 border-white/20 backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:shadow-2xl flex items-center gap-2"
+            className="glass border-2 border-white/30 text-white px-4 py-3 rounded-xl shadow-modern-xl hover:bg-white/20 hover:border-white/50 transition-all duration-200 hover:scale-105 flex items-center gap-2 backdrop-blur-md"
           >
-            <PanelRightOpen className="text-white" size={20} />
-            <span className="text-sm font-medium">Show Panel</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-accent/80 rounded-xl"></div>
+            <PanelRightOpen className="relative text-white" size={20} />
+            <span className="relative text-sm font-medium">Show Panel</span>
           </Button>
         </div>
       )}
@@ -222,56 +224,54 @@ const SidePanel = ({
           style={{
             backgroundColor: currentColors.slideBg,
           }}
-          className="min-w-[300px] max-w-[300px] h-[calc(100vh-150px)]  rounded-[20px] hide-scrollbar overflow-hidden slide-theme shadow-xl"
+          className="min-w-[300px] max-w-[300px] h-[calc(100vh-150px)] rounded-2xl hide-scrollbar overflow-hidden slide-theme shadow-modern-xl border-2 border-border/20 backdrop-blur-sm"
         >
           <div
             style={{
               backgroundColor: currentColors.slideBg,
             }}
-            className="sticky top-0 z-40  px-6 py-4"
+            className="sticky top-0 z-40 px-6 py-6 border-b border-border/20"
           >
             <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center justify-start gap-4">
+              <div className="flex items-center justify-start gap-3">
                 <ToolTip content="Image Preview">
                   <Button
-                    className={`${
+                    size="sm"
+                    variant={active === "grid" ? "default" : "outline"}
+                    className={`rounded-lg transition-all duration-200 hover:scale-105 ${
                       active === "grid"
-                        ? "bg-[#5141e5] hover:bg-[#4638c7]"
-                        : "bg-white hover:bg-white"
+                        ? "shadow-modern"
+                        : "border-2 border-border/30 hover:border-accent/50"
                     }`}
                     onClick={() => setActive("grid")}
                   >
-                    <LayoutList
-                      className={`${
-                        active === "grid" ? "text-white" : "text-black"
-                      }`}
-                      size={20}
-                    />
+                    <LayoutList size={18} />
                   </Button>
                 </ToolTip>
                 <ToolTip content="List Preview">
                   <Button
-                    className={`${
+                    size="sm"
+                    variant={active === "list" ? "default" : "outline"}
+                    className={`rounded-lg transition-all duration-200 hover:scale-105 ${
                       active === "list"
-                        ? "bg-[#5141e5] hover:bg-[#4638c7]"
-                        : "bg-white hover:bg-white"
+                        ? "shadow-modern"
+                        : "border-2 border-border/30 hover:border-accent/50"
                     }`}
                     onClick={() => setActive("list")}
                   >
-                    <ListTree
-                      className={`${
-                        active === "list" ? "text-white" : "text-black"
-                      }`}
-                      size={20}
-                    />
+                    <ListTree size={18} />
                   </Button>
                 </ToolTip>
               </div>
-              <X
+              <button
                 onClick={handleClose}
-                className="text-[#6c7081] cursor-pointer hover:text-gray-600"
-                size={20}
-              />
+                className="p-2 rounded-lg border-2 border-border/30 hover:border-destructive/50 hover:bg-destructive/10 transition-all duration-200 hover:scale-105 group"
+              >
+                <X
+                  className="text-muted-foreground group-hover:text-destructive transition-colors"
+                  size={18}
+                />
+              </button>
             </div>
           </div>
           <DndContext

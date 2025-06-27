@@ -50,23 +50,23 @@ const ToneSelect: React.FC<{
         name="tone"
         data-testid="tone-select"
         aria-expanded={open}
-        className="w-[200px] justify-between font-instrument_sans font-semibold overflow-hidden bg-blue-100 hover:bg-blue-100 border-blue-200 focus-visible:ring-blue-300 border-none"
+        className="w-[220px] justify-between font-body font-medium h-11 bg-background/50 hover:bg-background/80 border-2 border-accent/30 hover:border-accent/50 focus-visible:ring-2 focus-visible:ring-accent rounded-xl shadow-modern hover:shadow-modern-lg transition-all duration-200"
       >
         <p className="text-sm font-medium truncate">
           {value || "Select tone"}
         </p>
-        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
       </Button>
     </PopoverTrigger>
-    <PopoverContent className="w-[300px] p-0" align="end">
+    <PopoverContent className="w-[280px] p-0 border-2 border-border/50 rounded-xl shadow-modern-xl" align="end">
       <Command>
         <CommandInput
           placeholder="Search tone..."
-          className="font-instrument_sans"
+          className="font-body border-b border-border/30"
         />
         <CommandList>
-          <CommandEmpty>No tone found.</CommandEmpty>
-          <CommandGroup>
+          <CommandEmpty className="py-6 text-center text-sm text-muted-foreground font-body">No tone found.</CommandEmpty>
+          <CommandGroup className="p-2">
             {Object.values(ToneType).map((tone) => (
               <CommandItem
                 key={tone}
@@ -76,15 +76,15 @@ const ToneSelect: React.FC<{
                   onValueChange(currentValue);
                   onOpenChange(false);
                 }}
-                className="font-instrument_sans"
+                className="font-body rounded-lg py-3 px-3 hover:bg-accent/10 focus:bg-accent/10 transition-colors duration-150"
               >
                 <Check
                   className={cn(
-                    "mr-2 h-4 w-4",
+                    "mr-2 h-4 w-4 text-accent",
                     value === tone ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {tone}
+                <span className="font-medium">{tone}</span>
               </CommandItem>
             ))}
           </CommandGroup>
@@ -101,16 +101,15 @@ export function ConfigurationSelects({
   const [openTone, setOpenTone] = useState(false);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-4">
-        <ToneSelect
-          value={config.tone}
-          onValueChange={(value) => onConfigChange("tone", value)}
-          open={openTone}
-          onOpenChange={setOpenTone}
-        />
+    <div className="space-y-6">
+      <div className="flex flex-wrap gap-6">
+          <ToneSelect
+            value={config.tone}
+            onValueChange={(value) => onConfigChange("tone", value)}
+            open={openTone}
+            onOpenChange={setOpenTone}
+          />
       </div>
-      
     </div>
   );
 }

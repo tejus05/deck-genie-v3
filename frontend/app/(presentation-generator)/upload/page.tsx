@@ -24,11 +24,24 @@ export const metadata: Metadata = {
 const page = () => {
 
     return (
-        <div className='relative'>
-
+        <div className='relative min-h-screen'>
+            {/* Modern gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/30 to-accent/10"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-accent/5"></div>
+            
             <Header />
-            <div className='flex flex-col items-center justify-center  py-4'>
-                <h1 className='text-3xl font-semibold font-instrument_sans text-center px-6'>Transform your ideas into investor-ready decks </h1>
+            <div className='relative flex flex-col items-center justify-center py-12 px-6'>
+                <div className="text-center space-y-4 mb-8">
+                    <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold font-display text-gradient leading-tight pb-2'>
+                        Transform your ideas into 
+                    </h1>
+                    <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold font-display text-foreground leading-tight'>
+                        investor-ready decks
+                    </h2>
+                    <p className='text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mt-6 font-body'>
+                        AI-designed presentations that elevate your vision and unlock investor funding.
+                    </p>
+                </div>
             </div>
             <UploadPage />
         </div>)

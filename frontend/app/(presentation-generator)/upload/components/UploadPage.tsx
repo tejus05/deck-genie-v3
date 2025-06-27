@@ -176,7 +176,7 @@ const UploadPage = () => {
   };
 
   return (
-    <Wrapper className="pb-10 lg:max-w-[70%] xl:max-w-[65%]">
+    <Wrapper className="pb-16 lg:max-w-4xl relative z-10">
       <OverlayLoader
         show={loadingState.isLoading}
         text={loadingState.message}
@@ -184,29 +184,39 @@ const UploadPage = () => {
         duration={loadingState.duration}
         extra_info={loadingState.extra_info}
       />
-      <div className="flex flex-col gap-4 md:items-center md:flex-row justify-between py-4">
-        <p></p>
-        <ConfigurationSelects
-          config={config}
-          onConfigChange={handleConfigChange}
-        />
-      </div>
-      <div className="relative">
-        <PromptInput
-          value={config.prompt}
-          onChange={(value) => handleConfigChange("prompt", value)}
+      
+      <div className="space-y-8">
+        {/* Configuration Section */}
+        <div className="flex flex-col gap-6 md:items-center md:flex-row justify-between">
+          <div className="hidden md:block"></div>
+          <ConfigurationSelects
+            config={config}
+            onConfigChange={handleConfigChange}
+          />
+        </div>
 
-          data-testid="prompt-input"
-        />
+        {/* Main Input Section */}
+        <div className="space-y-8">
+          <PromptInput
+            value={config.prompt}
+            onChange={(value) => handleConfigChange("prompt", value)}
+            data-testid="prompt-input"
+          />
+
+          {/* CTA Button */}
+          <div className="flex justify-center pt-4">
+            <Button
+              onClick={handleGeneratePresentation}
+              size="xl"
+              className="group px-12 font-display font-semibold text-lg shadow-modern-xl hover:shadow-modern-xl hover:scale-[1.02] transition-all duration-300"
+              data-testid="next-button"
+            >
+              <span>Generate Presentation</span>
+              <ChevronRight className="!w-6 !h-6 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        </div>
       </div>
-      <Button
-        onClick={handleGeneratePresentation}
-        className="w-full rounded-[32px] flex items-center justify-center py-6 bg-[#5141e5] text-white font-instrument_sans font-semibold text-xl hover:bg-[#5141e5]/80 transition-colors duration-300"
-        data-testid="next-button"
-      >
-        <span>Next</span>
-        <ChevronRight className="!w-6 !h-6" />
-      </Button>
     </Wrapper>
   );
 };
