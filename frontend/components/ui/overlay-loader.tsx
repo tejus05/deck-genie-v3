@@ -52,7 +52,8 @@ export const OverlayLoader = ({
     return (
         <div
             ref={overlayRef}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center opacity-0"
+            className="fixed top-0 left-0 right-0 bottom-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center opacity-0"
+            style={{ height: '100vh', width: '100vw' }}
         >
             <div
                 ref={contentRef}
