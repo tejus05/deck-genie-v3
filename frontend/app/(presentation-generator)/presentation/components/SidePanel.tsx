@@ -53,7 +53,25 @@ const SidePanel = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (window.innerWidth < 768) {
+    // Initialize panel state based on screen size
+    const handleResize = () => {
+      if (window.innerWidth < 1280) { // xl breakpoint
+        setIsOpen(false); // Desktop panel should be closed on smaller screens
+      }
+    };
+    
+    // Set initial state
+    handleResize();
+    
+    // Listen for resize events
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    // Handle mobile panel state changes
+    if (window.innerWidth < 1280) {
       setIsOpen(isMobilePanelOpen);
     }
   }, [isMobilePanelOpen]);
@@ -78,9 +96,10 @@ const SidePanel = ({
   );
 
   const handleClose = () => {
-    setIsOpen(false);
-    if (window.innerWidth < 768) {
+    if (window.innerWidth < 1280) { // xl breakpoint is 1280px
       setIsMobilePanelOpen(false);
+    } else {
+      setIsOpen(false);
     }
   };
 
@@ -155,48 +174,33 @@ const SidePanel = ({
     presentationData?.slides.length === 0
   ) {
     return null;
-
-    // <div className="space-y-4 ">
-    //     <div className="flex items-center gap-2">
-    //         <div className="w-4 h-4 rounded-lg animate-pulse bg-gray-200" />
-    //         <div className="w-full h-2 rounded-lg animate-pulse bg-gray-200" />
-    //     </div>
-    //     {Array.from({ length: 8 }).map((_, index) => (
-    //         <div key={index} className="animate-pulse">
-    //             <div className="w-full aspect-video bg-gray-200 rounded-lg" />
-
-    //         </div>
-    //     ))}
-    // </div>
   }
 
   return (
     <>
       {/* Desktop Toggle Button - Always visible when panel is closed */}
       {!isOpen && (
-        <div className="hidden xl:block fixed left-4 top-1/2 -translate-y-1/2 z-50">
-          <ToolTip content="Open Panel">
-            <Button
-              onClick={() => setIsOpen(true)}
-              className="bg-white hover:bg-gray-50 shadow-lg"
-            >
-              <PanelRightOpen className="text-black" size={20} />
-            </Button>
-          </ToolTip>
+        <div className="hidden xl:block fixed left-6 bottom-6 z-50">
+          <Button
+            onClick={() => setIsOpen(true)}
+            className="bg-[#5146E5] hover:bg-[#4638c7] text-white px-4 py-3 rounded-lg shadow-xl border-2 border-white/20 backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:shadow-2xl flex items-center gap-2"
+          >
+            <PanelRightOpen className="text-white" size={20} />
+            <span className="text-sm font-medium">Show Panel</span>
+          </Button>
         </div>
       )}
 
-      {/* Mobile Toggle Button */}
+      {/* Mobile Toggle Button - Always visible when panel is closed */}
       {!isMobilePanelOpen && (
-        <div className="xl:hidden fixed left-4 bottom-4 z-50">
-          <ToolTip content="Show Panel">
-            <Button
-              onClick={() => setIsMobilePanelOpen(true)}
-              className="bg-[#5146E5] text-white p-3 rounded-full shadow-lg"
-            >
-              <PanelRightOpen className="text-white" size={20} />
-            </Button>
-          </ToolTip>
+        <div className="xl:hidden fixed left-6 bottom-6 z-50">
+          <Button
+            onClick={() => setIsMobilePanelOpen(true)}
+            className="bg-[#5146E5] hover:bg-[#4638c7] text-white px-4 py-3 rounded-lg shadow-xl border-2 border-white/20 backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:shadow-2xl flex items-center gap-2"
+          >
+            <PanelRightOpen className="text-white" size={20} />
+            <span className="text-sm font-medium">Show Panel</span>
+          </Button>
         </div>
       )}
 
