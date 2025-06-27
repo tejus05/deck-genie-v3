@@ -314,7 +314,7 @@ export const renderChart = (
         <ResponsiveContainer
           id="line-chart-container"
           width="100%"
-          height={isMini ? 100 : 300}
+          height={isMini ? 100 : chartSettings?.showLegend ? 350 : 300}
         >
           <LineChart
             className="w-full"
@@ -349,20 +349,8 @@ export const renderChart = (
               <YAxis
                 tick={{ fill: theme.slideTitle }}
                 tickFormatter={formatYAxisTick}
-                padding={{ top: 15 }}
-              >
-                <Label
-                  value={localChartData.unit || ""}
-                  position="top"
-                  style={{
-                    textTransform: "capitalize",
-                    textAnchor: "start",
-                    fontSize: "16px",
-                    fill: theme.slideTitle,
-                    fontWeight: "bold",
-                  }}
-                />
-              </YAxis>
+                padding={{ top: chartSettings?.showLegend ? 20 : 15 }}
+              />
             )}
             <Tooltip
               cursor={{ fill: "transparent" }}
@@ -376,7 +364,7 @@ export const renderChart = (
               }}
             />
             {!isMini && chartSettings?.showLegend && (
-              <Legend verticalAlign="top" align="center" />
+              <Legend verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: '20px' }} />
             )}
             {localChartData.data.series.map((serie, index) => (
               <Line
@@ -406,7 +394,7 @@ export const renderChart = (
         <ResponsiveContainer
           id="pie-chart-container"
           width="100%"
-          height={isMini ? 100 : 300}
+          height={isMini ? 100 : chartSettings?.showLegend ? 350 : 300}
         >
           <PieChart>
             <Pie
@@ -462,7 +450,7 @@ export const renderChart = (
               }}
             />
             {!isMini && chartSettings?.showLegend && (
-              <Legend verticalAlign="top" align="center" />
+              <Legend verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: '20px' }} />
             )}
           </PieChart>
         </ResponsiveContainer>
@@ -474,7 +462,7 @@ export const renderChart = (
         <ResponsiveContainer
           id="bar-chart-container"
           width="100%"
-          height={isMini ? 100 : 330}
+          height={isMini ? 100 : chartSettings?.showLegend ? 380 : 330}
         >
           <BarChart
             data={transformedData(localChartData)}
@@ -510,22 +498,8 @@ export const renderChart = (
                 stroke={theme.slideTitle}
                 tick={{ fill: theme.slideTitle }}
                 tickFormatter={formatYAxisTick}
-                padding={{ top: 20 }}
-              >
-                <Label
-                  value={localChartData.unit || ""}
-                  position="top"
-                  style={{
-                    textTransform: "capitalize",
-                    textAnchor: "start",
-                    fontSize: "16px",
-                    fill: theme.slideTitle,
-                    fontWeight: "bold",
-                    width: "fit",
-                    margin: "0 auto",
-                  }}
-                />
-              </YAxis>
+                padding={{ top: chartSettings?.showLegend ? 20 : 20 }}
+              />
             )}
             <Tooltip
               cursor={{ fill: "transparent" }}
@@ -539,7 +513,7 @@ export const renderChart = (
               }}
             />
             {!isMini && chartSettings?.showLegend && (
-              <Legend verticalAlign="top" align="center" />
+              <Legend verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: '20px' }} />
             )}
             {localChartData &&
               localChartData.data &&

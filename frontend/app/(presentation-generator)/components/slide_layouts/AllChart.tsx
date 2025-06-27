@@ -75,18 +75,37 @@ const AllChart = ({
 
   return (
     <>
-      <div
-        onClick={handleChartClick}
-        data-slide-element
-        data-element-type="graph"
-        data-graph-type={localChartData && localChartData.type}
-        data-graph-data={JSON.stringify(localChartData)}
-        data-element-id={`slide-${slideIndex}-graph`}
-        data-slide-index={slideIndex}
-        className="w-full h-full min-h-[200px] lg:min-h-[300px] max-md:pointer-events-none cursor-pointer hover:opacity-90 transition-opacity relative"
-      >
-        {renderChart(localChartData, false, currentColors ?? [], chartSettings)}
-        {/* <img src={`/Banner.png`} alt={localChartData.type} className="w-full h-full object-cover" /> */}
+      <div className="w-full">
+        {/* Chart Title */}
+        {((localChartData as any)?.unit || localChartData?.name) && chartSettings?.showAxisLabel && (
+          <div className="text-center mb-2">
+            <h3 
+              className="text-sm font-bold capitalize break-words"
+              style={{ 
+                color: currentColors?.slideTitle,
+                fontFamily: currentColors?.fontFamily || "Inter, sans-serif",
+                lineHeight: "1.2"
+              }}
+            >
+              {(localChartData as any)?.unit || localChartData?.name}
+            </h3>
+          </div>
+        )}
+        
+        {/* Chart Container */}
+        <div
+          onClick={handleChartClick}
+          data-slide-element
+          data-element-type="graph"
+          data-graph-type={localChartData && localChartData.type}
+          data-graph-data={JSON.stringify(localChartData)}
+          data-element-id={`slide-${slideIndex}-graph`}
+          data-slide-index={slideIndex}
+          className="w-full h-full min-h-[200px] lg:min-h-[350px] max-md:pointer-events-none cursor-pointer hover:opacity-90 transition-opacity relative"
+        >
+          {renderChart(localChartData, false, currentColors ?? [], chartSettings)}
+          {/* <img src={`/Banner.png`} alt={localChartData.type} className="w-full h-full object-cover" /> */}
+        </div>
       </div>
 
       {localChartData && (
