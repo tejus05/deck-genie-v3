@@ -6,10 +6,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: "DeckGenie | AI-Powered Presentation Generator & Design tool",
-    description: "Transform your ideas into compelling presentations. Let our AI generate professional, visually appealing presentations tailored to your needs.",
-    alternates: {
-        canonical: "https://deckgenie.ai/create"
-    },
+    description: "Transform your ideas into investor-ready decks",
     keywords: [
         "presentation generator",
         "AI presentations",
@@ -21,21 +18,7 @@ export const metadata: Metadata = {
         "presentation automation",
         "smart presentation tool",
         "business presentations"
-    ],
-    openGraph: {
-        title: "Create Data Presentation | PresentOn",
-        description: "Transform your data into compelling presentations with AI",
-        type: "website",
-        url: "https://presenton.ai/create",
-        siteName: "PresentOn"
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Create Data Presentation | PresentOn",
-        description: "Transform your data into compelling presentations with AI",
-        site: "@presenton_ai",
-        creator: "@presenton_ai"
-    }
+    ]
 }
 
 const page = () => {
@@ -45,8 +28,7 @@ const page = () => {
 
             <Header />
             <div className='flex flex-col items-center justify-center  py-4'>
-                <h1 className='text-3xl font-semibold font-instrument_sans'>Create  Presentation </h1>
-                {/* <p className='text-sm text-gray-500'>We will generate a presentation for you</p> */}
+                <h1 className='text-3xl font-semibold font-instrument_sans text-center px-6'>Transform your ideas into investor-ready decks </h1>
             </div>
             <UploadPage />
         </div>)
