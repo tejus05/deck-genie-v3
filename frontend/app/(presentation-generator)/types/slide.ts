@@ -19,7 +19,6 @@ interface SlideContent {
   diagram?: any;
   infographics?: any;
   image_prompts?: string[];
-  icon_queries?: Array<{ queries: string[] }>;
 }
 
 export interface Slide {
@@ -29,7 +28,6 @@ export interface Slide {
   design_index: number | null;
   images: string[] | null;
   properties: null | any;
-  icons: string[] | null;
   graph_id: string | null;
   presentation?: string;
   content: SlideContent;

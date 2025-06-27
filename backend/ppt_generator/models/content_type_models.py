@@ -10,10 +10,6 @@ class HeadingModel(BaseModel):
     description: str
 
 
-class IconQueryCollectionModel(BaseModel):
-    queries: List[str]
-
-
 class SlideContentModel(BaseModel):
     title: str
 
@@ -49,13 +45,11 @@ class Type6Content(SlideContentModel):
 
 class Type7Content(SlideContentModel):
     body: List[HeadingModel]
-    icon_queries: List[IconQueryCollectionModel]
 
 
 class Type8Content(SlideContentModel):
     description: str
     body: List[HeadingModel]
-    icon_queries: List[IconQueryCollectionModel]
 
 
 class Type9Content(SlideContentModel):

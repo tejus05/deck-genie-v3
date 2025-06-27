@@ -88,7 +88,7 @@ const Type7Layout = ({
                     data-element-id={`slide-${slideIndex}-item-${index}-number`}
                     className="text-[32px] leading-[40px] font-bold"
                     style={{
-                      color: currentColors.iconBg,
+                      color: currentColors.accentColor,
                     }}
                   >
                     {
@@ -156,7 +156,7 @@ const Type7Layout = ({
               data-element-id={`slide-${slideIndex}-item-${index}-number`}
               className="text-[32px] leading-[40px] font-bold mb-4"
               style={{
-                color: currentColors.iconBg,
+                color: currentColors.accentColor,
               }}
             >
               {

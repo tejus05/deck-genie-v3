@@ -1,9 +1,6 @@
 from typing import List, Optional
 from ppt_generator.models.other_models import SlideType
 from ppt_generator.models.query_and_prompt_models import (
-    IconCategoryEnum,
-    IconFrameEnum,
-    IconQueryCollectionWithData,
     ImageAspectRatio,
     ImagePromptWithThemeAndAspectRatio,
 )
@@ -15,16 +12,6 @@ SLIDE_WITHOUT_IMAGE = [
     SlideType.type6,
     SlideType.type7,
     SlideType.type8,
-    SlideType.type9,
-]
-
-SLIDE_WITHOUT_ICON = [
-    SlideType.type1,
-    SlideType.type2,
-    SlideType.type3,
-    SlideType.type4,
-    SlideType.type5,
-    SlideType.type6,
     SlideType.type9,
 ]
 
@@ -70,23 +57,4 @@ class SlideModelUtils:
                 theme_prompt=theme_prompt,
             )
             for each in self.content.image_prompts
-        ]
-
-    def get_icon_queries(self) -> List[IconQueryCollectionWithData]:
-        if self.type in SLIDE_WITHOUT_ICON:
-            return []
-
-        category = IconCategoryEnum.solid
-
-        if len(self.content.body) == 3:
-            category = IconCategoryEnum.outline
-
-        return [
-            IconQueryCollectionWithData(
-                category=category,
-                index=index,
-                theme=self.theme,
-                icon_query=each_query,
-            )
-            for index, each_query in enumerate(self.content.icon_queries)
         ]

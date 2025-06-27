@@ -18,12 +18,6 @@ class LLMHeadingModel(BaseModel):
     )
 
 
-class LLMIconQueryCollectionModel(BaseModel):
-    queries: List[str] = Field(
-        description="Multiple queries to generate simillar icons matching heading and description"
-    )
-
-
 class LLMSlideContentModel(BaseModel):
     title: str = Field(description="Title of the slide")
 
@@ -138,17 +132,11 @@ class LLMType7Content(LLMSlideContentModel):
         min_length=1,
         max_length=4,
     )
-    icon_queries: List[LLMIconQueryCollectionModel] = Field(
-        description="One icon query collection model for every item in body to search icon",
-        min_length=1,
-        max_length=4,
-    )
 
     @classmethod
     def get_notes(cls):
         return """
         - The **Body** should include **1 to 4 HeadingModels**.  
-        - Each **IconQueryCollectionModel** must contain 3 *queries*.
         - Each **Heading** must consist of **1 to 3 words**.  
         - Each item **Description** can be upto 10 words.
         """
@@ -165,15 +153,11 @@ class LLMType8Content(LLMSlideContentModel):
         min_length=1,
         max_length=3,
     )
-    icon_queries: List[LLMIconQueryCollectionModel] = Field(
-        description="One icon query collection model for every item in body to search icon"
-    )
 
     @classmethod
     def get_notes(cls):
         return """
         - The **Body** should include **1 to 3 HeadingModels**.  
-        - Each **IconQueryCollectionModel** must contain 3 *queries*.
         - Each **Heading** must consist of **1 to 3 words**.  
         - Each item **Description** can be upto 10 words.
         """

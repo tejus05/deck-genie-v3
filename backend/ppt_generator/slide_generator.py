@@ -23,8 +23,8 @@ prompt_template_from_slide = ChatPromptTemplate.from_messages(
                 # Notes
                 - Provide output in the specified tone and style.
                 - The goal is to change Slide data based on the provided prompt.
-                - Do not change **Image prompts** and **Icon queries** if not asked for in prompt.
-                - Generate **Image prompts** and **Icon queries** if asked to generate or change image or icons in prompt.
+                - Do not change **Image prompts** if not asked for in prompt.
+                - Generate **Image prompts** if asked to generate or change image in prompt.
                 - Ensure there are no line breaks in the JSON.
                 - Do not use special characters for highlighting.
                 {notes}
@@ -37,7 +37,7 @@ prompt_template_from_slide = ChatPromptTemplate.from_messages(
             """
             - Prompt: {prompt}
             - Output Tone: {tone}
-            - Image Prompts and Icon Queries Language: English
+            - Image Prompts Language: English
             - Theme: {theme}
             - Slide data: {slide_data}
         """,
@@ -60,8 +60,8 @@ prompt_template_from_slide_type = ChatPromptTemplate.from_messages(
                 - **4**: contains title and list of items with images.
                 - **5**: contains title, description and a graph.
                 - **6**: contains title, description and list of items.
-                - **7**: contains title and list of items with icons.
-                - **8**: contains title, description and list of items with icons.
+                - **7**: contains title and list of items.
+                - **8**: contains title, description and list of items.
                 - **9**: contains title, list of items and a graph.
                 - **10**: contains title, list of inforgraphic charts with supporting information.
                 - **11**: contains title, a single inforgraphic chart and description.

@@ -37,13 +37,13 @@ const Type2Mini = ({ title, body, design_index }: Type2MiniProps) => {
                     <div className="flex justify-between w-[85%] mx-auto items-center mb-1">
                         <div className="absolute w-[70%] h-[1px] "
                             style={{
-                                backgroundColor: currentColors.iconBg
+                                backgroundColor: currentColors.accentColor
                             }}
                         />
                         {body.map((_, index) => (
                             <div
                                 style={{
-                                    backgroundColor: currentColors.iconBg
+                                    backgroundColor: currentColors.accentColor
                                 }}
                                 key={index} className="w-2 h-2 rounded-full  text-white flex items-center justify-center text-[4px] z-10">
                                 {index + 1}
@@ -73,7 +73,7 @@ const Type2Mini = ({ title, body, design_index }: Type2MiniProps) => {
                             {design_index === 2 && (
                                 <div
                                     style={{
-                                        color: currentColors.iconBg
+                                        color: currentColors.accentColor
                                     }}
                                     className=" text-[5px] font-semibold">0{index + 1}</div>
                             )}

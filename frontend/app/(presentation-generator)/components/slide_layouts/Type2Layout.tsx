@@ -114,7 +114,7 @@ const Type2Layout = ({
               data-element-id={`slide-${slideIndex}-horizontal-line`}
               className="absolute top-1/2 w-[87%] left-1/2 -translate-x-1/2 h-[2px] "
               style={{
-                backgroundColor: currentColors.iconBg,
+                backgroundColor: currentColors.accentColor,
               }}
             />
 
@@ -128,7 +128,7 @@ const Type2Layout = ({
                 key={`timeline-${index}`}
                 className="relative z-10 w-12 h-12 rounded-full  px-1 text-white flex items-center justify-center font-bold text-lg"
                 style={{
-                  backgroundColor: currentColors.iconBg,
+                  backgroundColor: currentColors.accentColor,
                 }}
               >
                 <span
@@ -210,7 +210,7 @@ const Type2Layout = ({
                     data-element-id={`slide-${slideIndex}-item-${index}-number`}
                     className=" text-[32px] leading-[40px] px-1 font-bold mb-4"
                     style={{
-                      color: currentColors.iconBg,
+                      color: currentColors.accentColor,
                     }}
                   >
                     {
@@ -292,7 +292,7 @@ const Type2Layout = ({
                 data-element-id={`slide-${slideIndex}-item-${index}-number`}
                 className=" text-[32px] leading-[40px] font-semibold lg:mb-4"
                 style={{
-                  color: currentColors.iconBg,
+                  color: currentColors.accentColor,
                 }}
               >
                 {

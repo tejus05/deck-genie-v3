@@ -8,7 +8,7 @@ export interface ThemeColors {
   slideHeading: string;
   slideDescription: string;
   slideBox: string;
-  iconBg: string;
+  accentColor: string;
   chartColors: string[];
   fontFamily: string;
   theme?: ThemeType;
@@ -35,7 +35,7 @@ export const useThemeService = () => {
           slideHeading: '#333333',
           slideDescription: '#666666',
           slideBox: '#f5f5f5',
-          iconBg: '#e0e0e0',
+          accentColor: '#e0e0e0',
           chartColors: ['#3366cc', '#dc3912', '#ff9900', '#109618'],
           fontFamily: 'Arial, sans-serif'
         }

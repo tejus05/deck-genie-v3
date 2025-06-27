@@ -9,8 +9,8 @@ from pydantic import BaseModel, Field
 # 4. contains title and list of items and multiple images.
 # 5. contains title, description and a graph.
 # 6. contains title, description and list of items.
-# 7. contains title, list of items and icons.
-# 8. contains title, description, list of items and icons.
+# 7. contains title and list of items.
+# 8. contains title, description and list of items.
 # 9. contains title, list of items and a graph.
 # """
 

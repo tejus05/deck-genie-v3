@@ -31,7 +31,7 @@ const CustomThemeSettings = ({
     slideHeading: "#2D2D2D",
     slideDescription: "#4A4A4A",
     slideBox: "#d8c6c6",
-    iconBg: "#281810",
+    accentColor: "#281810",
     chartColors: ["#281810", "#4A3728", "#665E57", "#665E57", "#665E57"],
     fontFamily: "var(--font-inter)",
   });

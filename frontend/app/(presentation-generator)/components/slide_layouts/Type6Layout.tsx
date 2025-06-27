@@ -104,7 +104,7 @@ const Type6Layout = ({
                     data-element-id={`slide-${slideIndex}-item-${index}-number`}
                     className="  text-[26px] lg:text-[32px] leading-[40px] px-1 font-bold mb-4"
                     style={{
-                      color: currentColors.iconBg,
+                      color: currentColors.accentColor,
                     }}
                   >
                     {numberTranslations["English"][index || 0]}

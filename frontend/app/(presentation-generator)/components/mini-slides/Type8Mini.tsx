@@ -36,7 +36,7 @@ const Type8Mini = ({ title, description, body, tone }: Type8MiniProps) => {
             >
               <div
                 className="w-2 h-2 rounded-sm flex items-center justify-center text-[4px] font-bold"
-                style={{ backgroundColor: currentColors.iconBg, color: 'white' }}
+                style={{ backgroundColor: currentColors.accentColor, color: 'white' }}
               >
                 {
                   numberTranslations[

@@ -35,9 +35,6 @@ class SlideSqlModel(SQLModel, table=True):
     images: Optional[List[str]] = Field(
         sa_column=Column(JSON, nullable=True), default=None
     )
-    icons: Optional[List[str]] = Field(
-        sa_column=Column(JSON, nullable=True), default=None
-    )
     presentation: str
     content: dict = Field(sa_column=Column(JSON, nullable=False), default=None)
     properties: Optional[dict] = Field(

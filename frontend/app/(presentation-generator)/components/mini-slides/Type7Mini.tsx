@@ -29,7 +29,7 @@ const Type7Mini = ({ title, body, tone }: Type7MiniProps) => {
           <div key={index} className="bg-gray-50 rounded-sm p-1 slide-box">
             <div
               className="w-2 h-2 mb-1 rounded-sm flex items-center justify-center text-[4px] font-bold"
-              style={{ backgroundColor: currentColors.iconBg, color: 'white' }}
+              style={{ backgroundColor: currentColors.accentColor, color: 'white' }}
             >
               {
                 numberTranslations[

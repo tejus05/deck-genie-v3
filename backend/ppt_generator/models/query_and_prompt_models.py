@@ -3,8 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from ppt_generator.models.content_type_models import IconQueryCollectionModel
-
 
 class ImageAspectRatio(Enum):
     r_1_1 = "1:1"
@@ -22,21 +20,3 @@ class ImagePromptWithThemeAndAspectRatio(BaseModel):
     theme_prompt: str
     image_prompt: str
     aspect_ratio: ImageAspectRatio
-
-
-class IconFrameEnum(Enum):
-    filled_rounded_rectangle = 1
-    filled_circle = 2
-
-
-class IconCategoryEnum(Enum):
-    solid = "solid"
-    semi_solid = "semi-solid"
-    outline = "outline"
-
-
-class IconQueryCollectionWithData(BaseModel):
-    category: IconCategoryEnum = IconCategoryEnum.solid
-    index: int
-    theme: Optional[dict] = None
-    icon_query: IconQueryCollectionModel

@@ -23,7 +23,6 @@ class SlideModel(BaseModel):
     type: SlideType
     design_index: Optional[int] = None
     images: Optional[List[str]] = None
-    icons: Optional[List[str]] = None
     presentation: str
     content: (
         Type1Content
@@ -59,9 +58,3 @@ class SlideModel(BaseModel):
         if not hasattr(self.content, "image_prompts"):
             return 0
         return len(self.content.image_prompts or [])
-
-    @property
-    def icons_count(self):
-        if not hasattr(self.content, "icon_queries"):
-            return 0
-        return len(self.content.icon_queries or [])

@@ -244,16 +244,6 @@ const presentationGenerationSlice = createSlice({
         ] = action.payload.image;
       }
     },
-    updateSlideIcon: (
-      state,
-      action: PayloadAction<{ index: number; iconIdx: number; icon: string }>
-    ) => {
-      if (state.presentationData?.slides[action.payload.index]?.icons) {
-        state.presentationData.slides[action.payload.index].icons![
-          action.payload.iconIdx
-        ] = action.payload.icon;
-      }
-    },
     updateSlideChart: (
       state,
       action: PayloadAction<{ index: number; chart: Chart }>
@@ -443,7 +433,6 @@ export const {
   updateSlideBodyHeading,
   updateSlideBodyDescription,
   updateSlideImage,
-  updateSlideIcon,
   deletePresentationSlide,
   addSlideBodyItem,
   addSlideImage,

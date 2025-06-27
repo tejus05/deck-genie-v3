@@ -27,7 +27,6 @@ export const getEmptySlideContent = (
     design_index: 1,
     properties: null,
     images: [],
-    icons: [],
     graph_id: null,
     presentation: presentation_id,
     content: {
@@ -99,35 +98,23 @@ export const getEmptySlideContent = (
     case 7:
       return {
         ...baseSlide,
-        icons: ["", "", ""],
         content: {
           title: "New Title",
           body: [
             { heading: "First Point", description: "Add description" },
             { heading: "Second Point", description: "Add description" },
-          ],
-          icon_queries: [
-            {
-              queries: [""],
-            },
           ],
         },
       };
     case 8:
       return {
         ...baseSlide,
-        icons: ["", "", ""],
         content: {
           title: "New Title",
           description: "Add your description here",
           body: [
             { heading: "First Point", description: "Add description" },
             { heading: "Second Point", description: "Add description" },
-          ],
-          icon_queries: [
-            {
-              queries: [""],
-            },
           ],
         },
       };

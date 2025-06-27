@@ -29,7 +29,7 @@ const Type6Mini = ({ title, description, body }: Type6MiniProps) => {
                         <div key={index} className="bg-gray-50 rounded-sm p-[2px] slide-box">
                             <div
                                 style={{
-                                    color: currentColors.iconBg
+                                    color: currentColors.accentColor
                                 }}
                                 className=" text-[5px] font-semibold">0{index + 1}</div>
                             <div className="truncate font-medium slide-heading">
