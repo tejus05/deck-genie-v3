@@ -35,8 +35,8 @@ const Type8Mini = ({ title, description, body, tone }: Type8MiniProps) => {
               className="flex gap-1 bg-gray-50 rounded-sm p-1 slide-box"
             >
               <div
-                className="w-2 h-2 rounded-sm flex items-center justify-center text-[4px] font-bold"
-                style={{ backgroundColor: currentColors.accentColor, color: 'white' }}
+                className="text-[5px] font-bold flex-shrink-0"
+                style={{ color: currentColors.accentColor }}
               >
                 {
                   numberTranslations[
@@ -44,7 +44,7 @@ const Type8Mini = ({ title, description, body, tone }: Type8MiniProps) => {
                   ][index]
                 }
               </div>
-              <div>
+              <div className="flex-1">
                 <div className="truncate font-medium slide-heading">
                   <MiniTypeWriter text={item.heading} />
                 </div>
