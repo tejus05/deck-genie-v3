@@ -25,17 +25,26 @@ def get_prompt_template():
             (
                 "system",
                 """
-                    Generate titles for the presentation based on the prompt and additional information.
+                    Generate a specific, descriptive title for the presentation and individual slide titles based on the prompt and additional information.
+
+                    # IMPORTANT: You must generate an actual, specific presentation title - NOT a generic placeholder or instruction.
 
                     # Steps
-                    1. Analyze the prompt and additional information.
-                    2. Visualize presentation with **Number of Slides**.
-                    3. Use provided input or any information you have on this topic.
-                    4. Check if slide titles are provided in **Input**.
-                    5. Generate title for each slide if not provided in **Input**.
-                    6. If slide titles are provided in **Input** then use them as it is.
-                    7. In case if slides for chapter is provided then analyze all chapter content and then structurally generate titles considering all slide content. \
+                    1. Analyze the prompt and additional information carefully.
+                    2. Create a specific, descriptive presentation title that captures the main topic/theme.
+                    3. Visualize presentation with **Number of Slides**.
+                    4. Use provided input or any information you have on this topic.
+                    5. Check if slide titles are provided in **Input**.
+                    6. Generate title for each slide if not provided in **Input**.
+                    7. If slide titles are provided in **Input** then use them as it is.
+                    8. In case if slides for chapter is provided then analyze all chapter content and then structurally generate titles considering all slide content. \
                         Keep the flow as per given chapter content. Ensure that titles are generated to cover all the content in the chapter.
+
+                    # Title Generation Rules
+                    - The presentation title must be SPECIFIC to the content, not generic
+                    - Use 3-8 words that describe what the presentation is actually about
+                    - Examples of GOOD titles: "Digital Marketing Strategy 2024", "AI in Healthcare Applications", "Quarterly Sales Performance Review"
+                    - Examples of BAD titles: "Presentation", "Title of Presentation", "Business Presentation"
 
                     # Tone Guidelines
                     Apply the specified tone when creating titles:
@@ -82,7 +91,7 @@ async def generate_ppt_titles(
 
     chain = get_prompt_template() | model
 
-    return await get_validated_response(
+    response = await get_validated_response(
         chain,
         {
             "prompt": prompt,
@@ -92,3 +101,18 @@ async def generate_ppt_titles(
         },
         PresentationTitlesModel,
     )
+    
+    # Post-process to ensure we have a meaningful title
+    if (not response.presentation_title or 
+        response.presentation_title.lower() in ["presentation", "title", "untitled"] or
+        "title of" in response.presentation_title.lower() or
+        len(response.presentation_title.strip()) < 3):
+        
+        # Generate a fallback title from the prompt
+        if prompt and len(prompt.strip()) > 0:
+            words = prompt.strip().split()[:4]
+            response.presentation_title = " ".join(words).title()
+        else:
+            response.presentation_title = "Business Presentation"
+    
+    return response

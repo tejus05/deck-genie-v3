@@ -129,6 +129,29 @@ const Header = ({
     }
   };
 
+  const getCleanTitle = () => {
+    const title = presentationData?.presentation?.title;
+    if (!title || 
+        title === "Title of this presentation in about 3 to 8 words" ||
+        title === "Presentation" ||
+        title.trim().length === 0) {
+      
+      // Try to generate a better title from the prompt
+      const prompt = presentationData?.presentation?.prompt;
+      if (prompt && prompt.trim().length > 0) {
+        // Take first 4 words from prompt and title case them
+        const words = prompt.trim().split(' ').slice(0, 4);
+        const generatedTitle = words.map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
+        return generatedTitle;
+      }
+      
+      return `Presentation ${presentation_id.slice(0, 8)}`;
+    }
+    return title;
+  };
+
   const getSlideMetadata = async () => {
     try {
       logOperation('Fetching slide metadata');
@@ -301,7 +324,7 @@ const Header = ({
         const fileName = pptxPath.split('/').pop() || `presentation-${presentation_id}.pptx`;
         // Construct correct presentations URL
         link.href = `http://127.0.0.1:8000/presentations/${presentation_id}/${fileName}`;
-        link.download = `${presentationData?.presentation?.title || `presentation-${presentation_id}`}.pptx`;
+        link.download = `${getCleanTitle()}.pptx`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -352,7 +375,7 @@ const Header = ({
         },
         body: JSON.stringify({
           url: `http://localhost:3000/pdf-maker?id=${presentation_id}`,
-          title: presentationData?.presentation?.title || `presentation-${presentation_id}`,
+          title: getCleanTitle(),
         })
       });
 
@@ -363,7 +386,7 @@ const Header = ({
         // Create a download link
         const link = document.createElement('a');
         link.href = pdfUrl.startsWith('http') ? pdfUrl : `http://localhost:8000${pdfUrl}`;
-        link.download = `${presentationData?.presentation?.title || `presentation-${presentation_id}`}.pdf`;
+        link.download = `${getCleanTitle()}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

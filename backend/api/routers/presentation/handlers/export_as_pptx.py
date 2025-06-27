@@ -42,9 +42,23 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
                 PresentationSqlModel, self.data.presentation_id
             )
 
+        # Handle cases where title might be empty, None, or the old default prompt text
+        title = presentation.title
+        if (not title or 
+            title == "Title of this presentation in about 3 to 8 words" or
+            title == "Presentation" or
+            len(title.strip()) == 0):
+            # Generate a more descriptive fallback based on the presentation prompt
+            if presentation.prompt and len(presentation.prompt.strip()) > 0:
+                # Take first few words from prompt as title
+                words = presentation.prompt.strip().split()[:4]
+                title = " ".join(words).title()
+            else:
+                title = f"Presentation {presentation.id[:8]}"
+
         ppt_path = os.path.join(
             self.presentation_dir,
-            sanitize_filename(f"{presentation.title}.pptx")
+            sanitize_filename(f"{title}.pptx")
         )
         ppt_creator = PptxPresentationCreator(self.data.pptx_model, self.temp_dir)
         ppt_creator.create_ppt()
