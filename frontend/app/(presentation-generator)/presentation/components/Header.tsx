@@ -253,7 +253,6 @@ const Header = ({
         console.error(error);
       });
 
-    // Use the slide data directly as presenton does - no conversion needed
     const apiBody = {
       presentation_id: presentation_id,
       pptx_model: {
@@ -269,7 +268,7 @@ const Header = ({
 
     setOpen(false);
     try {
-      logOperation('Starting advanced PPTX export with presenton integration');
+      logOperation('Starting advanced PPTX export with DeckGenie integration');
       setShowLoader(true);
       
       toast({
@@ -278,7 +277,6 @@ const Header = ({
         variant: "default",
       });
 
-      // First, extract slide metadata using the new presenton-based API
       const metadataResponse = await fetch('/api/slide-metadata', {
         method: 'POST',
         headers: {

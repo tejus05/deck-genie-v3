@@ -6,9 +6,6 @@ import { clearLogs, logOperation } from "../../utils/log";
 const urls = getEnv();
 const BASE_URL = urls.BASE_URL;
 export class PresentationGenerationApi {
-  // static BASE_URL="https://api.presenton.ai";
-  // static BASE_URL="https://presentation-generator-fragrant-mountain-1643.fly.dev";
-  // static BASE_URL = "http://localhost:48388";
 
   static async getChapterDetails() {
     try {
