@@ -118,7 +118,7 @@ const UploadPage = () => {
   };
 
   /**
-   * Handles direct presentation generation without documents
+   * Handles direct presentation generation from prompt
    */
   const handleDirectPresentationGeneration = async () => {
     logOperation('Starting direct presentation generation');
@@ -132,7 +132,6 @@ const UploadPage = () => {
     const createResponse = await PresentationGenerationApi.getQuestions({
       prompt: config?.prompt ?? "",
       n_slides: config?.slides ? parseInt(config.slides) : null,
-      documents: [],
       images: [],
       tone: config?.tone ?? "",
     });

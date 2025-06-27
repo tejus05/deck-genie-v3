@@ -3,27 +3,16 @@ from pydantic import BaseModel
 
 from ppt_generator.models.pptx_models import PptxPresentationModel
 from ppt_generator.models.query_and_prompt_models import (
-    IconCategoryEnum,
     ImagePromptWithThemeAndAspectRatio,
 )
 from ppt_generator.models.slide_model import SlideModel
 from api.sql_models import PresentationSqlModel, SlideSqlModel
 
 
-class DocumentsAndImagesPath(BaseModel):
-    documents: Optional[List[str]] = None
-    images: Optional[List[str]] = None
-
-
-class DecomposeDocumentsRequest(DocumentsAndImagesPath):
-    pass
-
-
 class GeneratePresentationRequirementsRequest(BaseModel):
     prompt: Optional[str] = None
     n_slides: int
     tone: str
-    documents: Optional[List[str]] = None
     research_reports: Optional[List[str]] = None
     images: Optional[List[str]] = None
 
@@ -52,31 +41,6 @@ class SearchImageRequest(BaseModel):
     limit: int = 10
 
 
-class SearchIconRequest(BaseModel):
-    presentation_id: str
-    query: Optional[str] = None
-    category: Optional[IconCategoryEnum] = None
-    page: int = 1
-    limit: int = 10
-
-
-class SlideEditRequest(BaseModel):
-    index: int
-    prompt: str
-
-
-class EditPresentationRequest(BaseModel):
-    presentation_id: str
-    watermark: bool = True
-    changes: List[SlideEditRequest]
-
-
-class EditPresentationSlideRequest(BaseModel):
-    presentation_id: str
-    index: int
-    prompt: str
-
-
 class UpdatePresentationThemeRequest(BaseModel):
     presentation_id: str
     theme: Optional[dict] = None
@@ -85,10 +49,6 @@ class UpdatePresentationThemeRequest(BaseModel):
 class ExportAsRequest(BaseModel):
     presentation_id: str
     pptx_model: PptxPresentationModel
-
-
-class DecomposeDocumentsResponse(BaseModel):
-    documents: dict
 
 
 class PresentationAndSlides(BaseModel):

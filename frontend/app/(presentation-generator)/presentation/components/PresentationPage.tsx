@@ -26,7 +26,6 @@ import { Loader2 } from "lucide-react";
 import { jsonrepair } from "jsonrepair";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
-import Help from "./Help";
 import { getEnv } from "@/utils/constant";
 import { clearLogs, logOperation } from "../../utils/log";
 
@@ -369,7 +368,6 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
         </div>
       )}
       <Header presentation_id={presentation_id} currentSlide={currentSlide} />
-      <Help />
       {error ? (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
           <div

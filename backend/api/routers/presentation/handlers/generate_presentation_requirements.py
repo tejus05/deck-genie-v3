@@ -5,8 +5,6 @@ from api.services.logging import LoggingService
 from api.services.database import get_sql_session
 from api.services.instances import temp_file_service
 from api.sql_models import PresentationSqlModel
-from document_processor.loader import DocumentsLoader
-from ppt_config_generator.document_summary_generator import generate_document_summary
 
 
 class GeneratePresentationRequirementsHandler:
@@ -19,7 +17,6 @@ class GeneratePresentationRequirementsHandler:
         self.presentation_id = presentation_id
         self.prompt = data.prompt
         self.n_slides = data.n_slides
-        self.documents = data.documents or []
         self.tone = data.tone
         self.research_reports = data.research_reports or []
         self.images = data.images or []
@@ -33,19 +30,13 @@ class GeneratePresentationRequirementsHandler:
             extra=log_metadata.model_dump(),
         )
 
-        all_document_paths = [*self.documents, *self.research_reports]
-
-        documents_loader = DocumentsLoader(all_document_paths)
-        await documents_loader.load_documents(self.temp_dir)
-
-        summary = await generate_document_summary(documents_loader.documents)
-
+        # Create presentation without document processing
         presentation = PresentationSqlModel(
             id=self.presentation_id,
             prompt=self.prompt,
             n_slides=self.n_slides,
             tone=self.tone,
-            summary=summary,
+            summary="",  # No summary since we don't process documents
         )
 
         with get_sql_session() as sql_session:

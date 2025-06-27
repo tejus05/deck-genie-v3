@@ -6,7 +6,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: "DeckGenie | AI-Powered Presentation Generator & Design tool",
-    description: "Transform your data into compelling presentations. Upload your documents and let our AI generate professional, data-driven presentations tailored to your needs.",
+    description: "Transform your ideas into compelling presentations. Let our AI generate professional, visually appealing presentations tailored to your needs.",
     alternates: {
         canonical: "https://deckgenie.ai/create"
     },

@@ -71,12 +71,6 @@ const ImageEditor = ({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   
-  // Search-related state
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState<string[]>([]);
-  const [searchError, setSearchError] = useState<string | null>(null);
-  
   const [objectFit, setObjectFit] = useState<"cover" | "contain" | "fill">(
     (properties &&
       properties[imageIdx] &&
@@ -254,34 +248,6 @@ const ImageEditor = ({
   };
   const urls = getEnv();
   const BASE_URL = urls.BASE_URL;
-
-  // Search handler function for Unsplash image search
-  const handleSearchImages = async () => {
-    if (!searchQuery.trim()) return;
-    
-    try {
-      logOperation(`Searching images for slide ${slideIndex}, element ${elementId} with query: ${searchQuery}`);
-      setIsSearching(true);
-      setSearchError(null);
-
-      const presentation_id = searchParams.get("id");
-      const response = await PresentationGenerationApi.imageSearch({
-        presentation_id: presentation_id!,
-        query: searchQuery,
-        page: 1,
-        limit: 12,
-      });
-
-      logOperation(`Image search successful for slide ${slideIndex}, element ${elementId}`);
-      setSearchResults(response.urls || []);
-    } catch (err) {
-      const errorMessage = "Failed to search images. Please try again.";
-      logOperation(`Image search failed for slide ${slideIndex}, element ${elementId}: ${err}`);
-      setSearchError(errorMessage);
-    } finally {
-      setIsSearching(false);
-    }
-  };
 
   return (
     <>

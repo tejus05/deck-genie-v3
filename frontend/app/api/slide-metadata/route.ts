@@ -37,7 +37,6 @@ interface PictureElement {
   shape: string | null;
   object_fit: {
     fit: string | null;
-    focus: number[];
   };
   overlay: string | null;
   border_radius: number[];
@@ -245,8 +244,6 @@ export async function POST(request: NextRequest) {
               case "picture":
                 const imgEl = el.tagName.toLowerCase() === "img" ? el as HTMLImageElement : el.querySelector("img") as HTMLImageElement;
                 if (imgEl) {
-                  const focialPointx = parseFloat(imgEl.getAttribute('data-focial-point-x') || '0');
-                  const focialPointy = parseFloat(imgEl.getAttribute('data-focial-point-y') || '0');
                   const image_type = imgEl.getAttribute('data-image-type');
                   const objectFit = imgEl.getAttribute('data-object-fit');
 
@@ -259,7 +256,6 @@ export async function POST(request: NextRequest) {
                     shape: image_type,
                     object_fit: {
                       fit: objectFit,
-                      focus: [focialPointx, focialPointy],
                     },
                     overlay: isIcon ? "ffffff" : null,
                     border_radius: slideType === "4"

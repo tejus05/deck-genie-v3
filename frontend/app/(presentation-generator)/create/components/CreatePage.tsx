@@ -35,11 +35,6 @@ const CreatePage = () => {
   const { presentation_id, images, titles } = useSelector(
     (state: RootState) => state.presentationGeneration
   );
-  const {
-
-    documents,
-    images: imagesUploaded,
-  } = useSelector((state: RootState) => state.pptGenUpload);
   const { currentTheme, currentColors } = useSelector(
     (state: RootState) => state.theme
   );

@@ -4,14 +4,10 @@ from fastapi import APIRouter, Body, File, UploadFile, Depends
 
 from api.models import SessionModel
 from api.request_utils import RequestUtils
-from api.routers.presentation.handlers.decompose_documents import (
-    DecomposeDocumentsHandler,
-)
 from api.routers.presentation.handlers.delete_presentation import (
     DeletePresentationHandler,
 )
 from api.routers.presentation.handlers.delete_slide import DeleteSlideHandler
-from api.routers.presentation.handlers.edit import PresentationEditHandler
 from api.routers.presentation.handlers.export_as_pptx import ExportAsPptxHandler
 from api.routers.presentation.handlers.generate_data import (
     PresentationGenerateDataHandler,
@@ -20,7 +16,6 @@ from api.routers.presentation.handlers.generate_image import GenerateImageHandle
 from api.routers.presentation.handlers.generate_presentation_requirements import (
     GeneratePresentationRequirementsHandler,
 )
-
 from api.routers.presentation.handlers.generate_stream import (
     PresentationGenerateStreamHandler,
 )
@@ -29,26 +24,16 @@ from api.routers.presentation.handlers.generate_titles import (
 )
 from api.routers.presentation.handlers.get_presentation import GetPresentationHandler
 from api.routers.presentation.handlers.get_presentations import GetPresentationsHandler
-from api.routers.presentation.handlers.search_icon import SearchIconHandler
-from api.routers.presentation.handlers.search_image import SearchImageHandler
-from api.routers.presentation.handlers.update_parsed_document import (
-    UpdateParsedDocumentHandler,
-)
 from api.routers.presentation.handlers.update_presentation_theme import (
     UpdatePresentationThemeHandler,
 )
 from api.routers.presentation.handlers.update_slide_models import (
     UpdateSlideModelsHandler,
 )
-from api.routers.presentation.handlers.upload_files import UploadFilesHandler
 from api.routers.presentation.handlers.upload_presentation_thumbnail import (
     UploadPresentationThumbnailHandler,
 )
 from api.routers.presentation.models import (
-    DecomposeDocumentsRequest,
-    DecomposeDocumentsResponse,
-    DocumentsAndImagesPath,
-    EditPresentationSlideRequest,
     ExportAsRequest,
     GenerateImageRequest,
     GeneratePresentationRequirementsRequest,
@@ -56,10 +41,7 @@ from api.routers.presentation.models import (
     PresentationAndPaths,
     PresentationAndSlides,
     GenerateTitleRequest,
-    PresentationAndUrls,
     PresentationGenerateRequest,
-    SearchIconRequest,
-    SearchImageRequest,
     UpdatePresentationThemeRequest,
     PresentationUpdateRequest,
 )
@@ -89,44 +71,6 @@ async def get_presentation_from_id(presentation_id: str):
     )
     return await handle_errors(
         GetPresentationHandler(presentation_id).get, logging_service, log_metadata
-    )
-
-
-@presentation_router.post("/files/upload", response_model=DocumentsAndImagesPath)
-async def upload_files(
-    documents: Annotated[Optional[List[UploadFile]], File()] = None,
-    images: Annotated[Optional[List[UploadFile]], File()] = None,
-):
-    request_utils = RequestUtils("/ppt/files/upload")
-    logging_service, log_metadata = await request_utils.initialize_logger()
-    return await handle_errors(
-        UploadFilesHandler(documents, images).post,
-        logging_service,
-        log_metadata,
-    )
-
-
-
-@presentation_router.post("/files/decompose", response_model=DecomposeDocumentsResponse)
-async def decompose_documents(data: DecomposeDocumentsRequest):
-    request_utils = RequestUtils("/ppt/files/decompose")
-    logging_service, log_metadata = await request_utils.initialize_logger()
-    return await handle_errors(
-        DecomposeDocumentsHandler(data).post, logging_service, log_metadata
-    )
-
-
-@presentation_router.post("/document/update")
-async def update_document(
-    path: Annotated[str, Body()],
-    file: Annotated[UploadFile, File()],
-):
-    request_utils = RequestUtils("/ppt/document/update")
-    logging_service, log_metadata = await request_utils.initialize_logger()
-    return await handle_errors(
-        UpdateParsedDocumentHandler(path, file).post,
-        logging_service,
-        log_metadata,
     )
 
 
@@ -216,19 +160,6 @@ async def update_presentation(
     )
 
 
-@presentation_router.post("/edit", response_model=SlideModel)
-async def update_presentation(
-    data: EditPresentationSlideRequest,
-):
-    request_utils = RequestUtils("/ppt/edit")
-    logging_service, log_metadata = await request_utils.initialize_logger(
-        presentation_id=data.presentation_id
-    )
-    return await handle_errors(
-        PresentationEditHandler(data).post, logging_service, log_metadata
-    )
-
-
 @presentation_router.post("/slides/update", response_model=PresentationAndSlides)
 async def update_slide_models(data: PresentationUpdateRequest):
     request_utils = RequestUtils("/ppt/slides/update")
@@ -248,28 +179,6 @@ async def generate_image(data: GenerateImageRequest):
     )
     return await handle_errors(
         GenerateImageHandler(data).post, logging_service, log_metadata
-    )
-
-
-@presentation_router.post("/image/search", response_model=PresentationAndUrls)
-async def search_image(data: SearchImageRequest):
-    request_utils = RequestUtils("/ppt/image/search")
-    logging_service, log_metadata = await request_utils.initialize_logger(
-        presentation_id=data.presentation_id,
-    )
-    return await handle_errors(
-        SearchImageHandler(data).post, logging_service, log_metadata
-    )
-
-
-@presentation_router.post("/icon/search", response_model=PresentationAndPaths)
-async def search_icon(data: SearchIconRequest):
-    request_utils = RequestUtils("/ppt/icon/search")
-    logging_service, log_metadata = await request_utils.initialize_logger(
-        presentation_id=data.presentation_id,
-    )
-    return await handle_errors(
-        SearchIconHandler(data).post, logging_service, log_metadata
     )
 
 
