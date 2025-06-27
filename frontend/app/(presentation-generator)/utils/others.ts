@@ -5,7 +5,7 @@ export const getIconFromFile = (file: string): string => {
   } else if (file_ext == "docx") {
     return "/report.png";
   } else if (file_ext == "pptx") {
-    return "/ppt.svg";
+    return "/pptx.svg";
   }
   return "/report.png";
 };

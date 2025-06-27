@@ -20,9 +20,7 @@ from api.routers.presentation.handlers.generate_image import GenerateImageHandle
 from api.routers.presentation.handlers.generate_presentation_requirements import (
     GeneratePresentationRequirementsHandler,
 )
-from api.routers.presentation.handlers.generate_research_report import (
-    GenerateResearchReportHandler,
-)
+
 from api.routers.presentation.handlers.generate_stream import (
     PresentationGenerateStreamHandler,
 )
@@ -54,7 +52,6 @@ from api.routers.presentation.models import (
     ExportAsRequest,
     GenerateImageRequest,
     GeneratePresentationRequirementsRequest,
-    GenerateResearchReportRequest,
     PresentationAndPath,
     PresentationAndPaths,
     PresentationAndSlides,
@@ -108,16 +105,6 @@ async def upload_files(
         log_metadata,
     )
 
-
-@presentation_router.post("/report/generate", response_model=str)
-async def generate_research_report(
-    data: GenerateResearchReportRequest,
-):
-    request_utils = RequestUtils("/ppt/report/generate")
-    logging_service, log_metadata = await request_utils.initialize_logger()
-    return await handle_errors(
-        GenerateResearchReportHandler(data).post, logging_service, log_metadata
-    )
 
 
 @presentation_router.post("/files/decompose", response_model=DecomposeDocumentsResponse)

@@ -15,11 +15,6 @@ class DocumentsAndImagesPath(BaseModel):
     images: Optional[List[str]] = None
 
 
-class GenerateResearchReportRequest(BaseModel):
-    tone: Optional[str] = None
-    query: str
-
-
 class DecomposeDocumentsRequest(DocumentsAndImagesPath):
     pass
 
