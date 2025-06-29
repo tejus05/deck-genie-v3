@@ -64,14 +64,18 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
         ppt_creator.create_ppt()
         ppt_creator.save(ppt_path)
 
+        # Return just the filename instead of the full path for URL construction
+        filename = sanitize_filename(f"{title}.pptx")
+        
         response = PresentationAndPath(
-            presentation_id=self.data.presentation_id, path=ppt_path
+            presentation_id=self.data.presentation_id, path=filename
         )
 
         with get_sql_session() as sql_session:
             presentation = sql_session.get(
                 PresentationSqlModel, self.data.presentation_id
             )
+            # Store the full path in database for internal use, but return only filename
             presentation.file = ppt_path
             sql_session.commit()
 

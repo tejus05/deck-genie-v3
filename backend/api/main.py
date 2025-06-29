@@ -34,8 +34,8 @@ app.add_middleware(
 data_directory = os.getenv("APP_DATA_DIRECTORY", os.path.join(os.getcwd(), "data"))
 app.mount("/static", StaticFiles(directory=data_directory), name="static")
 
-# Mount presentations from temp directory
-app.mount("/presentations", StaticFiles(directory=presentation_storage.presentation_base_dir), name="presentations")
+# Mount presentations from temp directory - using a custom static handler for better cross-platform support
+app.mount("/presentations", StaticFiles(directory=presentation_storage.presentation_base_dir, follow_symlink=True), name="presentations")
 
 
 @app.middleware("http")
@@ -91,6 +91,22 @@ async def serve_image(presentation_id: str, filename: str):
         )
     
     return {"error": "Image not found"}
+
+@app.middleware("http")
+async def catch_static_errors(request: Request, call_next):
+    """Catch and log static file serving errors for debugging"""
+    response = await call_next(request)
+    
+    # Log 404s for static files to help debug Windows path issues
+    if response.status_code == 404 and ("/static/" in str(request.url) or "/presentations/" in str(request.url)):
+        print(f"Static file not found: {request.url}")
+        print(f"Looking for: {request.url.path}")
+        # Decode URL-encoded paths for debugging
+        import urllib.parse
+        decoded_path = urllib.parse.unquote(str(request.url.path))
+        print(f"Decoded path: {decoded_path}")
+    
+    return response
 
 @app.get("/storage/stats")
 async def get_storage_stats():

@@ -237,12 +237,15 @@ export function getStaticFileUrl(filepath: string): string {
   }
   
   // Convert file path to static URL
-  // Handle paths like "/Users/tejuss/Desktop/deck-genie-v3/backend/data/..." or temp presentation paths
-  const pathParts = filepath.split('/');
-  let relevantPath = filepath;
+  // Normalize path separators (Windows uses backslashes, but we need forward slashes for URLs)
+  const normalizedPath = filepath.replace(/\\/g, '/');
+  
+  // Handle both Unix and Windows paths
+  const pathParts = normalizedPath.split('/');
+  let relevantPath = normalizedPath;
   
   // Check if this is a temp presentation path
-  if (filepath.includes('deck_genie_presentations')) {
+  if (normalizedPath.includes('deck_genie_presentations')) {
     const presentationIndex = pathParts.findIndex(part => part === 'deck_genie_presentations');
     if (presentationIndex !== -1 && presentationIndex < pathParts.length - 1) {
       relevantPath = pathParts.slice(presentationIndex + 1).join('/');
