@@ -6,10 +6,13 @@
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
     "dev:frontend": "cd frontend && pnpm dev",
     "dev:backend": "node scripts/dev-backend.js",
+    "build": "cd frontend && pnpm build",
+    "start": "concurrently \"pnpm run start:backend\" \"pnpm run start:frontend\"",
+    "start:frontend": "cd frontend && pnpm start",
+    "start:backend": "node scripts/start-backend.js",
     "install:frontend": "cd frontend && pnpm install",
     "install:backend": "node scripts/install-backend.js",
-    "setup": "pnpm install && pnpm run install:frontend && pnpm run install:backend",
-    "build": "cd frontend && pnpm build"
+    "setup": "pnpm install && pnpm run install:frontend && pnpm run install:backend"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"
