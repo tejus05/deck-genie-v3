@@ -179,6 +179,7 @@ app_dist
 
 env
 .venv
+venv
 __pycache__
 
 *.db

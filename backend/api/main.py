@@ -66,6 +66,31 @@ async def download_file(presentation_id: str, filename: str):
 
     return {"error": "File not found"}
 
+@app.get("/images/{presentation_id}/{filename}")
+async def serve_image(presentation_id: str, filename: str):
+    """Serve images with proper cross-platform path handling"""
+    # Try presentation images directory first
+    images_dir = presentation_storage.get_presentation_images_dir(presentation_id)
+    image_path = os.path.join(images_dir, filename)
+    
+    if os.path.exists(image_path):
+        # Determine media type based on file extension
+        ext = filename.lower().split('.')[-1]
+        media_type = {
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg', 
+            'png': 'image/png',
+            'gif': 'image/gif',
+            'webp': 'image/webp'
+        }.get(ext, 'image/jpeg')
+        
+        return FileResponse(
+            path=image_path,
+            media_type=media_type,
+            filename=filename,
+        )
+    
+    return {"error": "Image not found"}
 
 @app.get("/storage/stats")
 async def get_storage_stats():

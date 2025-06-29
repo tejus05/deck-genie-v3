@@ -155,3 +155,14 @@ def sanitize_filename(filename: str) -> str:
         sanitized = sanitized[:200]
 
     return sanitized + ext
+
+def convert_image_path_to_url(image_path: str, presentation_id: str, base_url: str = "http://localhost:8000") -> str:
+    """Convert absolute image path to relative URL for serving"""
+    if not image_path:
+        return ""
+    
+    # Extract filename from path
+    filename = os.path.basename(image_path)
+    
+    # Return URL that uses the new image serving endpoint
+    return f"{base_url}/images/{presentation_id}/{filename}"

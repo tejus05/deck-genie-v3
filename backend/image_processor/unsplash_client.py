@@ -120,6 +120,9 @@ class UnsplashClient:
     async def download_image(self, unsplash_image: UnsplashImage, output_path: str) -> str:
         """Download an image from Unsplash to local storage"""
         try:
+            # Normalize path for cross-platform compatibility
+            output_path = os.path.normpath(output_path)
+            
             async with aiohttp.ClientSession() as session:
                 # First, trigger the download endpoint to credit the photographer
                 try:
