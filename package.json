@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "concurrently \"pnpm run dev:backend\" \"pnpm run dev:frontend\"",
     "dev:frontend": "cd frontend && pnpm dev",
-    "dev:backend": "cd backend && source venv/bin/activate && python server.py",
+    "dev:backend": "node -e \"const {spawn} = require('child_process'); const {existsSync} = require('fs'); const {join} = require('path'); const cwd = join(__dirname, 'backend'); const python = process.platform === 'win32' ? join(cwd, 'venv/Scripts/python.exe') : join(cwd, 'venv/bin/python'); const cmd = existsSync(python) ? python : (process.platform === 'win32' ? 'py' : 'python3'); spawn(cmd, ['server.py'], {cwd, stdio: 'inherit'});\"",
     "install:frontend": "cd frontend && pnpm install",
-    "install:backend": "cd backend && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+    "install:backend": "cd backend && (py -m venv venv 2>nul || python3 -m venv venv || python -m venv venv) && (py -m pip install --upgrade pip || python3 -m pip install --upgrade pip || python -m pip install --upgrade pip) && (py -m pip install -r requirements.txt || python3 -m pip install -r requirements.txt || python -m pip install -r requirements.txt)",
     "setup": "pnpm run install:frontend && pnpm run install:backend",
     "build": "cd frontend && pnpm build"
   },

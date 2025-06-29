@@ -5,7 +5,8 @@ from sqlmodel import Session
 
 # Use APP_DATA_DIRECTORY if set, otherwise use ./data as default
 data_directory = os.getenv("APP_DATA_DIRECTORY", "./data")
-sql_url = "sqlite:///" + os.path.join(data_directory, "fastapi.db")
+db_path = os.path.join(data_directory, "fastapi.db").replace("\\", "/")
+sql_url = "sqlite:///" + db_path
 sql_engine = create_engine(sql_url, connect_args={"check_same_thread": False})
 
 
