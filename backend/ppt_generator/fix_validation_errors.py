@@ -39,9 +39,9 @@ def get_prompt_template():
 
 async def fix_validation_errors(response_model: BaseModel, response, errors):
     model = (
-        ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
-        if os.getenv("LLM") == "openai"
-        else ChatGoogleGenerativeAI(model="gemini-2.5-flash-preview-04-17")
+        ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+        if os.getenv("LLM") == "google"
+        else ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
     )
 
     chain = get_prompt_template() | model.with_structured_output(

@@ -1,10 +1,14 @@
 import uvicorn
 import os
 import tempfile
+import sys
 from dotenv import load_dotenv
 
+# Add the current directory to the Python path for proper imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 # Load environment variables from .env file
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 # Set default environment variables before importing anything else
 data_dir = os.path.join(os.getcwd(), "data")

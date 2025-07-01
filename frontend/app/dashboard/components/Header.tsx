@@ -15,9 +15,9 @@ const Header = () => {
       <Wrapper>
         <div className="relative flex items-center justify-between py-4">
           <div className="flex items-center gap-4">
-            {pathname !== '/upload' && <BackBtn />}
-            <Link href="/dashboard" className="transition-transform hover:scale-105">
-              <img
+            {pathname !== '/upload' && pathname !== '/' && <BackBtn />}
+            <Link href="/" className="transition-transform hover:scale-105">
+              <Image
                 src="/logo-white.png"
                 alt="Presentation logo"
                 width={162}

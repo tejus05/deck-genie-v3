@@ -120,6 +120,7 @@ export async function POST(request: NextRequest) {
         waitUntil: "networkidle0",
         timeout: 60000,
       });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       await browser.close();
       return NextResponse.json({ error: "Failed to Navigate to provided URL" }, { status: 500 });
@@ -151,6 +152,7 @@ export async function POST(request: NextRequest) {
         },
         { theme, customColors }
       );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       await browser.close();
       return NextResponse.json({ error: "Slide container not found" }, { status: 500 });
@@ -387,7 +389,7 @@ export async function POST(request: NextRequest) {
     await browser.close();
 
 
-    const slides = metadata.map((slide: any, index: any) => {
+    const slides = metadata.map((slide: SlideMetadata) => {
       return {
         shapes: slide.elements,
       };

@@ -147,13 +147,21 @@ const presentationGenerationSlice = createSlice({
     },
     deletePresentationSlide: (state, action: PayloadAction<number>) => {
       if (state.presentationData) {
-        state.presentationData.slides.splice(action.payload, 1);
-        state.presentationData.slides = state.presentationData.slides.map(
-          (slide, idx) => ({
-            ...slide,
-            index: idx,
-          })
+        // Find the array index of the slide with the given slide index
+        const arrayIndex = state.presentationData.slides.findIndex(
+          slide => slide.index === action.payload
         );
+        
+        if (arrayIndex !== -1) {
+          state.presentationData.slides.splice(arrayIndex, 1);
+          // Re-index remaining slides
+          state.presentationData.slides = state.presentationData.slides.map(
+            (slide, idx) => ({
+              ...slide,
+              index: idx,
+            })
+          );
+        }
       }
     },
     updateSlide: (

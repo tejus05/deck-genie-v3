@@ -52,7 +52,7 @@ export function SortableSlide({ slide, index, selectedSlide, onSlideClick, tone 
             {...listeners}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
-            className={`flex justify-center items-center cursor-pointer ${selectedSlide === index
+            className={`flex justify-center items-center cursor-pointer ${selectedSlide === slide.index
                 ? 'ring-2 ring-[#5141e5]'
                 : 'hover:ring-2 hover:ring-gray-200'
                 } rounded-lg`}

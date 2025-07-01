@@ -154,6 +154,8 @@ const CreatePage = () => {
   };
 
   if (!presentation_id) {
+    // Redirect to homepage instead of showing "No Presentation Data"
+    router.push('/');
     return null;
   }
 

@@ -132,14 +132,41 @@ async def handle_errors(
         print(traceback.print_stack())
         print(traceback.print_exc())
 
-        log_metadata.status_code = 400
-        logging_service.logger.critical(
-            "Unhandled Exception",
-            exc_info=True,
-            stack_info=True,
-            extra=log_metadata.model_dump(),
-        )
-        raise HTTPException(400, "Something went wrong while processing your request.")
+        # Check for specific Google API errors
+        error_message = str(e)
+        if "quota" in error_message.lower() or "exceeded" in error_message.lower():
+            log_metadata.status_code = 429
+            logging_service.logger.error(
+                f"Google API quota exceeded: {error_message}",
+                exc_info=True,
+                extra=log_metadata.model_dump(),
+            )
+            raise HTTPException(429, "Google API quota exceeded. Please upgrade your plan or wait for quota reset. The system will use fallback generation.")
+        elif "rate limit" in error_message.lower() or "too many requests" in error_message.lower():
+            log_metadata.status_code = 429
+            logging_service.logger.error(
+                f"Google API rate limit exceeded: {error_message}",
+                exc_info=True,
+                extra=log_metadata.model_dump(),
+            )
+            raise HTTPException(429, "API rate limit exceeded. Please try again later.")
+        elif "api key" in error_message.lower() or "authentication" in error_message.lower():
+            log_metadata.status_code = 401
+            logging_service.logger.error(
+                f"Google API authentication error: {error_message}",
+                exc_info=True,
+                extra=log_metadata.model_dump(),
+            )
+            raise HTTPException(401, "API authentication failed. Please check your API key configuration.")
+        else:
+            log_metadata.status_code = 400
+            logging_service.logger.critical(
+                f"Unhandled Exception: {error_message}",
+                exc_info=True,
+                stack_info=True,
+                extra=log_metadata.model_dump(),
+            )
+            raise HTTPException(400, f"Something went wrong while processing your request: {error_message}")
 
 
 def sanitize_filename(filename: str) -> str:

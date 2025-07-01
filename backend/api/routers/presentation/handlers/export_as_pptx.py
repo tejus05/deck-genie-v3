@@ -15,11 +15,17 @@ from api.utils import get_presentation_dir, sanitize_filename
 from ppt_generator.pptx_presentation_creator import PptxPresentationCreator
 from api.services.database import get_sql_session
 
+# Add authentication and file manager imports
+from auth.models import User, Presentation
+from services.file_manager import file_manager
+from services.database import get_session
+
 
 class ExportAsPptxHandler(FetchPresentationAssetsMixin):
 
-    def __init__(self, data: ExportAsRequest):
+    def __init__(self, data: ExportAsRequest, current_user: User = None):
         self.data = data
+        self.current_user = current_user
 
         self.session = str(uuid.uuid4())
         self.temp_dir = temp_file_service.create_temp_dir(self.session)
@@ -78,6 +84,33 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
             # Store the full path in database for internal use, but return only filename
             presentation.file = ppt_path
             sql_session.commit()
+
+        # Save presentation to user's account if user is authenticated
+        if self.current_user:
+            try:
+                # Read the generated PPT file
+                with open(ppt_path, 'rb') as f:
+                    ppt_content = f.read()
+                
+                # Save to user's presentations directory using file_manager
+                with get_session() as auth_session:
+                    user_presentation = file_manager.save_presentation(
+                        user_id=self.current_user.id,
+                        title=title,
+                        file_content=ppt_content,
+                        file_extension=".pptx",
+                        session=auth_session
+                    )
+                    
+                logging_service.logger.info(
+                    f"Saved presentation to user account: {user_presentation.id}",
+                    extra=log_metadata.model_dump(),
+                )
+            except Exception as e:
+                logging_service.logger.error(
+                    f"Failed to save presentation to user account: {str(e)}",
+                    extra=log_metadata.model_dump(),
+                )
 
         logging_service.logger.info(
             logging_service.message(response.model_dump(mode="json")),

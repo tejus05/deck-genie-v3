@@ -42,7 +42,6 @@ export class PresentationGenerationApi {
           method: "POST",
           headers: getHeader(),
           body: JSON.stringify({
-            prompt: prompt,
             presentation_id: presentation_id,
           }),
           cache: "no-cache",

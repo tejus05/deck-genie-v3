@@ -66,7 +66,7 @@ const SlideContent = ({
   return (
     <>
       <div
-        id={`slide-${isStreaming ? index : slide.index}`}
+        id={`slide-${slide.index}`}
         className=" w-full max-w-[1280px] flex items-center max-md:mb-4 justify-center relative"
       >
         {isStreaming && (

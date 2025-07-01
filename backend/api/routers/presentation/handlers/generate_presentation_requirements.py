@@ -6,15 +6,20 @@ from api.services.database import get_sql_session
 from api.services.instances import temp_file_service
 from api.sql_models import PresentationSqlModel
 
+# Add authentication import
+from auth.models import User
+
 
 class GeneratePresentationRequirementsHandler:
     def __init__(
         self,
         presentation_id: str,
         data: GeneratePresentationRequirementsRequest,
+        current_user: User = None,
     ):
         self.data = data
         self.presentation_id = presentation_id
+        self.current_user = current_user
         self.prompt = data.prompt
         self.tone = data.tone
         self.research_reports = data.research_reports or []

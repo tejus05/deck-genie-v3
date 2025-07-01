@@ -9,10 +9,14 @@ from ppt_config_generator.models import PresentationTitlesModel
 from ppt_config_generator.ppt_title_summary_generator import generate_ppt_titles
 from api.services.database import get_sql_session
 
+# Add authentication import
+from auth.models import User
+
 
 class PresentationTitlesGenerateHandler:
-    def __init__(self, data: GenerateTitleRequest):
+    def __init__(self, data: GenerateTitleRequest, current_user: User = None):
         self.data = data
+        self.current_user = current_user
 
         self.session = str(uuid.uuid4())
         self.temp_dir = temp_file_service.create_temp_dir(self.session)

@@ -12,9 +12,97 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Professional Background Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-20px) rotate(1deg); }
+  50% { transform: translateY(-10px) rotate(0deg); }
+  75% { transform: translateY(-15px) rotate(-1deg); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  33% { transform: translateY(-30px) translateX(10px); }
+  66% { transform: translateY(-15px) translateX(-10px); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Professional floating elements */
+.floating-elements {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floating-orb {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(var(--primary), 0.1), rgba(var(--accent), 0.05));
+  backdrop-filter: blur(20px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.floating-orb:nth-child(1) {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 8s;
+}
+
+.floating-orb:nth-child(2) {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+  animation-duration: 10s;
+}
+
+.floating-orb:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 4s;
+  animation-duration: 12s;
+}
+
+/* Subtle grid animation */
+.animated-grid {
+  background-image: 
+    linear-gradient(rgba(var(--foreground), 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--foreground), 0.02) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  animation: shimmer 20s linear infinite;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: floatSlow 8s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse-slow 4s ease-in-out infinite;
   }
 }
 

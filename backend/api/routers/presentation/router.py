@@ -2,12 +2,17 @@ from typing import Annotated, List, Optional
 import uuid
 from fastapi import APIRouter, Body, File, UploadFile, Depends
 
+# Add authentication imports
+from auth.middleware import get_current_active_user
+from auth.models import User
+
 from api.models import SessionModel
 from api.request_utils import RequestUtils
 from api.routers.presentation.handlers.delete_presentation import (
     DeletePresentationHandler,
 )
 from api.routers.presentation.handlers.delete_slide import DeleteSlideHandler
+from api.routers.presentation.handlers.download_pptx import DownloadPptxHandler
 from api.routers.presentation.handlers.export_as_pptx import ExportAsPptxHandler
 from api.routers.presentation.handlers.generate_data import (
     PresentationGenerateDataHandler,
@@ -77,6 +82,7 @@ async def get_presentation_from_id(presentation_id: str):
 @presentation_router.post("/create", response_model=PresentationSqlModel)
 async def create_presentation(
     data: GeneratePresentationRequirementsRequest,
+    current_user: User = Depends(get_current_active_user)
 ):
     request_utils = RequestUtils("/ppt/create")
     presentation_id = str(uuid.uuid4())
@@ -84,20 +90,23 @@ async def create_presentation(
         presentation_id=presentation_id,
     )
     return await handle_errors(
-        GeneratePresentationRequirementsHandler(presentation_id, data).post,
+        GeneratePresentationRequirementsHandler(presentation_id, data, current_user).post,
         logging_service,
         log_metadata,
     )
 
 
 @presentation_router.post("/titles/generate", response_model=PresentationSqlModel)
-async def generate_titles(data: GenerateTitleRequest):
+async def generate_titles(
+    data: GenerateTitleRequest,
+    current_user: User = Depends(get_current_active_user)
+):
     request_utils = RequestUtils("/ppt/titles/generate")
     logging_service, log_metadata = await request_utils.initialize_logger(
         presentation_id=data.presentation_id,
     )
     return await handle_errors(
-        PresentationTitlesGenerateHandler(data).post,
+        PresentationTitlesGenerateHandler(data, current_user).post,
         logging_service,
         log_metadata,
     )
@@ -185,13 +194,30 @@ async def generate_image(data: GenerateImageRequest):
 @presentation_router.post(
     "/presentation/export_as_pptx", response_model=PresentationAndPath
 )
-async def export_as_pptx(data: ExportAsRequest):
+async def export_as_pptx(
+    data: ExportAsRequest,
+    current_user: User = Depends(get_current_active_user)
+):
     request_utils = RequestUtils("/ppt/presentation/export_as_pptx")
     logging_service, log_metadata = await request_utils.initialize_logger(
         presentation_id=data.presentation_id,
     )
     return await handle_errors(
-        ExportAsPptxHandler(data).post, logging_service, log_metadata
+        ExportAsPptxHandler(data, current_user).post, logging_service, log_metadata
+    )
+
+
+@presentation_router.get("/presentation/download_pptx/{presentation_id}")
+async def download_pptx(
+    presentation_id: str,
+    current_user: User = Depends(get_current_active_user)
+):
+    request_utils = RequestUtils("/ppt/presentation/download_pptx")
+    logging_service, log_metadata = await request_utils.initialize_logger(
+        presentation_id=presentation_id,
+    )
+    return await handle_errors(
+        DownloadPptxHandler(presentation_id, current_user).get, logging_service, log_metadata
     )
 
 

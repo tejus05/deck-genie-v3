@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { DashboardApi } from "@/app/dashboard/api/dashboard";
+import { PresentationGenerationApi } from "../../services/api/presentation-generation";
 import {
   DndContext,
   closestCenter,
@@ -115,7 +116,7 @@ const SidePanel = ({
     return new File([u8arr], filename, { type: mime });
   };
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = async (event: any) => {
     const { active, over } = event;
 
     if (!active || !over || !presentationData?.slides) return;
@@ -146,6 +147,20 @@ const SidePanel = ({
       dispatch(
         setPresentationData({ ...presentationData, slides: updatedArray })
       );
+
+      // Save the updated slide order to the backend
+      try {
+        if (presentationData.presentation?.id) {
+          await PresentationGenerationApi.updatePresentationContent({
+            presentation_id: presentationData.presentation.id,
+            slides: updatedArray,
+          });
+          console.log("Slide order saved successfully");
+        }
+      } catch (error) {
+        console.error("Failed to save slide order:", error);
+        // Optionally, you could show a toast notification here
+      }
     }
   };
 

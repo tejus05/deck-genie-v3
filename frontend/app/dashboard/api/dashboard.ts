@@ -3,7 +3,7 @@ import {
   getHeaderForFormData,
 } from "@/app/(presentation-generator)/services/api/header";
 import { getEnv } from "@/utils/constant";
-import { clearLogs, logOperation } from "@/app/(presentation-generator)/utils/log";
+import { logOperation } from "@/app/(presentation-generator)/utils/log";
 
 const urls = getEnv();
 const BASE_URL = urls.BASE_URL;
@@ -11,7 +11,7 @@ export interface PresentationResponse {
   id: string;
   title: string;
   created_at: string;
-  data: any | null;
+  data: unknown | null;
   file: string;
   n_slides: number;
   prompt: string;
@@ -19,7 +19,7 @@ export interface PresentationResponse {
   theme: string;
   titles: string[];
   user_id: string;
-  vector_store: any;
+  vector_store: unknown;
 
   thumbnail: string;
 }
@@ -97,12 +97,12 @@ export class DashboardApi {
       throw error;
     }
   }
-  static async setSlideThumbnail(presentation_id: string, file: any) {
+  static async setSlideThumbnail(presentation_id: string, file: unknown) {
     logOperation(`Setting thumbnail for presentation ${presentation_id}`);
     const formData = new FormData();
 
     formData.append("presentation_id", presentation_id);
-    formData.append("thumbnail", file);
+    formData.append("thumbnail", file as Blob);
     try {
       const response = await fetch(
         `${BASE_URL}/ppt/presentation/thumbnail`,

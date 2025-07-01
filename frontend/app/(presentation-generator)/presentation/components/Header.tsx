@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/popover";
 import UserAccount from "../../components/UserAccount";
 import { PresentationGenerationApi } from "../../services/api/presentation-generation";
+import { getHeader } from "../../services/api/header";
+import Image from "next/image";
 import { OverlayLoader } from "@/components/ui/overlay-loader";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +49,11 @@ import Modal from "./Modal";
 
 import Announcement from "@/components/Announcement";
 import { getFontLink } from "../../utils/others";
-import { clearLogs, logOperation } from "../../utils/log";
+import { logOperation } from "../../utils/log";
+import { getEnv } from "@/utils/constant";
+
+// Get environment URLs
+const urls = getEnv();
 
 const Header = ({
   presentation_id,
@@ -151,118 +157,6 @@ const Header = ({
     }
     return title;
   };
-
-  const getSlideMetadata = async () => {
-    try {
-      logOperation('Fetching slide metadata');
-      
-      // For web mode, create metadata for each slide based on current presentation data
-      const slides = presentationData?.slides || [];
-      const metadata = slides.map((slide: any, index: number) => {
-        // Extract text content from the slide
-        const elements = [];
-        
-        if (slide.content) {
-          // Try to extract title
-          const title = slide.content.title || slide.content.heading || slide.title;
-          if (title) {
-            elements.push({
-              type: 'text',
-              content: title,
-              position: { left: 50, top: 50, width: 600, height: 100 },
-              fontSize: 36,
-              fontWeight: 'bold'
-            });
-          }
-          
-          // Try to extract subtitle  
-          const subtitle = slide.content.subtitle || slide.content.subheading;
-          if (subtitle) {
-            elements.push({
-              type: 'text', 
-              content: subtitle,
-              position: { left: 50, top: 150, width: 600, height: 50 },
-              fontSize: 24
-            });
-          }
-          
-          // Try to extract bullet points or content
-          const bulletPoints = slide.content.bullet_points || slide.content.bullets || slide.content.points;
-          if (bulletPoints && Array.isArray(bulletPoints) && bulletPoints.length > 0) {
-            const bulletText = bulletPoints.map((point: any) => `• ${point}`).join('\n');
-            elements.push({
-              type: 'text',
-              content: bulletText,
-              position: { left: 50, top: 220, width: 600, height: 300 },
-              fontSize: 18
-            });
-          }
-          
-          // Try to extract general content
-          const content = slide.content.content || slide.content.text || slide.content.description;
-          if (content && typeof content === 'string' && !bulletPoints) {
-            elements.push({
-              type: 'text',
-              content: content,
-              position: { left: 50, top: 220, width: 600, height: 300 },
-              fontSize: 18
-            });
-          }
-        }
-        
-        // If no content found, add a placeholder
-        if (elements.length === 0) {
-          elements.push({
-            type: 'text',
-            content: `Slide ${index + 1}`,
-            position: { left: 50, top: 50, width: 600, height: 100 },
-            fontSize: 36,
-            fontWeight: 'bold'
-          });
-        }
-        
-        return {
-          elements: elements,
-          backgroundColor: currentColors?.slideBg || '#ffffff',
-          slideIndex: index
-        };
-      });
-      
-      logOperation('Slide metadata fetched successfully');
-      return metadata;
-    } catch (error) {
-      logOperation(`Error fetching metadata: ${error}`);
-      setShowLoader(false);
-      console.error("Error fetching metadata:", error);
-      toast({
-        title: "Error fetching slide metadata",
-        description: error instanceof Error ? error.message : "Failed to fetch metadata",
-        variant: "destructive",
-      });
-      throw error;
-    }
-  };
-  const metaData = async () => {
-    const body = {
-      presentation_id: presentation_id,
-      slides: presentationData?.slides,
-    };
-    await PresentationGenerationApi.updatePresentationContent(body)
-      .then(() => { })
-      .catch((error) => {
-        console.error(error);
-      });
-
-    const apiBody = {
-      presentation_id: presentation_id,
-      pptx_model: {
-        background_color: currentColors?.slideBg || '#ffffff',
-        slides: presentationData?.slides || []
-      },
-    };
-
-    return apiBody;
-  };
   const handleExportPptx = async () => {
     if (isStreaming) return;
 
@@ -302,11 +196,9 @@ const Header = ({
       console.log('Background color:', pptx_model.background_color);
 
       // Now send the PPTX model to backend for generation
-      const backendResponse = await fetch('http://127.0.0.1:8000/ppt/presentation/export_as_pptx', {
+      const backendResponse = await fetch(`${urls.BASE_URL}/ppt/presentation/export_as_pptx`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getHeader(),
         body: JSON.stringify({
           presentation_id: presentation_id,
           pptx_model: pptx_model
@@ -314,18 +206,43 @@ const Header = ({
       });
 
       if (backendResponse.ok) {
-        const { path: pptxPath } = await backendResponse.json();
+        await backendResponse.json(); // We still need to consume the response but we don't need the path
         logOperation('PPTX export completed, initiating download');
+        
+        // We'll use getHeader() which already handles getting the token from cookie
+        
+        // Create a new URL with BASE_URL
+        const url = new URL(`${urls.BASE_URL}/ppt/presentation/download_pptx/${presentation_id}`);
+        
+        // Fetch the file as a blob with authentication header
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: getHeader()  // This includes Authorization header with token
+        });
+        
+        if (!response.ok) {
+          logOperation(`Download failed with status: ${response.status} - ${response.statusText}`);
+          throw new Error(`Failed to download file: ${response.statusText}`);
+        }
+        
+        // Get the blob from the response
+        const blob = await response.blob();
+        
+        // Create a URL for the blob
+        const blobUrl = window.URL.createObjectURL(blob);
         
         // Create a download link
         const link = document.createElement('a');
-        const fileName = pptxPath.split('/').pop() || `presentation-${presentation_id}.pptx`;
-        // Construct correct presentations URL
-        link.href = `http://127.0.0.1:8000/presentations/${presentation_id}/${fileName}`;
+        link.href = blobUrl;
         link.download = `${getCleanTitle()}.pptx`;
+        
+        // Click the link to trigger the download
         document.body.appendChild(link);
         link.click();
+        
+        // Clean up
         document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
         
         logOperation('PPTX download completed successfully');
         
@@ -415,7 +332,7 @@ const Header = ({
         variant="ghost"
         className="pb-4 border-b rounded-none border-gray-300 w-full flex justify-start text-[#5146E5]"
       >
-        <img src="/pdf.svg" alt="pdf export" width={30} height={30} />
+        <Image src="/pdf.svg" alt="pdf export" width={30} height={30} />
         Export as PDF
       </Button>
       <Button
@@ -423,7 +340,7 @@ const Header = ({
         variant="ghost"
         className="w-full flex justify-start text-[#5146E5]"
       >
-        <img src="/pptx.svg" alt="pptx export" width={30} height={30} />
+        <Image src="/pptx.svg" alt="pptx export" width={30} height={30} />
         Export as PPTX
       </Button>
       <p className="text-sm pt-3 border-t border-gray-300">
@@ -484,8 +401,8 @@ const Header = ({
       />
       <Announcement />
       <Wrapper className="relative flex items-center justify-between py-4">
-        <Link href="/dashboard" className="min-w-[162px] transition-transform hover:scale-105">
-          <img
+        <Link href="/" className="min-w-[162px] transition-transform hover:scale-105">
+          <Image
             src="/logo-white.png"
             alt="Presentation logo"
             width={162}

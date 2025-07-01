@@ -31,6 +31,7 @@ import { PresentationGenerationApi } from "../../services/api/presentation-gener
 import { OverlayLoader } from "@/components/ui/overlay-loader";
 import Wrapper from "@/components/Wrapper";
 import { clearLogs, logOperation } from "../../utils/log";
+import { useAuth } from "../../context/AuthContext";
 
 // Types for loading state
 interface LoadingState {
@@ -45,6 +46,7 @@ const UploadPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { toast } = useToast();
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
 
 
 
@@ -101,6 +103,30 @@ const UploadPage = () => {
    * Handles the presentation generation process
    */
   const handleGeneratePresentation = async () => {
+    // Add debugging
+    console.log('Auth state:', { isAuthenticated, authLoading, user });
+    
+    // Wait for auth loading to complete
+    if (authLoading) {
+      toast({
+        title: "Loading...",
+        description: "Please wait while we check your authentication status",
+        variant: "default",
+      });
+      return;
+    }
+    
+    // Check authentication first
+    if (!isAuthenticated) {
+      toast({
+        title: "Login Required",
+        description: "Please login to generate presentations",
+        variant: "destructive",
+      });
+      router.push('/auth/login');
+      return;
+    }
+
     if (!validateConfiguration()) return;
 
     try {

@@ -91,7 +91,9 @@ async def get_edited_slide_content_model(
     theme: Optional[dict] = None,
     tone: Optional[str] = None,
 ):
-    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
+    model = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash" if os.getenv("LLM") == "google" else "gemini-2.0-flash-exp"
+    )
 
     content_type_model_type = CONTENT_TYPE_MAPPING[slide_type]
     chain = prompt_template_from_slide | model.with_structured_output(
@@ -116,7 +118,9 @@ async def get_slide_type_from_prompt(
     slide: SlideModel,
 ) -> SlideTypeModel:
 
-    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
+    model = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash" if os.getenv("LLM") == "google" else "gemini-2.0-flash-exp"
+    )
 
     chain = prompt_template_from_slide_type | model.with_structured_output(
         SlideTypeModel.model_json_schema()

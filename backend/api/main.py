@@ -5,6 +5,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from sqlmodel import SQLModel
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 from api.routers.presentation.router import presentation_router
 from api.routers.config import router as config_router
@@ -12,11 +16,24 @@ from api.services.database import sql_engine
 from api.services.presentation_storage import presentation_storage
 from api.utils import update_env_with_user_config
 
+# Import authentication components
+from auth.routes import router as auth_router
+from auth.oauth import oauth_router
+from routers.files import router as files_router
+from services.database import create_db_and_tables
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    os.makedirs(os.getenv("APP_DATA_DIRECTORY"), exist_ok=True)
+    # Create data directory if it doesn't exist
+    app_data_dir = os.getenv("APP_DATA_DIRECTORY", "./data")
+    os.makedirs(app_data_dir, exist_ok=True)
+    
     SQLModel.metadata.create_all(sql_engine)
+    
+    # Create authentication database tables
+    create_db_and_tables()
+    
     yield
 
 
@@ -133,3 +150,6 @@ async def delete_presentation(presentation_id: str):
 
 app.include_router(presentation_router)
 app.include_router(config_router)
+app.include_router(auth_router)
+app.include_router(oauth_router)
+app.include_router(files_router)

@@ -333,12 +333,20 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
     }
   };
 
-  const handleDeleteSlide = async (index: number) => {
-    logOperation(`Deleting slide at index ${index}`);
-    dispatch(deletePresentationSlide(index));
+  const handleDeleteSlide = async (slideIndex: number) => {
+    logOperation(`Deleting slide at index ${slideIndex}`);
+    
+    // Find the slide by its index property rather than array position
+    const slideToDelete = presentationData?.slides.find(slide => slide.index === slideIndex);
+    if (!slideToDelete) {
+      console.error(`Slide with index ${slideIndex} not found`);
+      return;
+    }
+    
+    dispatch(deletePresentationSlide(slideIndex));
     const response = PresentationGenerationApi.deleteSlide(
       presentation_id,
-      presentationData?.slides[index].id!
+      slideToDelete.id!
     );
   };
 
@@ -438,9 +446,9 @@ const PresentationPage = ({ presentation_id }: { presentation_id: string }) => {
                     presentationData.slides.length > 0 &&
                     presentationData.slides.map((slide, index) => (
                       <SlideContent
-                        key={`${slide.type}-${index}-${slide.index}}`}
+                        key={`${slide.type}-${slide.id}-${slide.index}`}
                         slide={slide}
-                        index={index}
+                        index={slide.index}
                         presentationId={presentation_id}
                         onDeleteSlide={handleDeleteSlide}
                       />
