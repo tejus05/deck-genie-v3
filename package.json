@@ -12,7 +12,10 @@
     "start:backend": "node scripts/start-backend.js",
     "install:frontend": "cd frontend && pnpm install",
     "install:backend": "node scripts/install-backend.js",
-    "setup": "pnpm install && pnpm run install:frontend && pnpm run install:backend"
+    "setup": "pnpm install && pnpm run install:frontend && pnpm run install:backend",
+    "db:init": "cd backend && python init_db.py",
+    "db:migrate": "cd backend && python migrate_data.py",
+    "db:setup": "pnpm run db:init && pnpm run db:migrate"
   },
   "devDependencies": {
     "concurrently": "^9.1.0"

@@ -13,8 +13,17 @@ DATABASE_URL = os.getenv(
     "postgresql://username:password@localhost:5432/deck_genie_db"
 )
 
-# Create engine
-engine = create_engine(DATABASE_URL, echo=True)
+print(f"Connecting to database: {DATABASE_URL.split('@')[0]}@[HIDDEN]")
+
+# Create engine with PostgreSQL-specific settings
+engine = create_engine(
+    DATABASE_URL, 
+    echo=True,  # Set to False in production
+    pool_size=20,
+    max_overflow=0,
+    pool_pre_ping=True,  # Enables pessimistic disconnect handling
+    pool_recycle=300,  # Recycle connections every 5 minutes
+)
 
 def create_db_and_tables():
     """Create database tables."""
