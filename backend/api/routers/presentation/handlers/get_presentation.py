@@ -23,7 +23,9 @@ class GetPresentationHandler:
         with get_sql_session() as sql_session:
             presentation = sql_session.get(PresentationSqlModel, self.id)
             slide_models = sql_session.exec(
-                select(SlideSqlModel).where(SlideSqlModel.presentation == self.id)
+                select(SlideSqlModel)
+                .where(SlideSqlModel.presentation == self.id)
+                .order_by(SlideSqlModel.index)
             ).all()
 
         response = PresentationAndSlides(
