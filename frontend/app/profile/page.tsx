@@ -206,13 +206,13 @@ function ProfileContent() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  {/* <div className="flex items-center gap-3">
                     <CalendarDays className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="text-sm text-muted-foreground">Member Since</p>
                       <p className="font-medium">{formatDate(user.created_at)}</p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               ) : (
                 // Edit Mode
@@ -314,13 +314,13 @@ function ProfileContent() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 bg-muted/50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <div className="text-2xl font-bold text-primary">
                     {user.id}
                   </div>
                   <div className="text-sm text-muted-foreground">User ID</div>
-                </div>
+                </div> */}
                 
                 <div className="text-center p-4 bg-muted/50 rounded-lg">
                   <div className="text-2xl font-bold text-green-600">

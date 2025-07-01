@@ -53,7 +53,7 @@ const UserAccount = () => {
           </Avatar>
 
           <div className="hidden sm:flex items-center">
-            <span className="text-white text-sm font-medium mr-1">
+            <span className="text-white text-sm font-medium mr-1 px-2">
               {user.full_name.split(' ')[0]}
             </span>
             <ChevronDown className="w-4 h-4 ml-1 text-white" />
