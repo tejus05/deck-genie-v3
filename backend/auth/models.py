@@ -40,8 +40,15 @@ class PresentationBase(SQLModel):
 class Presentation(PresentationBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     owner_id: int = Field(foreign_key="user.id")
-    file_path: str  # Path to the generated PPT file
-    thumbnail_path: Optional[str] = None
+    file_path: Optional[str] = None  # Path to the generated PPT file (for backward compatibility)
+    thumbnail_path: Optional[str] = None  # Local thumbnail path (for backward compatibility)
+    
+    # UploadThing fields
+    uploadthing_url: Optional[str] = None  # UploadThing file URL
+    uploadthing_key: Optional[str] = None  # UploadThing file key for deletion
+    uploadthing_thumbnail_url: Optional[str] = None  # UploadThing thumbnail URL
+    uploadthing_thumbnail_key: Optional[str] = None  # UploadThing thumbnail key
+    file_size: Optional[int] = None  # File size in bytes
     
     # Relationships
     owner: User = Relationship(back_populates="presentations")
@@ -52,8 +59,43 @@ class PresentationCreate(PresentationBase):
 class PresentationRead(PresentationBase):
     id: int
     owner_id: int
-    file_path: str
+    file_path: Optional[str] = None
     thumbnail_path: Optional[str] = None
+    
+    # UploadThing fields
+    uploadthing_url: Optional[str] = None
+    uploadthing_key: Optional[str] = None
+    uploadthing_thumbnail_url: Optional[str] = None
+    uploadthing_thumbnail_key: Optional[str] = None
+    file_size: Optional[int] = None
+    
+    # Computed fields for frontend
+    @property
+    def download_url(self) -> Optional[str]:
+        """Get the download URL (UploadThing URL or API endpoint for legacy files)"""
+        if self.uploadthing_url:
+            return self.uploadthing_url
+        elif self.file_path:
+            return f"/files/presentations/{self.id}/download"
+        return None
+    
+    @property
+    def thumbnail_url(self) -> Optional[str]:
+        """Get the thumbnail URL (UploadThing thumbnail or local path)"""
+        if self.uploadthing_thumbnail_url:
+            return self.uploadthing_thumbnail_url
+        elif self.thumbnail_path:
+            return self.thumbnail_path
+        return None
+    
+    @property
+    def storage_type(self) -> str:
+        """Identify the storage type for this presentation"""
+        if self.uploadthing_url:
+            return "uploadthing"
+        elif self.file_path:
+            return "local"
+        return "unknown"
 
 # File management model
 class UserFileBase(SQLModel):

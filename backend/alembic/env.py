@@ -10,6 +10,7 @@ load_dotenv()
 
 # Import your models here
 from api.sql_models import *
+from auth.models import *  # Import auth models for user and presentation tables
 from sqlmodel import SQLModel
 
 # this is the Alembic Config object, which provides

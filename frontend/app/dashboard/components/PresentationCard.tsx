@@ -1,8 +1,9 @@
 import React from "react";
 
 import { Card } from "@/components/ui/card";
-import { DashboardApi, PresentationResponse } from "../api/dashboard";
-import { DotsVerticalIcon, TrashIcon } from "@radix-ui/react-icons";
+import { DashboardApi } from "../api/dashboard";
+import { Presentation } from "../types";
+import { DotsVerticalIcon, TrashIcon, DownloadIcon } from "@radix-ui/react-icons";
 import {
   Popover,
   PopoverTrigger,
@@ -19,13 +20,64 @@ export const PresentationCard = ({
   created_at,
   thumbnail,
   type,
-}: PresentationResponse & { type: "video" | "slide" }) => {
+  download_url,
+  storage_type,
+}: Presentation) => {
   const router = useRouter();
 
   const handlePreview = (e: React.MouseEvent) => {
     e.preventDefault();
 
     router.push(`/presentation?id=${id}`);
+  };
+
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      if (download_url) {
+        if (storage_type === "uploadthing") {
+          // For UploadThing presentations, open the URL directly
+          window.open(download_url, '_blank');
+        } else {
+          // For legacy presentations, use the API endpoint
+          const response = await fetch(download_url, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+          
+          if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${title}.pptx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          } else {
+            throw new Error('Download failed');
+          }
+        }
+        
+        toast({
+          title: "Download started",
+          description: "Your presentation download has started",
+          variant: "default",
+        });
+      } else {
+        throw new Error('No download URL available');
+      }
+    } catch (error) {
+      toast({
+        title: "Download failed",
+        description: "Failed to download the presentation. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
@@ -73,6 +125,13 @@ export const PresentationCard = ({
             <PopoverContent align="end" className="bg-white w-[200px]">
               <button
                 className="flex items-center justify-between w-full px-2 py-1 hover:bg-gray-100"
+                onClick={handleDownload}
+              >
+                <p>Download</p>
+                <DownloadIcon className="w-4 h-4 text-blue-500" />
+              </button>
+              <button
+                className="flex items-center justify-between w-full px-2 py-1 hover:bg-gray-100"
                 onClick={handleDelete}
               >
                 <p>Delete</p>
@@ -84,6 +143,21 @@ export const PresentationCard = ({
 
         {/* Thumbnail */}
         <div className="relative border-2 border-gray-200 aspect-[16/9] rounded-[8px] overflow-hidden">
+          {/* Storage Type Indicator */}
+          {storage_type && storage_type !== "unknown" && (
+            <div className="absolute top-2 right-2 z-10">
+              {storage_type === "uploadthing" ? (
+                <div className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium shadow-sm">
+                  ☁️ Cloud
+                </div>
+              ) : (
+                <div className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium shadow-sm">
+                  📁 Local
+                </div>
+              )}
+            </div>
+          )}
+          
           {thumbnail ? (
             <img
               src={getStaticFileUrl(thumbnail)}

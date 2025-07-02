@@ -87,30 +87,54 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
 
         # Save presentation to user's account if user is authenticated
         if self.current_user:
+            logging_service.logger.info(
+                f"Starting save for authenticated user: {self.current_user.id}",
+                extra=log_metadata.model_dump(),
+            )
             try:
                 # Read the generated PPT file
                 with open(ppt_path, 'rb') as f:
                     ppt_content = f.read()
                 
-                # Save to user's presentations directory using file_manager
-                with get_session() as auth_session:
-                    user_presentation = file_manager.save_presentation(
+                logging_service.logger.info(
+                    f"Read PPT file content, size: {len(ppt_content)} bytes",
+                    extra=log_metadata.model_dump(),
+                )
+                
+                # Save to user's presentations directory using file_manager with UploadThing
+                auth_session = next(get_session())
+                try:
+                    user_presentation = await file_manager.save_presentation_async(
                         user_id=self.current_user.id,
                         title=title,
                         file_content=ppt_content,
                         file_extension=".pptx",
-                        session=auth_session
+                        session=auth_session,
+                        use_uploadthing=True  # Use UploadThing for new presentations
                     )
+                    auth_session.commit()
                     
-                logging_service.logger.info(
-                    f"Saved presentation to user account: {user_presentation.id}",
-                    extra=log_metadata.model_dump(),
-                )
+                    logging_service.logger.info(
+                        f"Successfully saved presentation to user account with UploadThing: {user_presentation.id}",
+                        extra=log_metadata.model_dump(),
+                    )
+                finally:
+                    auth_session.close()
             except Exception as e:
                 logging_service.logger.error(
                     f"Failed to save presentation to user account: {str(e)}",
                     extra=log_metadata.model_dump(),
                 )
+                import traceback
+                logging_service.logger.error(
+                    f"Traceback: {traceback.format_exc()}",
+                    extra=log_metadata.model_dump(),
+                )
+        else:
+            logging_service.logger.info(
+                "No authenticated user found, skipping user account save",
+                extra=log_metadata.model_dump(),
+            )
 
         logging_service.logger.info(
             logging_service.message(response.model_dump(mode="json")),

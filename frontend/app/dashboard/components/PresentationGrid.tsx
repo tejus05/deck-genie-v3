@@ -2,10 +2,10 @@ import React from "react";
 import { PresentationCard } from "./PresentationCard";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { PresentationResponse } from "../api/dashboard";
+import { Presentation } from "../types";
 
 interface PresentationGridProps {
-  presentations: PresentationResponse[];
+  presentations: Presentation[];
   type: "slide" | "video";
   isLoading?: boolean;
   error?: string | null;
