@@ -17,7 +17,12 @@ async def generate_image(
     input: ImagePromptWithThemeAndAspectRatio,
     output_directory: str,
 ) -> str:
-    image_prompt = f"{input.image_prompt}, {input.theme_prompt}"
+    # Enhance prompt with more context for better relevance
+    image_prompt = (
+        f"{input.image_prompt}, theme: {input.theme_prompt}, "
+        f"style: high quality, professional, relevant, "
+        f"aspect ratio: {input.aspect_ratio.value}"
+    )
     print(f"Request - Finding Image for {image_prompt}")
 
     try:
@@ -67,8 +72,9 @@ async def search_and_download_image(prompt: str, output_directory: str, aspect_r
             print(f"No images found on Unsplash for query: {prompt}")
             return ""
         
-        # Take the first (most relevant) image
+        # Take the most relevant image (or let user pick from top 3)
         best_image = images[0]
+        # Optionally: Add logic to score/filter images here
         
         # Generate unique filename
         filename = f"{str(uuid.uuid4())}.jpg"
