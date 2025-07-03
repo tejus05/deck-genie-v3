@@ -10,6 +10,8 @@ import { ThemeType } from "../upload/type";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { clearLogs, logOperation } from "../utils/log";
+import CustomThemeSettings from "../components/CustomThemeSettings";
+import Modal from "../presentation/components/Modal";
 
 interface ThemeCardProps {
   name: string;
@@ -64,6 +66,8 @@ const ThemeCard = ({
 };
 
 const ThemePage = () => {
+  const [showCustomThemeModal, setShowCustomThemeModal] = useState(false);
+  
   const themes = [
     {
       name: "Dark Theme",
@@ -113,10 +117,23 @@ const ThemePage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [selectedTheme, setSelectedTheme] = useState<ThemeType | null>(null);
+  
   const handleThemeClick = async (theme: ThemeColors, type: string) => {
+    if (type === "custom") {
+      logOperation('Opening custom theme modal');
+      setShowCustomThemeModal(true);
+      return;
+    }
     logOperation(`Theme selected: ${type}`);
     setSelectedTheme(type as ThemeType);
   };
+  
+  const handleCustomThemeSubmit = () => {
+    // Custom theme was saved in the modal, proceed with custom theme
+    setSelectedTheme("custom" as ThemeType);
+    setShowCustomThemeModal(false);
+  };
+  
   const handleSubmit = () => {
     if (!selectedTheme) {
       logOperation('Error: No theme selected');
@@ -147,7 +164,56 @@ const ThemePage = () => {
               onClick={() => handleThemeClick(theme.colors, theme.type)}
             />
           ))}
+          
+          {/* Custom Theme Card */}
+          <div
+            className="cursor-pointer group"
+            onClick={() => handleThemeClick({} as ThemeColors, "custom")}
+          >
+            <Card
+              className={`p-3 md:p-6 h-[120px] md:h-[210px] transition-all duration-200 border-2 ${
+                selectedTheme === "custom" ? "border-4 border-blue-400" : "hover:border-primary"
+              }`}
+              style={{ 
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" 
+              }}
+            >
+              <div
+                className="rounded-lg p-6 h-full flex items-center justify-center"
+                style={{ 
+                  background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" 
+                }}
+              >
+                <div className="text-center text-white">
+                  <div className="mb-2">
+                    <svg 
+                      className="w-8 h-8 mx-auto" 
+                      fill="currentColor" 
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Custom Theme</h3>
+                  <p className="text-sm opacity-90">Create your own colors</p>
+                </div>
+              </div>
+            </Card>
+          </div>
         </div>
+        
+        {/* Custom Theme Modal */}
+        <Modal
+          isOpen={showCustomThemeModal}
+          onClose={() => setShowCustomThemeModal(false)}
+          title="Custom Theme Colors"
+        >
+          <CustomThemeSettings
+            onClose={handleCustomThemeSubmit}
+            presentationId="theme-selection" // Placeholder since we don't have presentation ID yet
+          />
+        </Modal>
+        
         <Button
           onClick={handleSubmit}
           className="bg-[#5146E5] fixed bottom-4 left-0 right-0 max-w-[1100px] mx-auto w-full rounded-[32px] text-base sm:text-lg py-4 sm:py-6 transition-all duration-300 font-switzer font-semibold hover:bg-[#5146E5]/80 text-white mt-4"

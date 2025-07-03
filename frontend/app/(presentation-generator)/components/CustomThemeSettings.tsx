@@ -115,14 +115,8 @@ const CustomThemeSettings = ({
       );
       root.style.setProperty("--custom-slide-box", draftColors.slideBox);
 
-      // Save to file and API
-      await Promise.all([
-        PresentationGenerationApi.setThemeColors(presentationId, {
-          name: themeType,
-          colors: {
-            ...draftColors,
-          },
-        }),
+      // Save to file and API (only if we have a valid presentation ID)
+      const savePromises = [
         themeService.saveTheme({
           name: "custom",
           colors: {
@@ -130,7 +124,21 @@ const CustomThemeSettings = ({
             theme: themeType,
           },
         }),
-      ]);
+      ];
+
+      // Only save to API if we have a valid presentation ID
+      if (presentationId && presentationId !== "theme-selection") {
+        savePromises.push(
+          PresentationGenerationApi.setThemeColors(presentationId, {
+            name: themeType,
+            colors: {
+              ...draftColors,
+            },
+          })
+        );
+      }
+
+      await Promise.all(savePromises);
 
       onClose?.();
     } catch (error) {

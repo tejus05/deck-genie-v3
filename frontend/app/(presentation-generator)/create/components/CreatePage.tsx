@@ -137,12 +137,12 @@ const CreatePage = () => {
       return;
     }
 
-    if (titles.length >= initialSlideCount) {
+    // Allow adding slides up to a reasonable limit (20 slides max)
+    if (titles.length >= 20) {
       logOperation('Error: Cannot add more slides - reached maximum limit');
       toast({
         title: "Cannot add more slides",
-        description:
-          "You can only add back slides that were previously deleted",
+        description: "Maximum of 20 slides allowed",
         variant: "destructive",
       });
       return;
@@ -189,8 +189,8 @@ const CreatePage = () => {
             <Button
               variant="outline"
               onClick={handleAddSlide}
-              disabled={!titles || titles.length >= initialSlideCount}
-              className={`w-full mt-4 text-[#9034EA] border-[#9034EA] rounded-[32px] ${!titles || titles.length >= initialSlideCount
+              disabled={!titles || titles.length >= 20}
+              className={`w-full mt-4 text-[#9034EA] border-[#9034EA] rounded-[32px] ${!titles || titles.length >= 20
                 ? "opacity-50 cursor-not-allowed"
                 : ""
                 }`}

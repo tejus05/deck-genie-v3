@@ -426,12 +426,6 @@ const Header = ({
         <img src="/pptx.svg" alt="pptx export" width={30} height={30} />
         Export as PPTX
       </Button>
-      <p className="text-sm pt-3 border-t border-gray-300">
-        Font Used:
-        <a className="text-blue-500  flex items-center gap-1" href={getFontLink(currentColors.fontFamily).link || ''} target="_blank" rel="noopener noreferrer">
-          {getFontLink(currentColors.fontFamily).name || ''} <ExternalLink className="w-4 h-4" />
-        </a>
-      </p>
     </div>
   );
 
