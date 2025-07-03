@@ -85,7 +85,15 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
             presentation.file = ppt_path
             sql_session.commit()
 
-        # Save presentation to user's account if user is authenticated
+        # Always save presentation to user's account - require authentication for export
+        if not self.current_user:
+            logging_service.logger.error(
+                "Export attempted without authentication - this should not happen",
+                extra=log_metadata.model_dump(),
+            )
+            # Still continue with export but log the issue
+            # In future, this could raise an error to require authentication
+        
         if self.current_user:
             logging_service.logger.info(
                 f"Starting save for authenticated user: {self.current_user.id}",
@@ -118,6 +126,7 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
                         f"Successfully saved presentation to user account with UploadThing: {user_presentation.id}",
                         extra=log_metadata.model_dump(),
                     )
+                    
                 finally:
                     auth_session.close()
             except Exception as e:
@@ -130,9 +139,12 @@ class ExportAsPptxHandler(FetchPresentationAssetsMixin):
                     f"Traceback: {traceback.format_exc()}",
                     extra=log_metadata.model_dump(),
                 )
+                # Re-raise the error to ensure export fails if user save fails
+                # This ensures users don't think their presentation was saved when it wasn't
+                raise Exception(f"Failed to save presentation to user account: {str(e)}")
         else:
-            logging_service.logger.info(
-                "No authenticated user found, skipping user account save",
+            logging_service.logger.warning(
+                "Export completed without authenticated user - presentation not saved to user account",
                 extra=log_metadata.model_dump(),
             )
 

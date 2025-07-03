@@ -173,10 +173,12 @@ class FileManager:
             raise HTTPException(status_code=500, detail=f"Could not save presentation: {str(e)}")
         
         # Create database record with legacy file path
+        # Ensure consistent forward slash path separators for cross-platform compatibility
+        normalized_path = str(file_path).replace('\\', '/')
         presentation = Presentation(
             owner_id=user_id,
             title=title,
-            file_path=str(file_path),
+            file_path=normalized_path,
             file_size=len(file_content)
         )
         
