@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import puppeteer from 'puppeteer';
 import { NextResponse, NextRequest } from 'next/server';
+import { launchPuppeteer } from '@/lib/puppeteer-config';
 
 function sanitizeFilename(filename: string): string {
   return filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -12,10 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     const { url, title } = await req.json();
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+    const browser = await launchPuppeteer();
     
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle0' });
@@ -51,8 +48,20 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error('PDF generation failed:', error);
+    
+    // Provide more specific error information
+    if (error instanceof Error) {
+      if (error.message.includes('browser at the configured path')) {
+        console.error('Chromium executable not found. Check PUPPETEER_EXECUTABLE_PATH environment variable.');
+        return NextResponse.json(
+          { error: 'Browser executable not found in production environment' },
+          { status: 500 }
+        );
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to generate PDF' },
+      { error: 'Failed to generate PDF', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

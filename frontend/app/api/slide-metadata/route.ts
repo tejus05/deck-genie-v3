@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { launchPuppeteer } from '@/lib/puppeteer-config';
 
 interface Position {
   left: number;
@@ -107,10 +107,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing URL" }, { status: 400 });
     }
 
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+    // Configure Puppeteer for production environment
+    browser = await launchPuppeteer();
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
@@ -404,7 +402,22 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error during page preparation:", error);
     if (browser) await browser.close();
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    
+    // Provide more specific error information
+    if (error instanceof Error) {
+      if (error.message.includes('browser at the configured path')) {
+        console.error('Chromium executable not found. Check PUPPETEER_EXECUTABLE_PATH environment variable.');
+        return NextResponse.json(
+          { error: 'Browser executable not found in production environment' },
+          { status: 500 }
+        );
+      }
+    }
+    
+    return NextResponse.json(
+      { error: "Failed to extract slide metadata", details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
   } finally {
     if (browser) await browser.close();
   }

@@ -1,6 +1,6 @@
 [phases.setup]
-nixPkgs = ['nodejs_20', 'pnpm']
-aptPkgs = ['chromium', 'ca-certificates', 'fonts-liberation', 'libappindicator3-1', 'libasound2t64', 'libatk-bridge2.0-0', 'libdrm2', 'libgtk-3-0', 'libnspr4', 'libnss3', 'libx11-xcb1', 'libxcomposite1', 'libxdamage1', 'libxrandr2', 'xdg-utils']
+nixPkgs = ['nodejs_20', 'pnpm', 'chromium']
+aptPkgs = ['ca-certificates', 'fonts-liberation', 'libappindicator3-1', 'libasound2t64', 'libatk-bridge2.0-0', 'libdrm2', 'libgtk-3-0', 'libnspr4', 'libnss3', 'libx11-xcb1', 'libxcomposite1', 'libxdamage1', 'libxrandr2', 'xdg-utils', 'fonts-noto-color-emoji']
 
 [phases.install]
 cmds = [
@@ -9,8 +9,15 @@ cmds = [
 
 [phases.build] 
 cmds = [
-  'echo "Chromium location: $(which chromium)"',
-  'echo "Chromium version: $(chromium --version)"',
+  'echo "=== Checking for Chromium executables ==="',
+  'which chromium || echo "chromium not found in PATH"',
+  'ls -la /nix/store/*/bin/chromium* 2>/dev/null | head -5 || echo "No chromium in nix store"',
+  'ls -la /usr/bin/chromium* 2>/dev/null || echo "No chromium in /usr/bin/"',
+  'ls -la /usr/bin/google-chrome* 2>/dev/null || echo "No google-chrome in /usr/bin/"',
+  'echo "=== Environment Variables ==="',
+  'echo "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=${PUPPETEER_SKIP_CHROMIUM_DOWNLOAD}"',
+  'echo "PUPPETEER_EXECUTABLE_PATH=${PUPPETEER_EXECUTABLE_PATH}"',
+  'echo "=== Starting Build ==="',
   'pnpm build'
 ]
 
@@ -19,5 +26,6 @@ cmd = 'pnpm start'
 
 [variables]
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true'
-PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium'
+# Try to use nix-provided chromium first, fallback to system paths
+PUPPETEER_EXECUTABLE_PATH = 'chromium'
 PUPPETEER_ARGS = '--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-accelerated-2d-canvas --no-first-run --no-zygote --disable-gpu --disable-extensions'
