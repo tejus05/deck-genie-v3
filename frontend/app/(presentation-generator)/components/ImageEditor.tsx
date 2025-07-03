@@ -227,7 +227,7 @@ const ImageEditor = ({
       }
 
       const result = await response.json();
-      const relativePath = result.images[0]; // Get the uploaded image path
+      const relativePath = result.paths[0]; // Get the uploaded image path
 
       logOperation(`File upload successful for slide ${slideIndex}, element ${elementId}: ${relativePath}`);
       setUploadedImageUrl(relativePath);
@@ -332,11 +332,11 @@ const ImageEditor = ({
 
           <div className="mt-6">
             <Tabs defaultValue="upload" className="w-full">
-              <TabsList className="grid bg-blue-100 border border-blue-300 w-full grid-cols-1 mx-auto ">
+              {/* <TabsList className="grid bg-blue-100 border border-blue-300 w-full grid-cols-1 mx-auto ">
                 <TabsTrigger className="font-medium" value="upload">
                   Upload
                 </TabsTrigger>
-              </TabsList>
+              </TabsList> */}
 
               <TabsContent value="upload" className="mt-4 space-y-4">
                 <div className="space-y-4">
