@@ -213,11 +213,10 @@ const ImageEditor = ({
       setIsUploading(true);
       setUploadError(null);
 
-      // For web mode, create a form data to upload to backend
       const formData = new FormData();
       formData.append('images', file);
 
-      const response = await fetch('http://localhost:8000/ppt/files/upload', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/ppt/files/upload`, {
         method: 'POST',
         body: formData
       });

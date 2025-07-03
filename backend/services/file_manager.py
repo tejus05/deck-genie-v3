@@ -113,12 +113,9 @@ class FileManager:
         file_extension: str = ".pptx",
         session: Session = None
     ) -> Presentation:
-        """Save presentation using UploadThing."""
         try:
-            # Generate filename
             filename = f"{title.replace(' ', '_')}{file_extension}"
             
-            # Upload to UploadThing
             upload_result = await uploadthing_service.upload_presentation(
                 file_content=file_content,
                 filename=filename,
@@ -131,7 +128,6 @@ class FileManager:
                     detail=f"Failed to upload to UploadThing: No URL returned"
                 )
             
-            # Create database record with UploadThing data
             presentation = Presentation(
                 owner_id=user_id,
                 title=title,
@@ -139,17 +135,6 @@ class FileManager:
                 uploadthing_key=upload_result['key'],
                 file_size=len(file_content)
             )
-            
-            # Try to generate thumbnail if possible
-            try:
-                thumbnail_result = await self._generate_presentation_thumbnail(
-                    file_content, upload_result['key']
-                )
-                if thumbnail_result:
-                    presentation.uploadthing_thumbnail_url = thumbnail_result['url']
-                    presentation.uploadthing_thumbnail_key = thumbnail_result['key']
-            except Exception as e:
-                logging.warning(f"Failed to generate thumbnail: {str(e)}")
             
             if session:
                 session.add(presentation)
@@ -160,7 +145,6 @@ class FileManager:
             
         except Exception as e:
             logging.error(f"Failed to save presentation with UploadThing: {str(e)}")
-            # Fallback to legacy method
             return self._save_presentation_legacy(
                 user_id, title, file_content, file_extension, session
             )

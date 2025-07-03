@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "cp ../.env .env.local 2>/dev/null || true && next dev",
+    "build": "cp ../.env .env.local 2>/dev/null || true && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "puppeteer browsers install chrome"

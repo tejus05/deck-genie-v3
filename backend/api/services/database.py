@@ -4,26 +4,20 @@ from sqlalchemy import create_engine
 from sqlmodel import Session
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '../../../.env'))
 
-# Get database URL from environment variables
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is not set")
 
-print(f"Connecting to database: {DATABASE_URL.split('@')[0]}@[HIDDEN]")
-
-# Create engine with PostgreSQL-specific settings
 sql_engine = create_engine(
     DATABASE_URL,
-    echo=True,  # Set to False in production
-    pool_size=20,
+    echo=False,
+    pool_size=10,
     max_overflow=0,
-    pool_pre_ping=True,  # Enables pessimistic disconnect handling
-    pool_recycle=300,  # Recycle connections every 5 minutes
+    pool_pre_ping=True,
+    pool_recycle=300,
 )
-
 
 @contextmanager
 def get_sql_session():
