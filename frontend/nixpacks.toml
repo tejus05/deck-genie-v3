@@ -1,6 +1,12 @@
 [phases.setup]
 nixPkgs = ['nodejs_20', 'pnpm']
-aptPkgs = ['chromium', 'ca-certificates', 'fonts-liberation', 'libappindicator3-1', 'libasound2t64', 'libatk-bridge2.0-0', 'libdrm2', 'libgtk-3-0', 'libnspr4', 'libnss3', 'libx11-xcb1', 'libxcomposite1', 'libxdamage1', 'libxrandr2', 'xdg-utils']
+aptPkgs = ['wget', 'gnupg', 'ca-certificates', 'fonts-liberation', 'libappindicator3-1', 'libasound2t64', 'libatk-bridge2.0-0', 'libdrm2', 'libgtk-3-0', 'libnspr4', 'libnss3', 'libx11-xcb1', 'libxcomposite1', 'libxdamage1', 'libxrandr2', 'xdg-utils']
+cmds = [
+  'wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -',
+  'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list',
+  'apt-get update',
+  'apt-get install -y google-chrome-stable'
+]
 
 [phases.install]
 cmds = [
@@ -9,8 +15,16 @@ cmds = [
 
 [phases.build] 
 cmds = [
-  'echo "Chromium location: $(which chromium)"',
-  'echo "Chromium version: $(chromium --version)"',
+  'echo "=== Finding Chrome/Chromium ==="',
+  'which google-chrome-stable || echo "google-chrome-stable not in PATH"',
+  'which chromium || echo "chromium not in PATH"',
+  'ls -la /usr/bin/google-chrome* || echo "No google-chrome in /usr/bin/"',
+  'ls -la /usr/bin/chromium* || echo "No chromium in /usr/bin/"',
+  'echo "=== Creating symlinks ==="',
+  'if [ -f /usr/bin/google-chrome-stable ]; then ln -sf /usr/bin/google-chrome-stable /usr/bin/chromium; echo "Created symlink: google-chrome-stable -> chromium"; fi',
+  'echo "=== Final verification ==="',
+  'ls -la /usr/bin/chromium',
+  '/usr/bin/chromium --version || google-chrome-stable --version',
   'pnpm build'
 ]
 
