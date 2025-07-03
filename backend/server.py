@@ -19,4 +19,6 @@ os.environ.setdefault("LLM", "google")
 from api.main import app
 
 if __name__ == "__main__":
-    uvicorn.run("api.main:app", host="127.0.0.1", port=8000, reload=True, log_level="info")
+    port = int(os.environ.get("PORT", 8000))
+    host = "0.0.0.0"  # Railway requires binding to 0.0.0.0
+    uvicorn.run("api.main:app", host=host, port=port, reload=False, log_level="info")

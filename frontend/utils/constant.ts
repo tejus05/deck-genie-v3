@@ -5,7 +5,7 @@ export const getEnv = () => {
   if (typeof window !== 'undefined') {
     return {
       // @ts-ignore
-      BASE_URL: window.env?.NEXT_PUBLIC_FAST_API || 'http://localhost:8000',
+      BASE_URL: window.env?.NEXT_PUBLIC_FAST_API || process.env.NEXT_PUBLIC_FAST_API || 'http://localhost:8000',
       // @ts-ignore
       USER_CONFIG_PATH: window.env?.NEXT_PUBLIC_USER_CONFIG_PATH || '',
         // @ts-ignore
@@ -16,11 +16,9 @@ export const getEnv = () => {
   }
 
   return {
-    BASE_URL: 'http://localhost:8000',
+    BASE_URL: process.env.NEXT_PUBLIC_FAST_API || 'http://localhost:8000',
     USER_CONFIG_PATH: '',
- 
     NEXT_PUBLIC_URL: '',
-    
     TEMP_DIRECTORY: '',
   };
 };
