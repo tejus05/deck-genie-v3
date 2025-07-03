@@ -1,3 +1,5 @@
+import { getEnv } from "@/utils/constant";
+
 export const getIconFromFile = (file: string): string => {
   const file_ext = file.split(".").pop()?.toLowerCase() ?? "";
   if (file_ext == "pdf") {
@@ -249,7 +251,8 @@ export function getStaticFileUrl(filepath: string): string {
     const presentationIndex = pathParts.findIndex(part => part === 'deck_genie_presentations');
     if (presentationIndex !== -1 && presentationIndex < pathParts.length - 1) {
       relevantPath = pathParts.slice(presentationIndex + 1).join('/');
-      return `http://localhost:8000/presentations/${relevantPath}`;
+      const { BASE_URL } = getEnv();
+      return `${BASE_URL}/presentations/${relevantPath}`;
     }
   }
   
@@ -260,5 +263,6 @@ export function getStaticFileUrl(filepath: string): string {
   }
   
   // Return the static URL
-  return `http://localhost:8000/static/${relevantPath}`;
+  const { BASE_URL } = getEnv();
+  return `${BASE_URL}/static/${relevantPath}`;
 }

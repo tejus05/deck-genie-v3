@@ -40,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RootState } from "@/store/store";
+import { getEnv } from "@/utils/constant";
 import { toast } from "@/hooks/use-toast";
 
 import ThemeSelector from "./ThemeSelector";
@@ -283,7 +284,7 @@ const Header = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          url: `http://localhost:3000/pdf-maker?id=${presentation_id}`,
+          url: `${window.location.origin}/pdf-maker?id=${presentation_id}`,
           theme: currentTheme || 'light',
           customColors: currentColors
         })
@@ -302,7 +303,8 @@ const Header = ({
       console.log('Background color:', pptx_model.background_color);
 
       // Now send the PPTX model to backend for generation
-      const backendResponse = await fetch('http://127.0.0.1:8000/ppt/presentation/export_as_pptx', {
+      const { BASE_URL } = getEnv();
+      const backendResponse = await fetch(`${BASE_URL}/ppt/presentation/export_as_pptx`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -321,7 +323,7 @@ const Header = ({
         const link = document.createElement('a');
         const fileName = pptxPath.split('/').pop() || `presentation-${presentation_id}.pptx`;
         // Construct correct presentations URL
-        link.href = `http://127.0.0.1:8000/presentations/${presentation_id}/${fileName}`;
+        link.href = `${BASE_URL}/presentations/${presentation_id}/${fileName}`;
         link.download = `${getCleanTitle()}.pptx`;
         document.body.appendChild(link);
         link.click();
@@ -357,6 +359,7 @@ const Header = ({
 
     setOpen(false);
     try {
+      const { BASE_URL } = getEnv();
       logOperation('Starting PDF export');
       setShowLoader(true);
       
@@ -372,7 +375,7 @@ const Header = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          url: `http://localhost:3000/pdf-maker?id=${presentation_id}`,
+          url: `${window.location.origin}/pdf-maker?id=${presentation_id}`,
           title: getCleanTitle(),
         })
       });
@@ -383,7 +386,7 @@ const Header = ({
         
         // Create a download link
         const link = document.createElement('a');
-        link.href = pdfUrl.startsWith('http') ? pdfUrl : `http://localhost:8000${pdfUrl}`;
+        link.href = pdfUrl.startsWith('http') ? pdfUrl : `${BASE_URL}${pdfUrl}`;
         link.download = `${getCleanTitle()}.pdf`;
         document.body.appendChild(link);
         link.click();
