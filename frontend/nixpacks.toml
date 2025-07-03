@@ -1,19 +1,16 @@
 [phases.setup]
 nixPkgs = ['nodejs_20', 'pnpm']
+aptPkgs = ['chromium', 'ca-certificates', 'fonts-liberation', 'libappindicator3-1', 'libasound2t64', 'libatk-bridge2.0-0', 'libdrm2', 'libgtk-3-0', 'libnspr4', 'libnss3', 'libx11-xcb1', 'libxcomposite1', 'libxdamage1', 'libxrandr2', 'xdg-utils']
 
 [phases.install]
 cmds = [
-  'wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -',
-  'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list',
-  'apt-get update',
-  'apt-get install -y google-chrome-stable',
   'pnpm install'
 ]
 
 [phases.build] 
 cmds = [
-  'echo "Chrome location: $(which google-chrome)"',
-  'echo "Chrome version: $(google-chrome --version)"',
+  'echo "Chromium location: $(which chromium)"',
+  'echo "Chromium version: $(chromium --version)"',
   'pnpm build'
 ]
 
@@ -22,5 +19,5 @@ cmd = 'pnpm start'
 
 [variables]
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true'
-PUPPETEER_EXECUTABLE_PATH = '/usr/bin/google-chrome'
-PUPPETEER_ARGS = '--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-accelerated-2d-canvas --no-first-run --no-zygote --disable-gpu'
+PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium'
+PUPPETEER_ARGS = '--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-accelerated-2d-canvas --no-first-run --no-zygote --disable-gpu --disable-extensions'
