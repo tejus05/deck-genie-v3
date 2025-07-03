@@ -7,6 +7,7 @@
     "dev:frontend": "cd frontend && pnpm dev",
     "dev:backend": "node scripts/dev-backend.js",
     "build": "cd frontend && pnpm build",
+    "build:frontend": "cd frontend && pnpm install && pnpm build",
     "start": "cd backend && python server.py",
     "start:frontend": "cd frontend && pnpm start",
     "start:backend": "node scripts/start-backend.js",
