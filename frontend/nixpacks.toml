@@ -1,5 +1,6 @@
 [phases.setup]
-nixPkgs = ['nodejs_20', 'pnpm', 'chromium']
+nixPkgs = ['nodejs_20', 'pnpm']
+aptPkgs = ['chromium-browser']
 
 [phases.install]
 cmds = [
@@ -8,7 +9,7 @@ cmds = [
 
 [phases.build] 
 cmds = [
-  'echo "Chromium location: $(which chromium)"',
+  'echo "Chromium location: $(which chromium-browser)"',
   'pnpm build'
 ]
 
@@ -17,4 +18,4 @@ cmd = 'pnpm start'
 
 [variables]
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true'
-PUPPETEER_EXECUTABLE_PATH = 'chromium'
+PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium-browser'
