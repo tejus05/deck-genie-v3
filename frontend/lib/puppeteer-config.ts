@@ -29,14 +29,8 @@ export function getPuppeteerConfig(): PuppeteerLaunchOptions {
 
   // Use environment variables for production
   if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-    // If it's just 'chromium', let puppeteer find it in PATH
-    if (process.env.PUPPETEER_EXECUTABLE_PATH === 'chromium') {
-      // Don't set executablePath, let Puppeteer find it
-      console.log('Using Chromium from PATH');
-    } else {
-      config.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-      console.log(`Using Chromium at: ${process.env.PUPPETEER_EXECUTABLE_PATH}`);
-    }
+    config.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    console.log(`Using Chromium at: ${process.env.PUPPETEER_EXECUTABLE_PATH}`);
   }
 
   return config;
@@ -49,13 +43,27 @@ export async function launchPuppeteer() {
   try {
     const config = getPuppeteerConfig();
     console.log('Launching Puppeteer with config:', JSON.stringify(config, null, 2));
+    
+    // Additional debug information
+    console.log('Environment check:');
+    console.log('PUPPETEER_EXECUTABLE_PATH:', process.env.PUPPETEER_EXECUTABLE_PATH);
+    console.log('PUPPETEER_SKIP_CHROMIUM_DOWNLOAD:', process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD);
+    
     const browser = await puppeteer.launch(config);
+    console.log('Puppeteer launched successfully');
     return browser;
   } catch (error) {
     console.error('Failed to launch Puppeteer:', error);
     
+    // Additional debugging
+    console.log('=== Debug Information ===');
+    console.log('Process environment variables:');
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    console.log('PUPPETEER_EXECUTABLE_PATH:', process.env.PUPPETEER_EXECUTABLE_PATH);
+    console.log('PUPPETEER_SKIP_CHROMIUM_DOWNLOAD:', process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD);
+    
     if (error instanceof Error && error.message.includes('browser at the configured path')) {
-      throw new Error('Browser executable not found in production environment. Please check PUPPETEER_EXECUTABLE_PATH.');
+      throw new Error(`Browser executable not found. Configured path: ${process.env.PUPPETEER_EXECUTABLE_PATH}. Please check if chromium is installed at the specified path.`);
     }
     
     throw error;
