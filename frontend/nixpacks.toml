@@ -1,6 +1,6 @@
 [phases.setup]
 nixPkgs = ['nodejs_20', 'pnpm']
-aptPkgs = ['chromium-browser']
+aptPkgs = ['chromium-browser', 'libnss3', 'libatk1.0-0', 'libatk-bridge2.0-0', 'libcups2', 'libgbm1', 'libasound2', 'libpangocairo-1.0-0', 'libxss1', 'libgtk-3-0', 'libxshmfence1', 'libglu1']
 
 [phases.install]
 cmds = [
@@ -10,6 +10,7 @@ cmds = [
 [phases.build] 
 cmds = [
   'echo "Chromium location: $(which chromium-browser)"',
+  'echo "Chromium version: $(chromium-browser --version)"',
   'pnpm build'
 ]
 
@@ -19,3 +20,4 @@ cmd = 'pnpm start'
 [variables]
 PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true'
 PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium-browser'
+PUPPETEER_ARGS = '--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-accelerated-2d-canvas --no-first-run --no-zygote --disable-gpu'
