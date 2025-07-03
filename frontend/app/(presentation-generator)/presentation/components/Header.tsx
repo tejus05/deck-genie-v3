@@ -381,20 +381,33 @@ const Header = ({
       });
 
       if (response.ok) {
-        const { url: pdfUrl } = await response.json();
+        // Get the PDF as a blob
+        const pdfBlob = await response.blob();
         logOperation('PDF export completed, initiating download');
         
-        // Create a download link
+        // Create a download link with blob URL
+        const blobUrl = URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');
-        link.href = pdfUrl.startsWith('http') ? pdfUrl : `${BASE_URL}${pdfUrl}`;
+        link.href = blobUrl;
         link.download = `${getCleanTitle()}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
+        // Clean up the blob URL
+        URL.revokeObjectURL(blobUrl);
+        
         logOperation('PDF download completed successfully');
       } else {
-        throw new Error("Failed to export PDF");
+        // Try to get error message from JSON response
+        let errorMessage = "Failed to export PDF";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          // If response is not JSON, use default message
+        }
+        throw new Error(errorMessage);
       }
 
     } catch (err) {
