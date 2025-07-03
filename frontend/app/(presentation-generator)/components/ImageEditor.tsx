@@ -380,6 +380,53 @@ const ImageEditor = ({
                     </p>
                   )}
 
+                  {/* Image Fit Controls */}
+                  {image && (
+                    <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+                      <h3 className="text-sm font-medium">Image Display</h3>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button
+                          onClick={() => handleFitChange("cover")}
+                          className={cn(
+                            "px-3 py-2 text-xs rounded-md transition-colors",
+                            objectFit === "cover"
+                              ? "bg-blue-500 text-white"
+                              : "bg-white border border-gray-200 hover:bg-gray-100"
+                          )}
+                        >
+                          Fill Frame
+                        </button>
+                        <button
+                          onClick={() => handleFitChange("contain")}
+                          className={cn(
+                            "px-3 py-2 text-xs rounded-md transition-colors",
+                            objectFit === "contain"
+                              ? "bg-blue-500 text-white"
+                              : "bg-white border border-gray-200 hover:bg-gray-100"
+                          )}
+                        >
+                          Fit All
+                        </button>
+                        <button
+                          onClick={() => handleFitChange("fill")}
+                          className={cn(
+                            "px-3 py-2 text-xs rounded-md transition-colors",
+                            objectFit === "fill"
+                              ? "bg-blue-500 text-white"
+                              : "bg-white border border-gray-200 hover:bg-gray-100"
+                          )}
+                        >
+                          Stretch
+                        </button>
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {objectFit === "cover" && "Fills the frame, may crop image"}
+                        {objectFit === "contain" && "Shows full image, may add padding"}
+                        {objectFit === "fill" && "Stretches to fill frame exactly"}
+                      </div>
+                    </div>
+                  )}
+
                   {(uploadedImageUrl || isUploading) && (
                     <div className="mt-4">
                       <h3 className="text-sm font-medium mb-2">
