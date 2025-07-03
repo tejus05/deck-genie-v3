@@ -33,9 +33,6 @@ from api.routers.presentation.handlers.update_slide_models import (
 from api.routers.presentation.handlers.upload_presentation_thumbnail import (
     UploadPresentationThumbnailHandler,
 )
-from api.routers.presentation.handlers.upload_images import (
-    UploadImagesHandler,
-)
 from api.routers.presentation.models import (
     ExportAsRequest,
     GenerateImageRequest,
@@ -171,19 +168,6 @@ async def update_slide_models(data: PresentationUpdateRequest):
     )
     return await handle_errors(
         UpdateSlideModelsHandler(data).post, logging_service, log_metadata
-    )
-
-
-@presentation_router.post("/files/upload", response_model=PresentationAndPaths)
-async def upload_images(
-    images: Annotated[List[UploadFile], File()],
-):
-    request_utils = RequestUtils("/ppt/files/upload")
-    logging_service, log_metadata = await request_utils.initialize_logger()
-    return await handle_errors(
-        UploadImagesHandler(images).post,
-        logging_service,
-        log_metadata,
     )
 
 

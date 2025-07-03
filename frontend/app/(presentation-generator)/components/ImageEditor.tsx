@@ -188,23 +188,32 @@ const ImageEditor = ({
     }
   };
 
+  // Helper function to convert file to base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const presentation_id = searchParams.get("id");
     const file = event.target.files?.[0];
     if (!file) return;
 
-    logOperation(`Attempting to upload file for slide ${slideIndex}, element ${elementId}: ${file.name}`);
+    logOperation(`Attempting to convert file to base64 for slide ${slideIndex}, element ${elementId}: ${file.name}`);
 
     if (file.size > 5 * 1024 * 1024) {
       const error_message = "File size should be less than 5MB";
-      logOperation(`File upload failed for slide ${slideIndex}, element ${elementId}: File too large`);
+      logOperation(`File conversion failed for slide ${slideIndex}, element ${elementId}: File too large`);
       setUploadError(error_message);
       return;
     }
 
     if (!file.type.startsWith("image/")) {
       const error_message = "Please upload an image file";
-      logOperation(`File upload failed for slide ${slideIndex}, element ${elementId}: Invalid file type`);
+      logOperation(`File conversion failed for slide ${slideIndex}, element ${elementId}: Invalid file type`);
       setUploadError(error_message);
       return;
     }
@@ -213,29 +222,16 @@ const ImageEditor = ({
       setIsUploading(true);
       setUploadError(null);
 
-      // For web mode, create a form data to upload to backend
-      const formData = new FormData();
-      formData.append('images', file);
+      // Convert image to base64 data URL
+      const base64String = await convertToBase64(file);
 
-      const response = await fetch('http://localhost:8000/ppt/files/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      const result = await response.json();
-      const relativePath = result.paths[0]; // Get the uploaded image path
-
-      logOperation(`File upload successful for slide ${slideIndex}, element ${elementId}: ${relativePath}`);
-      setUploadedImageUrl(relativePath);
+      logOperation(`File conversion successful for slide ${slideIndex}, element ${elementId}`);
+      setUploadedImageUrl(base64String);
     } catch (err) {
-      const error_message = "Failed to upload image. Please try again.";
-      logOperation(`File upload failed for slide ${slideIndex}, element ${elementId}: ${err}`);
+      const error_message = "Failed to process image. Please try again.";
+      logOperation(`File conversion failed for slide ${slideIndex}, element ${elementId}: ${err}`);
       setUploadError(error_message);
-      console.error("Upload error:", err);
+      console.error("Conversion error:", err);
     } finally {
       setIsUploading(false);
     }
@@ -370,7 +366,7 @@ const ImageEditor = ({
                       )}
                       <span className="text-sm text-gray-600">
                         {isUploading
-                          ? "Uploading your image..."
+                          ? "Processing your image..."
                           : "Click to upload an image"}
                       </span>
                       <span className="text-xs text-gray-500 mt-1">
