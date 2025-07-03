@@ -3,14 +3,17 @@ nixPkgs = ['nodejs_20', 'corepack', 'chromium']
 
 [phases.install]
 cmds = [
-  'corepack enable', 
-  'pnpm install',
+  'corepack enable',
   'export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true',
-  'export PUPPETEER_EXECUTABLE_PATH=/nix/store/*/bin/chromium'
+  'pnpm install'
 ]
 
-[phases.build]
+[phases.build] 
 cmds = ['pnpm build']
 
 [start]
 cmd = 'pnpm start'
+
+[variables]
+PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true'
+PUPPETEER_EXECUTABLE_PATH = '/nix/store/*/bin/chromium'
