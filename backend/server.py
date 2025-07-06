@@ -12,8 +12,6 @@ os.environ.setdefault("APP_DATA_DIRECTORY", data_dir)
 os.environ.setdefault("TEMP_DIRECTORY", os.path.join(data_dir, "temp"))
 os.environ.setdefault("USER_CONFIG_PATH", os.path.join(data_dir, "config.json"))
 
-# Set Google Gemini as default LLM
-os.environ.setdefault("LLM", "google")
 # Google API key will be loaded from .env file or Railway environment
 
 from api.main import app

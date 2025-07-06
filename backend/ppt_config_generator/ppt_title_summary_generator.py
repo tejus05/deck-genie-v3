@@ -90,11 +90,7 @@ async def generate_ppt_titles(
     content: Optional[str],
     tone: Optional[str] = None,
 ) -> PresentationTitlesModel:
-    model = (
-        ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
-        if os.getenv("LLM") == "openai"
-        else ChatGoogleGenerativeAI(model="gemini-2.0-flash")
-    ).with_structured_output(PresentationTitlesModel.model_json_schema())
+    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash").with_structured_output(PresentationTitlesModel.model_json_schema())
 
     chain = get_prompt_template() | model
 

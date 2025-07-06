@@ -29,8 +29,6 @@ async def save_config(config: UserConfig):
             json.dump(config.model_dump(exclude_none=True), f, indent=2)
         
         # Update environment variables
-        if config.LLM:
-            os.environ["LLM"] = config.LLM
         if config.GOOGLE_API_KEY:
             os.environ["GOOGLE_API_KEY"] = config.GOOGLE_API_KEY
             

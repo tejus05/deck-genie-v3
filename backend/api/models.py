@@ -59,5 +59,4 @@ class SSECompleteResponse(BaseModel):
 
 
 class UserConfig(BaseModel):
-    LLM: Optional[str] = "google"
     GOOGLE_API_KEY: Optional[str] = None

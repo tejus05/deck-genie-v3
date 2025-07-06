@@ -36,15 +36,12 @@ def get_user_config():
         pass
 
     return UserConfig(
-        LLM=existing_config.LLM or os.getenv("LLM") or "google",
         GOOGLE_API_KEY=existing_config.GOOGLE_API_KEY or os.getenv("GOOGLE_API_KEY"),
     )
 
 
 def update_env_with_user_config():
     user_config = get_user_config()
-    if user_config.LLM:
-        os.environ["LLM"] = user_config.LLM
     if user_config.GOOGLE_API_KEY:
         os.environ["GOOGLE_API_KEY"] = user_config.GOOGLE_API_KEY
 

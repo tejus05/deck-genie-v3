@@ -98,10 +98,6 @@ def generate_presentation_stream(
     user_message = f"Prompt: {prompt}-|0|--|0|- Presentation Tone: {tone} -|0|--|0|- Slide Titles: {titles} -|0|--|0|- Reference Document: {summary}"
     user_message = HumanMessage(user_message.replace("-|0|-", "\n"))
 
-    model = (
-        ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
-        if os.getenv("LLM") == "openai"
-        else ChatGoogleGenerativeAI(model="gemini-2.0-flash")
-    )
+    model = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 
     return model.astream([system_prompt, user_message])
