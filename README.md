@@ -1,6 +1,7 @@
 <div align="center">
 
-  <img src="https://deck-genie-v3-web.up.railway.app/logo-white.png" alt="DeckGenie Logo" width="400" height="400"/> <br>
+  <img width="2000" height="333" alt="image" src="https://github.com/user-attachments/assets/9d94d8f1-5d69-4c4d-bc5a-18dc1025bd7d" />
+
   
   **Transform your ideas into investor-ready decks**
   
